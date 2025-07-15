@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giochi Educativi - Maestro Alberto</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #ff6b6b, #ffa500);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            opacity: 0.9;
+        }
+
+        .container {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 3px solid transparent;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border-color: #667eea;
+        }
+
+        .game-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .game-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .game-title strong {
+            color: #000;
+        }
+
+        .game-description {
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .play-button {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-family: inherit;
+        }
+
+        .play-button:hover {
+            background: linear-gradient(45deg, #45a049, #4CAF50);
+            transform: scale(1.05);
+        }
+
+        .matematica .play-button {
+            background: linear-gradient(45deg, #2196F3, #0D47A1);
+        }
+
+        .matematica .play-button:hover {
+            background: linear-gradient(45deg, #0D47A1, #2196F3);
+        }
+
+        .tabelline .play-button {
+            background: linear-gradient(45deg, #9C27B0, #673AB7);
+        }
+
+        .tabelline .play-button:hover {
+            background: linear-gradient(45deg, #673AB7, #9C27B0);
+        }
+
+        .coming-soon {
+            background: linear-gradient(45deg, #FF9800, #F57C00);
+            opacity: 0.7;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .coming-soon::before {
+            content: "PRESTO DISPONIBILE";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            background: rgba(255, 255, 255, 0.9);
+            color: #FF9800;
+            padding: 0.5rem 2rem;
+            font-weight: bold;
+            font-size: 0.8rem;
+            border-radius: 20px;
+        }
+
+        .coming-soon .play-button {
+            background: #ccc;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .footer {
+            background: rgba(0,0,0,0.1);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .game-card {
+                padding: 1.5rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .game-card {
+                padding: 1rem;
+            }
+            
+            .game-icon {
+                font-size: 3rem;
+            }
+            
+            .game-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎮 Giochi Educativi</h1>
+        <p>by Maestro Alberto</p>
+    </div>
+
+    <div class="container">
+        <div class="games-grid">
+            <!-- Gioco Matematica -->
+            <div class="game-card matematica" onclick="window.location.href='matematica.html'">
+                <div class="game-icon">🧮</div>
+                <div class="game-title">Matematica sul Divano</div>
+                <div class="game-description">
+                    Addizioni, sottrazioni e tabelline progressive con livelli crescenti di difficoltà. Audio interattivo e PWA installabile!
+                </div>
+                <a href="matematica.html" class="play-button">🚀 Gioca Ora</a>
+            </div>
+
+            <!-- Gioco Tabelline -->
+            <div class="game-card tabelline" onclick="window.location.href='tabelline.html'">
+                <div class="game-icon">🎯</div>
+                <div class="game-title">Sfida Tabelline</div>
+                <div class="game-description">
+                    Timer di 60 secondi, 3 livelli di difficoltà e sistema anti-ripetizione. Perfetto per allenarsi con le tabelline!
+                </div>
+                <a href="tabelline.html" class="play-button">⚡ Inizia Sfida</a>
+            </div>
+
+            <!-- Altro in arrivo -->
+            <div class="game-card coming-soon">
+                <div class="game-icon">🎲</div>
+                <div class="game-title"><strong>Altro in arrivo</strong></div>
+                <div class="game-description">
+                    Nuovi giochi educativi e attività didattiche sono in fase di sviluppo. Resta sintonizzato per le prossime novità!
+                </div>
+                <button class="play-button">🔜 Presto</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">2</div>
+                <div class="stat-label">Giochi Disponibili</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">1</div>
+                <div class="stat-label">In Sviluppo</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Divertimento</div>
+            </div>
+        </div>
+        <p style="margin-top: 1rem; opacity: 0.8;">© 2025 Maestro Alberto - Giochi Educativi per Studenti</p>
+    </div>
+
+    <script>
+        // Animazione di entrata per le carte
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.game-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(50px)';
+                card.style.transition = 'all 0.6s ease';
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+
+        // Effetto click per le carte non disponibili
+        document.querySelectorAll('.coming-soon').forEach(card => {
+            card.addEventListener('click', function(e) {
+                e.preventDefault();
+                this.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    this.style.animation = '';
+                }, 500);
+            });
+        });
+    </script>
+
+    <style>
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+    </style>
+</body>
+</html>

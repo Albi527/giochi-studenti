@@ -15,14 +15,41 @@
     {
       "id": "tabelline",
       "title": "Sfida Tabelline",
-      "description": "Timer di 60 secondi, 3 livelli di difficoltà e sistema anti-ripetizione. Perfetto per allenarsi con le tabelline!",
+      "description": "Timer di 60 secondi, 3 livelli di difficoltà, sistema audio interattivo e anti-ripetizione domande. Sistema di scadenza integrato!",
       "icon": "🎯",
       "file": "tabelline.html",
       "category": "matematica",
       "buttonText": "⚡ Inizia Sfida",
       "buttonColor": "tabelline",
       "active": true,
-      "featured": true
+      "featured": true,
+      "version": "2.1.0",
+      "lastUpdated": "2025-07-15",
+      "features": [
+        "Sistema audio Web Audio API",
+        "3 livelli di difficoltà progressiva", 
+        "Timer 60 secondi con avvisi sonori",
+        "Anti-ripetizione domande intelligente",
+        "Feedback visivo e sonoro immediato",
+        "Design responsive mobile-first",
+        "Sistema di scadenza automatica"
+      ],
+      "educational": {
+        "targetAge": "6-12 anni",
+        "subject": "Matematica - Tabelline",
+        "skills": ["Moltiplicazioni", "Calcolo mentale", "Memoria", "Concentrazione"]
+      },
+      "technical": {
+        "audioSupport": true,
+        "offlineCapable": true,
+        "mobileOptimized": true,
+        "expirationDate": "2026-01-01"
+      },
+      "stats": {
+        "questionsPerGame": 15,
+        "maxScore": 150,
+        "gameDuration": "60 secondi"
+      }
     },
     {
       "id": "coming-soon-1",
@@ -66,10 +93,11 @@
   "settings": {
     "title": "Giochi Educativi",
     "subtitle": "by Maestro Alberto",
-    "version": "1.0.0",
-    "lastUpdated": "2025-01-15",
+    "version": "1.1.0",
+    "lastUpdated": "2025-07-15",
     "autoDetectGames": true,
     "showInstallButton": true,
-    "showOfflineIndicator": true
+    "showOfflineIndicator": true,
+    "audioSupported": true
   }
 }

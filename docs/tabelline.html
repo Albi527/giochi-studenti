@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gioco delle Tabelline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .game-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2vh;
+            position: relative;
+        }
+        
+        .header {
+            position: absolute;
+            top: 2vh;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 4vw;
+            color: white;
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: bold;
+        }
+        
+        .score-timer {
+            display: flex;
+            gap: 3vw;
+        }
+        
+        .main-content {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 4vh 6vw;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            min-width: 50vw;
+            max-width: 80vw;
+        }
+        
+        .question {
+            font-size: clamp(2rem, 8vw, 6rem);
+            color: #333;
+            margin-bottom: 3vh;
+            font-weight: bold;
+        }
+        
+        .input-container {
+            margin: 3vh 0;
+        }
+        
+        .answer-input {
+            font-size: clamp(1.5rem, 6vw, 4rem);
+            padding: 1vh 2vw;
+            border: 4px solid #667eea;
+            border-radius: 15px;
+            text-align: center;
+            width: 30vw;
+            min-width: 200px;
+            max-width: 400px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .answer-input:focus {
+            border-color: #764ba2;
+            box-shadow: 0 0 20px rgba(118, 75, 162, 0.3);
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 2vw;
+            justify-content: center;
+            margin-top: 3vh;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            padding: 1.5vh 3vw;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .feedback {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            margin-top: 2vh;
+            min-height: 3rem;
+            font-weight: bold;
+        }
+        
+        .correct {
+            color: #27ae60;
+        }
+        
+        .incorrect {
+            color: #e74c3c;
+        }
+        
+        .level-selector {
+            margin-bottom: 3vh;
+        }
+        
+        .level-btn {
+            margin: 0 1vw;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .level-btn.easy {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+        }
+        
+        .level-btn.medium {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+        }
+        
+        .level-btn.hard {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+        }
+        
+        .level-btn.active {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .progress-bar {
+            position: absolute;
+            bottom: 2vh;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80vw;
+            height: 1vh;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        @media (max-height: 600px) {
+            .main-content {
+                padding: 2vh 4vw;
+            }
+            .question {
+                margin-bottom: 2vh;
+            }
+            .buttons {
+                margin-top: 2vh;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                font-size: 1rem;
+                padding: 0 2vw;
+            }
+            .score-timer {
+                gap: 2vw;
+            }
+            .answer-input {
+                width: 60vw;
+            }
+            .buttons {
+                gap: 1vw;
+            }
+            .btn {
+                min-width: 100px;
+                padding: 1vh 2vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <div class="title">🎯 Tabelline by Maestro Alberto</div>
+            <div class="score-timer">
+                <div>⭐ <span id="score">0</span></div>
+                <div>⏱️ <span id="timer">60</span>s</div>
+                <div style="font-size: 0.8em;">📚 <span id="questionProgress">0</span>/15</div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="level-selector">
+                <button class="btn level-btn easy" onclick="setLevel(1)">Facile (1-3)</button>
+                <button class="btn level-btn medium" onclick="setLevel(2)">Medio (4-6)</button>
+                <button class="btn level-btn hard" onclick="setLevel(3)">Difficile (7-9)</button>
+            </div>
+            
+            <div class="question" id="question">5 × 7 = ?</div>
+            
+            <div class="input-container">
+                <input type="number" class="answer-input" id="answerInput" placeholder="?" autocomplete="off">
+            </div>
+            
+            <div class="buttons">
+                <button class="btn btn-primary" onclick="checkAnswer()">✓ Verifica</button>
+            </div>
+            
+            <div class="feedback" id="feedback"></div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Data di scadenza del gioco
+        const EXPIRATION_DATE = new Date('2026-01-01');
+        
+        let currentLevel = 1;
+        let score = 0;
+        let timeLeft = 60;
+        let currentQuestion = {};
+        let gameActive = false;
+        let gameStarted = false;
+        let questionsAnswered = 0;
+        const totalQuestions = 15;
+        let sessionUsedQuestions = new Set();
+        let allTimeUsedQuestions = new Map();
+        
+        function isGameExpired() {
+            const currentDate = new Date();
+            return currentDate >= EXPIRATION_DATE;
+        }
+        
+        function disableExpiredGame() {
+            document.querySelectorAll('.level-btn').forEach(btn => {
+                btn.disabled = true;
+                btn.style.opacity = '0.5';
+                btn.style.cursor = 'not-allowed';
+            });
+            
+            document.getElementById('answerInput').disabled = true;
+            document.querySelector('.btn-primary').disabled = true;
+            document.querySelector('.btn-primary').style.opacity = '0.5';
+            document.querySelector('.btn-primary').style.cursor = 'not-allowed';
+            
+            document.getElementById('question').textContent = '⏰ GIOCO SCADUTO';
+            document.getElementById('question').style.color = '#e74c3c';
+            document.getElementById('feedback').textContent = '🚫 Questo gioco non è più disponibile dal 1° Gennaio 2026';
+            document.getElementById('feedback').className = 'feedback incorrect';
+            document.getElementById('feedback').style.fontSize = '1.5rem';
+            
+            document.querySelector('.title').textContent = '❌ Tabelline - SCADUTO';
+        }
+        
+        function setLevel(level) {
+            if (isGameExpired()) {
+                return;
+            }
+            
+            currentLevel = level;
+            
+            document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('active'));
+            
+            const buttons = document.querySelectorAll('.level-btn');
+            buttons[level - 1].classList.add('active');
+            
+            if (!allTimeUsedQuestions.has(level)) {
+                allTimeUsedQuestions.set(level, new Set());
+            }
+            
+            if (!gameStarted) {
+                gameStarted = true;
+                gameActive = true;
+                document.getElementById('answerInput').disabled = false;
+                startTimer();
+            } else {
+                questionsAnswered = 0;
+                score = 0;
+                updateDisplay();
+            }
+            
+            updateStats();
+            newQuestion();
+            
+            if (gameStarted && !gameActive) {
+                resetGame();
+            }
+        }
+        
+        function getAllPossibleQuestions(level) {
+            const range = getNumberRange(level);
+            const questions = new Set();
+            
+            for (let base of range.baseNumbers) {
+                for (let multiplier of range.multipliers) {
+                    questions.add(createQuestionKey(base, multiplier));
+                }
+            }
+            return questions;
+        }
+        
+        function updateStats() {
+            const usedQuestions = allTimeUsedQuestions.get(currentLevel) || new Set();
+            const totalQuestions = getAllPossibleQuestions(currentLevel);
+            
+            document.getElementById('questionProgress').textContent = questionsAnswered;
+        }
+        
+        function resetLevelQuestions() {
+            if (allTimeUsedQuestions.has(currentLevel)) {
+                allTimeUsedQuestions.get(currentLevel).clear();
+            }
+            updateStats();
+            newQuestion();
+        }
+        
+        function createQuestionKey(num1, num2) {
+            const a = Math.min(num1, num2);
+            const b = Math.max(num1, num2);
+            return `${a}x${b}`;
+        }
+        
+        function getNumberRange(level) {
+            switch(level) {
+                case 1: return { baseNumbers: [1, 2, 3], multipliers: [1, 2, 3, 4, 5, 6, 7] };
+                case 2: return { baseNumbers: [4, 5, 6], multipliers: [1, 2, 3, 4, 5, 6, 7] };
+                case 3: return { baseNumbers: [7, 8, 9], multipliers: [1, 2, 3, 4, 5, 6, 7] };
+                default: return { baseNumbers: [1, 2, 3], multipliers: [1, 2, 3, 4, 5, 6, 7] };
+            }
+        }
+        
+        function generateRandomQuestion() {
+            const range = getNumberRange(currentLevel);
+            
+            if (!allTimeUsedQuestions.has(currentLevel)) {
+                allTimeUsedQuestions.set(currentLevel, new Set());
+            }
+            
+            const usedQuestions = allTimeUsedQuestions.get(currentLevel);
+            const allPossibleQuestions = getAllPossibleQuestions(currentLevel);
+            
+            if (usedQuestions.size >= allPossibleQuestions.size) {
+                console.log(`Tutte le ${allPossibleQuestions.size} domande del livello ${currentLevel} sono state viste!`);
+                usedQuestions.clear();
+                updateStats();
+            }
+            
+            const maxAttempts = 1000;
+            let attempts = 0;
+            
+            while (attempts < maxAttempts) {
+                const baseNumber = range.baseNumbers[Math.floor(Math.random() * range.baseNumbers.length)];
+                const multiplier = range.multipliers[Math.floor(Math.random() * range.multipliers.length)];
+                
+                const questionKey = createQuestionKey(baseNumber, multiplier);
+                
+                if (!usedQuestions.has(questionKey)) {
+                    usedQuestions.add(questionKey);
+                    updateStats();
+                    return {
+                        num1: baseNumber,
+                        num2: multiplier,
+                        answer: baseNumber * multiplier
+                    };
+                }
+                attempts++;
+            }
+            
+            console.log("Fallback: resetto domande del livello");
+            usedQuestions.clear();
+            updateStats();
+            return generateRandomQuestion();
+        }
+        
+        function resetGame() {
+            score = 0;
+            timeLeft = 60;
+            questionsAnswered = 0;
+            gameActive = true;
+            updateDisplay();
+            updateStats();
+        }
+        
+        function newQuestion() {
+            if (!gameActive) return;
+            
+            currentQuestion = generateRandomQuestion();
+            
+            document.getElementById('question').textContent = `${currentQuestion.num1} × ${currentQuestion.num2} = ?`;
+            document.getElementById('answerInput').value = '';
+            document.getElementById('answerInput').focus();
+            document.getElementById('feedback').textContent = '';
+            
+            updateProgress();
+        }
+        
+        function checkAnswer() {
+            if (isGameExpired()) {
+                return;
+            }
+            
+            if (!gameActive || !gameStarted) return;
+            
+            const userAnswer = parseInt(document.getElementById('answerInput').value);
+            const feedback = document.getElementById('feedback');
+            
+            if (isNaN(userAnswer)) {
+                feedback.textContent = '⚠️ Inserisci un numero!';
+                feedback.className = 'feedback incorrect';
+                return;
+            }
+            
+            questionsAnswered++;
+            updateStats();
+            
+            if (userAnswer === currentQuestion.answer) {
+                score += 10;
+                feedback.textContent = '🎉 Corretto! Bravo!';
+                feedback.className = 'feedback correct';
+                
+                setTimeout(() => {
+                    if (questionsAnswered < totalQuestions) {
+                        newQuestion();
+                    } else {
+                        endGame();
+                    }
+                }, 1500);
+            } else {
+                feedback.textContent = `❌ Sbagliato! La risposta è ${currentQuestion.answer}`;
+                feedback.className = 'feedback incorrect';
+            }
+            
+            updateDisplay();
+            
+            if (questionsAnswered >= totalQuestions) {
+                setTimeout(endGame, 2000);
+            }
+        }
+        
+        function updateDisplay() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('timer').textContent = timeLeft;
+        }
+        
+        function updateProgress() {
+            const progress = (questionsAnswered / totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+        
+        function startTimer() {
+            const timer = setInterval(() => {
+                timeLeft--;
+                updateDisplay();
+                
+                if (timeLeft <= 0 || !gameActive) {
+                    clearInterval(timer);
+                    if (gameActive) endGame();
+                }
+            }, 1000);
+        }
+        
+        function endGame() {
+            gameActive = false;
+            const feedback = document.getElementById('feedback');
+            const percentage = Math.round((score / (totalQuestions * 10)) * 100);
+            
+            let message = `🏁 Gioco finito! Punteggio: ${score}/${totalQuestions * 10} (${percentage}%)`;
+            
+            if (percentage >= 90) message += ' 🌟 ECCELLENTE!';
+            else if (percentage >= 70) message += ' 👍 BRAVO!';
+            else if (percentage >= 50) message += ' 📚 Continua a esercitarti!';
+            else message += ' 💪 Non mollare, riprova!';
+            
+            feedback.textContent = message;
+            feedback.className = 'feedback';
+            
+            setTimeout(() => {
+                const playAgain = confirm('Vuoi giocare ancora?');
+                if (playAgain) {
+                    gameStarted = false;
+                    gameActive = false;
+                    score = 0;
+                    questionsAnswered = 0;
+                    timeLeft = 60;
+                    updateDisplay();
+                    updateStats();
+                    
+                    document.getElementById('feedback').textContent = '👆 Clicca su un bottone sopra per iniziare a giocare';
+                    document.getElementById('feedback').className = 'feedback';
+                    document.getElementById('answerInput').disabled = true;
+                    document.getElementById('answerInput').value = '';
+                    
+                    document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('active'));
+                }
+            }, 3000);
+        }
+        
+        document.getElementById('answerInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+        
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+        
+        allTimeUsedQuestions.set(1, new Set());
+        updateStats();
+        
+        if (isGameExpired()) {
+            disableExpiredGame();
+        } else {
+            document.getElementById('feedback').textContent = '👆 Clicca su un bottone sopra per iniziare a giocare';
+            document.getElementById('feedback').className = 'feedback';
+            
+            document.getElementById('answerInput').disabled = true;
+        }
+        
+        document.getElementById('questionProgress').textContent = '0';
+    </script>
+</body>
+</html>

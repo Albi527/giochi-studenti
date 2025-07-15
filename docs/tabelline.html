@@ -229,6 +229,7 @@
                 <div>⭐ <span id="score">0</span></div>
                 <div>⏱️ <span id="timer">60</span>s</div>
                 <div style="font-size: 0.8em;">📚 <span id="questionProgress">0</span>/15</div>
+                <div style="font-size: 0.8em; cursor: pointer;" onclick="toggleSound()" id="soundToggle">🔊</div>
             </div>
         </div>
         
@@ -261,65 +262,169 @@
         // Data di scadenza del gioco
         const EXPIRATION_DATE = new Date('2026-01-01');
         
+        // Sistema audio
+        let audioContext;
+        let soundEnabled = true;
+        
+        // Inizializza il contesto audio
+        function initAudio() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            } catch (e) {
+                console.log('Audio non supportato');
+                soundEnabled = false;
+            }
+        }
+        
+        // Funzione per creare e riprodurre suoni
+        function playSound(frequency, duration, type = 'sine', volume = 0.1) {
+            if (!soundEnabled || !audioContext) return;
+            
+            try {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+                oscillator.type = type;
+                
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.01);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + duration);
+            } catch (e) {
+                console.log('Errore riproduzione audio:', e);
+            }
+        }
+        
+        // Suoni specifici del gioco
+        function playCorrectSound() {
+            // Suono di successo: accordo maggiore ascendente
+            setTimeout(() => playSound(523.25, 0.15, 'triangle', 0.15), 0);   // Do
+            setTimeout(() => playSound(659.25, 0.15, 'triangle', 0.15), 100); // Mi
+            setTimeout(() => playSound(783.99, 0.25, 'triangle', 0.15), 200); // Sol
+        }
+        
+        function playIncorrectSound() {
+            // Suono di errore: suono discendente
+            setTimeout(() => playSound(400, 0.1, 'sawtooth', 0.1), 0);
+            setTimeout(() => playSound(300, 0.1, 'sawtooth', 0.1), 100);
+            setTimeout(() => playSound(200, 0.3, 'sawtooth', 0.1), 200);
+        }
+        
+        function playClickSound() {
+            // Suono di click: breve beep
+            playSound(800, 0.1, 'square', 0.05);
+        }
+        
+        function playGameEndSound() {
+            // Fanfara di fine gioco
+            const melody = [523.25, 659.25, 783.99, 1046.5]; // Do, Mi, Sol, Do alto
+            melody.forEach((freq, index) => {
+                setTimeout(() => playSound(freq, 0.3, 'triangle', 0.12), index * 150);
+            });
+        }
+        
+        function playWarningSound() {
+            // Suono di avvertimento per gli ultimi 10 secondi
+            playSound(1000, 0.1, 'triangle', 0.08);
+        }
+        
+        function playLevelSelectSound() {
+            // Suono per selezione livello
+            playSound(600, 0.15, 'sine', 0.1);
+        }
+        
+        // Funzione per attivare/disattivare i suoni
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const toggle = document.getElementById('soundToggle');
+            toggle.textContent = soundEnabled ? '🔊' : '🔇';
+            
+            // Riproduce un suono di test quando si riattiva
+            if (soundEnabled) {
+                playClickSound();
+            }
+        }
+        
         let currentLevel = 1;
         let score = 0;
         let timeLeft = 60;
         let currentQuestion = {};
-        let gameActive = false;
-        let gameStarted = false;
+        let gameActive = false; // Inizia come false
+        let gameStarted = false; // Nuovo flag per tracciare se il gioco è iniziato
         let questionsAnswered = 0;
         const totalQuestions = 15;
-        let sessionUsedQuestions = new Set();
-        let allTimeUsedQuestions = new Map();
+        let sessionUsedQuestions = new Set(); // Tiene traccia di TUTTE le domande usate nella sessione
+        let allTimeUsedQuestions = new Map(); // Traccia le domande per livello durante tutta la sessione
         
+        // Funzione per controllare se il gioco è scaduto
         function isGameExpired() {
             const currentDate = new Date();
             return currentDate >= EXPIRATION_DATE;
         }
         
+        // Funzione per disabilitare il gioco quando è scaduto
         function disableExpiredGame() {
+            // Disabilita tutti i bottoni del livello
             document.querySelectorAll('.level-btn').forEach(btn => {
                 btn.disabled = true;
                 btn.style.opacity = '0.5';
                 btn.style.cursor = 'not-allowed';
             });
             
+            // Disabilita input e bottone verifica
             document.getElementById('answerInput').disabled = true;
             document.querySelector('.btn-primary').disabled = true;
             document.querySelector('.btn-primary').style.opacity = '0.5';
             document.querySelector('.btn-primary').style.cursor = 'not-allowed';
             
+            // Mostra messaggio di scadenza
             document.getElementById('question').textContent = '⏰ GIOCO SCADUTO';
             document.getElementById('question').style.color = '#e74c3c';
             document.getElementById('feedback').textContent = '🚫 Questo gioco non è più disponibile dal 1° Gennaio 2026';
             document.getElementById('feedback').className = 'feedback incorrect';
             document.getElementById('feedback').style.fontSize = '1.5rem';
             
+            // Modifica il titolo
             document.querySelector('.title').textContent = '❌ Tabelline - SCADUTO';
         }
         
         function setLevel(level) {
+            // Controlla se il gioco è scaduto
             if (isGameExpired()) {
-                return;
+                return; // Non fare nulla se il gioco è scaduto
             }
+            
+            // Suono di selezione livello
+            playLevelSelectSound();
             
             currentLevel = level;
             
+            // Remove active class from all buttons
             document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('active'));
             
+            // Add active class to selected button
             const buttons = document.querySelectorAll('.level-btn');
             buttons[level - 1].classList.add('active');
             
+            // Inizializza il set per questo livello se non esiste
             if (!allTimeUsedQuestions.has(level)) {
                 allTimeUsedQuestions.set(level, new Set());
             }
             
+            // Se è la prima volta che si sceglie un livello, inizia il gioco
             if (!gameStarted) {
                 gameStarted = true;
                 gameActive = true;
-                document.getElementById('answerInput').disabled = false;
+                document.getElementById('answerInput').disabled = false; // Riabilita input
                 startTimer();
             } else {
+                // Se si cambia livello durante una partita, resetta le domande risposte
                 questionsAnswered = 0;
                 score = 0;
                 updateDisplay();
@@ -328,6 +433,7 @@
             updateStats();
             newQuestion();
             
+            // Se il gioco era già iniziato, resetta solo il punteggio ma mantieni il timer
             if (gameStarted && !gameActive) {
                 resetGame();
             }
@@ -349,6 +455,7 @@
             const usedQuestions = allTimeUsedQuestions.get(currentLevel) || new Set();
             const totalQuestions = getAllPossibleQuestions(currentLevel);
             
+            // Aggiorna il contatore del progresso della partita
             document.getElementById('questionProgress').textContent = questionsAnswered;
         }
         
@@ -378,6 +485,7 @@
         function generateRandomQuestion() {
             const range = getNumberRange(currentLevel);
             
+            // Inizializza il set per questo livello se non esiste
             if (!allTimeUsedQuestions.has(currentLevel)) {
                 allTimeUsedQuestions.set(currentLevel, new Set());
             }
@@ -385,8 +493,10 @@
             const usedQuestions = allTimeUsedQuestions.get(currentLevel);
             const allPossibleQuestions = getAllPossibleQuestions(currentLevel);
             
+            // Se abbiamo visto tutte le domande possibili per questo livello
             if (usedQuestions.size >= allPossibleQuestions.size) {
                 console.log(`Tutte le ${allPossibleQuestions.size} domande del livello ${currentLevel} sono state viste!`);
+                // Reset automatico per questo livello
                 usedQuestions.clear();
                 updateStats();
             }
@@ -395,11 +505,14 @@
             let attempts = 0;
             
             while (attempts < maxAttempts) {
+                // Scegli un numero base casuale dalla lista
                 const baseNumber = range.baseNumbers[Math.floor(Math.random() * range.baseNumbers.length)];
+                // Scegli un moltiplicatore casuale dalla lista
                 const multiplier = range.multipliers[Math.floor(Math.random() * range.multipliers.length)];
                 
                 const questionKey = createQuestionKey(baseNumber, multiplier);
                 
+                // Se questa domanda non è mai stata usata per questo livello
                 if (!usedQuestions.has(questionKey)) {
                     usedQuestions.add(questionKey);
                     updateStats();
@@ -412,6 +525,7 @@
                 attempts++;
             }
             
+            // Fallback: se per qualche motivo non troviamo domande, resettiamo
             console.log("Fallback: resetto domande del livello");
             usedQuestions.clear();
             updateStats();
@@ -423,13 +537,16 @@
             timeLeft = 60;
             questionsAnswered = 0;
             gameActive = true;
+            // NON resettiamo più sessionUsedQuestions - manteniamo la memoria!
             updateDisplay();
-            updateStats();
+            updateStats(); // Aggiorna anche il contatore
+            // Non richiamare startTimer qui perché già chiamato in setLevel
         }
         
         function newQuestion() {
             if (!gameActive) return;
             
+            // Genera una nuova domanda che non è mai stata usata
             currentQuestion = generateRandomQuestion();
             
             document.getElementById('question').textContent = `${currentQuestion.num1} × ${currentQuestion.num2} = ?`;
@@ -441,8 +558,9 @@
         }
         
         function checkAnswer() {
+            // Controlla se il gioco è scaduto
             if (isGameExpired()) {
-                return;
+                return; // Non fare nulla se il gioco è scaduto
             }
             
             if (!gameActive || !gameStarted) return;
@@ -453,17 +571,20 @@
             if (isNaN(userAnswer)) {
                 feedback.textContent = '⚠️ Inserisci un numero!';
                 feedback.className = 'feedback incorrect';
+                playIncorrectSound();
                 return;
             }
             
             questionsAnswered++;
-            updateStats();
+            updateStats(); // Aggiorna il contatore
             
             if (userAnswer === currentQuestion.answer) {
                 score += 10;
                 feedback.textContent = '🎉 Corretto! Bravo!';
                 feedback.className = 'feedback correct';
+                playCorrectSound();
                 
+                // Auto-advance after correct answer
                 setTimeout(() => {
                     if (questionsAnswered < totalQuestions) {
                         newQuestion();
@@ -474,6 +595,7 @@
             } else {
                 feedback.textContent = `❌ Sbagliato! La risposta è ${currentQuestion.answer}`;
                 feedback.className = 'feedback incorrect';
+                playIncorrectSound();
             }
             
             updateDisplay();
@@ -498,6 +620,11 @@
                 timeLeft--;
                 updateDisplay();
                 
+                // Suono di avvertimento negli ultimi 10 secondi
+                if (timeLeft <= 10 && timeLeft > 0 && gameActive) {
+                    playWarningSound();
+                }
+                
                 if (timeLeft <= 0 || !gameActive) {
                     clearInterval(timer);
                     if (gameActive) endGame();
@@ -509,6 +636,9 @@
             gameActive = false;
             const feedback = document.getElementById('feedback');
             const percentage = Math.round((score / (totalQuestions * 10)) * 100);
+            
+            // Suono di fine gioco
+            playGameEndSound();
             
             let message = `🏁 Gioco finito! Punteggio: ${score}/${totalQuestions * 10} (${percentage}%)`;
             
@@ -523,30 +653,47 @@
             setTimeout(() => {
                 const playAgain = confirm('Vuoi giocare ancora?');
                 if (playAgain) {
-                    gameStarted = false;
+                    gameStarted = false; // Reset per permettere di scegliere di nuovo il livello
                     gameActive = false;
                     score = 0;
                     questionsAnswered = 0;
                     timeLeft = 60;
                     updateDisplay();
-                    updateStats();
+                    updateStats(); // Reset del contatore
                     
+                    // Ripristina messaggio iniziale
                     document.getElementById('feedback').textContent = '👆 Clicca su un bottone sopra per iniziare a giocare';
                     document.getElementById('feedback').className = 'feedback';
-                    document.getElementById('answerInput').disabled = true;
-                    document.getElementById('answerInput').value = '';
+                    document.getElementById('answerInput').disabled = true; // Disabilita di nuovo l'input
+                    document.getElementById('answerInput').value = ''; // Pulisci l'input
                     
+                    // Rimuovi classe active da tutti i bottoni
                     document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('active'));
                 }
             }, 3000);
         }
         
+        // Event listeners
         document.getElementById('answerInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 checkAnswer();
             }
         });
         
+        // Aggiungi suono di click al bottone verifica
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('btn')) {
+                playClickSound();
+            }
+        });
+        
+        // Inizializza l'audio al primo click dell'utente (necessario per alcuni browser)
+        document.addEventListener('click', function initAudioOnce() {
+            initAudio();
+            document.removeEventListener('click', initAudioOnce);
+        }, { once: true });
+        
+        // Prevent zoom on double tap for mobile
         let lastTouchEnd = 0;
         document.addEventListener('touchend', function (event) {
             const now = (new Date()).getTime();
@@ -556,18 +703,23 @@
             lastTouchEnd = now;
         }, false);
         
-        allTimeUsedQuestions.set(1, new Set());
+        // Initialize game
+        allTimeUsedQuestions.set(1, new Set()); // Inizializza il livello 1
         updateStats();
         
+        // Controlla se il gioco è scaduto all'avvio
         if (isGameExpired()) {
             disableExpiredGame();
         } else {
+            // Mostra messaggio iniziale solo se il gioco non è scaduto
             document.getElementById('feedback').textContent = '👆 Clicca su un bottone sopra per iniziare a giocare';
             document.getElementById('feedback').className = 'feedback';
             
+            // Disabilita input finché non si sceglie un livello
             document.getElementById('answerInput').disabled = true;
         }
         
+        // Inizializza il contatore
         document.getElementById('questionProgress').textContent = '0';
     </script>
 </body>

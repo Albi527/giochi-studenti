@@ -1,0 +1,75 @@
+{
+  "games": [
+    {
+      "id": "matematica",
+      "title": "Matematica sul Divano",
+      "description": "Addizioni, sottrazioni e tabelline progressive con livelli crescenti di difficoltà. Audio interattivo e PWA installabile!",
+      "icon": "🧮",
+      "file": "matematica.html",
+      "category": "matematica",
+      "buttonText": "🚀 Gioca Ora",
+      "buttonColor": "matematica",
+      "active": true,
+      "featured": true
+    },
+    {
+      "id": "tabelline",
+      "title": "Sfida Tabelline",
+      "description": "Timer di 60 secondi, 3 livelli di difficoltà e sistema anti-ripetizione. Perfetto per allenarsi con le tabelline!",
+      "icon": "🎯",
+      "file": "tabelline.html",
+      "category": "matematica",
+      "buttonText": "⚡ Inizia Sfida",
+      "buttonColor": "tabelline",
+      "active": true,
+      "featured": true
+    },
+    {
+      "id": "coming-soon-1",
+      "title": "Altro in arrivo",
+      "description": "Nuovi giochi educativi e attività didattiche sono in fase di sviluppo. Resta sintonizzato per le prossime novità!",
+      "icon": "🎲",
+      "file": null,
+      "category": "futuro",
+      "buttonText": "🔜 Presto",
+      "buttonColor": "coming-soon",
+      "active": false,
+      "featured": false
+    }
+  ],
+  "categories": [
+    {
+      "id": "matematica",
+      "name": "Matematica",
+      "icon": "🔢",
+      "color": "#4CAF50"
+    },
+    {
+      "id": "italiano",
+      "name": "Italiano",
+      "icon": "📚",
+      "color": "#2196F3"
+    },
+    {
+      "id": "scienze",
+      "name": "Scienze",
+      "icon": "🔬",
+      "color": "#FF9800"
+    },
+    {
+      "id": "futuro",
+      "name": "In Sviluppo",
+      "icon": "🚀",
+      "color": "#9C27B0"
+    }
+  ],
+  "settings": {
+    "title": "Giochi Educativi",
+    "subtitle": "by Maestro Alberto",
+    "version": "1.0.0",
+    "lastUpdated": "2025-01-15",
+    "autoDetectGames": true,
+    "showInstallButton": true,
+    "showOfflineIndicator": true
+  }
+}

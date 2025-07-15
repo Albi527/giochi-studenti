@@ -52,52 +52,6 @@
       }
     },
     {
-      "id": "divisioni",
-      "title": "Maestro delle Divisioni",
-      "description": "Timer di 90 secondi, gestione del resto e 3 livelli di difficoltà per la quarta elementare. Sistema audio e feedback educativo!",
-      "icon": "🔢",
-      "file": "divisioni.html",
-      "category": "matematica",
-      "buttonText": "🎯 Inizia Divisioni",
-      "buttonColor": "divisioni",
-      "active": true,
-      "featured": true,
-      "version": "1.0.0",
-      "lastUpdated": "2025-07-15",
-      "features": [
-        "Gestione intelligente del resto",
-        "3 livelli calibrati per quarta elementare",
-        "Timer 90 secondi ottimizzato per divisioni",
-        "Sistema audio con feedback educativo",
-        "Anti-ripetizione domande progressive",
-        "Design responsive arancione/rosso",
-        "Sistema di scadenza automatica"
-      ],
-      "educational": {
-        "targetAge": "8-11 anni",
-        "subject": "Matematica - Divisioni",
-        "skills": ["Divisioni", "Gestione resto", "Calcolo mentale", "Problem solving"],
-        "gradeLevel": "Quarta elementare"
-      },
-      "technical": {
-        "audioSupport": true,
-        "offlineCapable": true,
-        "mobileOptimized": true,
-        "expirationDate": "2026-01-01",
-        "dualInput": true
-      },
-      "stats": {
-        "questionsPerGame": 12,
-        "maxScore": 120,
-        "gameDuration": "90 secondi"
-      },
-      "levels": {
-        "easy": "Dividendi 10-40, divisori 2-5",
-        "medium": "Dividendi 15-60, divisori 2-8", 
-        "hard": "Dividendi 20-100, divisori 2-10"
-      }
-    },
-    {
       "id": "coming-soon-1",
       "title": "Altro in arrivo",
       "description": "Nuovi giochi educativi e attività didattiche sono in fase di sviluppo. Resta sintonizzato per le prossime novità!",
@@ -139,7 +93,7 @@
   "settings": {
     "title": "Giochi Educativi",
     "subtitle": "by Maestro Alberto",
-    "version": "1.2.0",
+    "version": "1.1.0",
     "lastUpdated": "2025-07-15",
     "autoDetectGames": true,
     "showInstallButton": true,

@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+<meta name="theme-color" content="#667eea"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="Matematica sul Divano"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="description" content="Gioco educativo di matematica per bambini - Addizioni, Sottrazioni e Tabelline"/>
+
+<title>Matematica sul Divano by Maestro Alberto</title>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIk1hdGVtYXRpY2Egc3VsIERpdmFubyIsCiAgInNob3J0X25hbWUiOiAiTWF0ZW1hdGljYSIsCiAgImRlc2NyaXB0aW9uIjogIkdpb2NvIGVkdWNhdGl2byBkaSBtYXRlbWF0aWNhIHBlciBiYW1iaW5pIC0gQWRkaXppb25pLCBTb3R0cmF6aW9uaSBlIFRhYmVsbGluZSIsCiAgInN0YXJ0X3VybCI6ICIuLyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzY2N2VlYSIsCiAgInRoZW1lX2NvbG9yIjogIiM2NjdlZWEiLAogICJvcmllbnRhdGlvbiI6ICJwb3J0cmFpdCIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjNhV1IwYUQwaU5USTRJaUJvWldsbmFIUTlJalV5T0NJZ2RtbGxkMEp2ZUQwaU1DQXdJRFV5T0NBMU1qZ2lJR1pwYkd3OUluVnliQ2doSTJOdmJHeGxZM1JwYjI0cElpQjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaVBnbzhaR1ZtY3o0OGJHbHVaV0ZzUjNKaFpHbGxiblFnYVdROUluQnlhVzFoY25raUlIZ3hQU0l3SlNJZ2VUSTlJakV3TUNVaUlIZ3lQU0l3SlNJZ2VUSXlQU0l3SlNJK1BITjBiM0JnYjJabWMyVjBQU0l3SlNJZ2MzUjViR1U5SW5OMGIzQXRZMjlzYjNJNklpTm1aalpzWWpaaUlpSXZQand2YzNSdmNENDhMM04wYjNBK1BDOXNhVzVsWVhKSGNtRmthV1Z1ZEQ0OEwyUmxabk0rUEhKbFkzUWdkMmxrZEdnOUlqVXlPQ0lnYUdWcFoyaDBQU0kxTWpnaUlHWnBiR3c5SW5WeWJDZ2pjSEpwYldGeWVTa2lJSEo0UFNJeE1DSWdjbms5SWpFd0lpSXZQand2YzNabVBnPT0iLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9LAogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjNhV1IwYUQwaU1qVTJJaUJvWldsbmFIUTlJalUxTWlJZ2RtbGxkMEp2ZUQwaU1DQXdJRFV4TWlBMU1USWlJR1pwYkd3OUluVnliQ2doSTJOdmJHeGxZM1JwYjI0cElpQjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaVBnbzhkR1Y0ZENCNFBTSTFNaVVpSUhrOUlqVXdKU0lnWkc5dGFXNWhiblF0WW1GelpXeHBibVU5SWcwZ2JXbGtaR3hsWUQxaU9pTnpaVzR1TldaaExqOWdhVzVhSUhWaVpEWmpNQ0ZwZG1KaGJGUlNiMnRGVDJNdElHRWlJSFI0ZEMxaGJtTm9iM0k5SW0xcFpHUnNaU0lnWm1sc2JEMGlJeUptWm01bVpXVWlJR1p2Ym5RdGMyVnlhV1l0YzJGdWN5MXpaWEpwWmkxbVlXMXBiSGs5SW05d2RXUXVJR1p2Ym5RdGMybDZaVDBpTXpwbElpSStUV0ZPUkVOaVBDOTBlSFErUEM5emRtYytQQT09IiwKICAgICAgInNpemVzIjogIjI1NngyNTYiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfSwKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlOREE0SWlCb1pXbG5hSFE5SWpRd09DSWdkbWxsZDBKdmVEMGlNQ0F3SURRNE9DQTBNRGdpSUdacGJHdzlJblZ5YkNnaFkyOXNiR1ZqZEdsdmJpa2lJSGh0Ykc1elBTSm9kSFJ3T2k4dmQzZDNMbmN6TG05eVp5OHlNREF3TDNOMlp5SStQSFJsZUhRZ2VEMGlOakFsSWlCNVBTSTFNQ1VpSUdSdmJXbHVZVzUwTFdKaGMyVnNhVzVsUFNKdGFXUmtiR1VpSUhSNGRDMWhibU5vYjNJOUltMXBaR1JzWlNJZ1ptbHNiRDBpSTJabU5tWm1aU0lnWm05dWRDMXpaWEpwWmkxellXNXpMWE5sY21sbUxXWmhiV2xzZVQwaWIzQjFaSElpSUdadmJuUXRjMmw2WlQwaU1qcGxJajVOWVU1RVEySThaM2RJUEM5MFpYaDBQand2YzNabFBnPT0iLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXQp9"/>
+
+<!-- Apple Touch Icons -->
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9InVybCgjcHJpbWFyeSkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJwcmltYXJ5IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjNjY3ZWVhIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjNzY0YmEyIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIGZpbGw9InVybCgjcHJpbWFyeSkiIHJ4PSIxMCIgcnk9IjEwIi8+PC9zdmc+"/>
+
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #ff6b6b, #ffa500);
+            color: white;
+            text-align: center;
+            padding: min(3vh, 20px) min(3vw, 20px);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .header::before {
+            content: '🏠';
+            position: absolute;
+            left: min(3vw, 20px);
+            font-size: min(4vw, 2em);
+        }
+
+        .header::after {
+            content: '📚';
+            position: absolute;
+            right: min(3vw, 20px);
+            font-size: min(4vw, 2em);
+        }
+
+        h1 {
+            font-size: min(6vw, 2.5em);
+            margin-bottom: min(1vh, 10px);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: min(3vw, 1.2em);
+            opacity: 0.9;
+        }
+
+        .game-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: min(4vh, 30px) min(4vw, 30px);
+            overflow: hidden;
+        }
+
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(40vw, 200px), 1fr));
+            gap: min(3vw, 20px);
+            margin-bottom: min(4vh, 30px);
+            flex-shrink: 0;
+        }
+
+        .menu-btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: min(3vh, 20px) min(2vw, 15px);
+            border-radius: min(2vw, 15px);
+            font-size: min(3vw, 1.3em);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            min-height: min(8vh, 60px);
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .menu-btn.sottrazione {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+        }
+
+        .menu-btn.tabelline {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+        }
+
+        .install-btn {
+            background: linear-gradient(45deg, #17a2b8, #138496);
+            margin-top: 10px;
+        }
+
+        .install-btn:hover {
+            background: linear-gradient(45deg, #138496, #117a8b);
+        }
+
+        .game-screen {
+            display: none;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .game-screen.hidden {
+            display: none;
+        }
+
+        .game-screen.active {
+            display: flex;
+        }
+
+        .level-info {
+            background: #f8f9fa;
+            padding: min(2vh, 15px);
+            border-radius: min(1.5vw, 10px);
+            margin-bottom: min(3vh, 20px);
+            border-left: 5px solid #007bff;
+            flex-shrink: 0;
+        }
+
+        .level-info h2 {
+            font-size: min(4vw, 1.5em);
+            margin-bottom: min(1vh, 8px);
+        }
+
+        .level-info p {
+            font-size: min(3vw, 1.1em);
+        }
+
+        .question {
+            font-size: min(8vw, 3em);
+            margin: min(4vh, 30px) 0;
+            color: #333;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+
+        .answer-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: min(2vw, 15px);
+            margin: min(3vh, 20px) 0;
+            flex-shrink: 0;
+        }
+
+        .answer-input {
+            font-size: min(5vw, 2em);
+            padding: min(2vh, 15px) min(2vw, 15px);
+            border: 3px solid #ddd;
+            border-radius: min(1.5vw, 10px);
+            text-align: center;
+            width: min(20vw, 150px);
+            max-width: 150px;
+        }
+
+        .answer-input:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 10px rgba(0,123,255,0.3);
+        }
+
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: min(2vh, 15px) min(4vw, 30px);
+            border-radius: min(1.5vw, 10px);
+            font-size: min(3vw, 1.2em);
+            cursor: pointer;
+            margin: min(1vh, 10px);
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .btn.back {
+            background: #6c757d;
+        }
+
+        .btn.back:hover {
+            background: #545b62;
+        }
+
+        .progress {
+            background: #e9ecef;
+            height: min(3vh, 20px);
+            border-radius: min(1.5vh, 10px);
+            margin: min(2vh, 15px) 0;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .progress-bar {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            height: 100%;
+            transition: width 0.5s ease;
+            border-radius: min(1.5vh, 10px);
+        }
+
+        .feedback {
+            margin: min(3vh, 20px) 0;
+            padding: min(3vh, 20px);
+            border-radius: min(1.5vw, 10px);
+            font-size: min(3vw, 1.2em);
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        .trophy {
+            font-size: min(12vw, 4em);
+            margin: min(3vh, 20px) 0;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .level-complete {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            padding: min(4vh, 30px);
+            border-radius: min(2vw, 15px);
+            margin: min(3vh, 20px) 0;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            flex-shrink: 0;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: min(2vw, 15px);
+            margin: min(3vh, 20px) 0;
+            flex-shrink: 0;
+        }
+
+        .stat-item {
+            background: #f8f9fa;
+            padding: min(2vh, 15px);
+            border-radius: min(1.5vw, 10px);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: min(5vw, 2em);
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .stat-label {
+            font-size: min(2.5vw, 1em);
+            margin-top: min(1vh, 5px);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .sound-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2em;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .sound-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .emoji-decoration {
+            font-size: min(5vw, 2em);
+            margin: 0 min(1vw, 10px);
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: min(2vw, 15px);
+            flex-wrap: wrap;
+            margin-top: auto;
+            padding-top: min(2vh, 15px);
+        }
+
+        .install-notification {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+            margin: 10px;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .offline-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            z-index: 1000;
+            display: none;
+        }
+
+        /* Responsive adjustments for very small screens */
+        @media (max-height: 500px) {
+            .header {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+                margin-bottom: 5px;
+            }
+            
+            .subtitle {
+                font-size: 0.9em;
+            }
+            
+            .game-content {
+                padding: 15px;
+            }
+            
+            .question {
+                font-size: 2em;
+                margin: 15px 0;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .stats {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+            
+            .stat-item {
+                padding: 8px;
+            }
+            
+            .menu {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 300px) {
+            .menu-btn {
+                font-size: 0.9em;
+                padding: 10px;
+            }
+
+            .header::before,
+            .header::after {
+                display: none;
+            }
+
+            .answer-input {
+                width: 80px;
+            }
+        }
+
+
+        .stat-item.domanda {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+        }
+
+        .stat-item.corrette {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+        }
+
+        .stat-item.livello {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+        }
+
+</style>
+</head>
+<body>
+<div class="offline-indicator" id="offline-indicator">📴 Modalità Offline</div>
+
+<div class="container">
+<div class="header">
+<button class="sound-toggle" id="sound-toggle" onclick="toggleSound()" title="Attiva/Disattiva Suoni">🔊</button>
+<h1>Matematica sul Divano</h1>
+<div class="subtitle">by Maestro Alberto</div>
+</div>
+<div class="game-content">
+<!-- Menu principale -->
+<div class="menu" id="main-menu">
+<button class="menu-btn" onclick="startGame('addizioni')">
+                    ➕ Addizioni
+                </button>
+<button class="menu-btn sottrazione" onclick="startGame('sottrazioni')">
+                    ➖ Sottrazioni  
+                </button>
+<button class="menu-btn tabelline" onclick="startGame('tabelline')">
+                    ✖️ Tabelline
+                </button>
+<button class="menu-btn install-btn hidden" id="install-btn" onclick="installApp()">
+                    📱 Installa App
+                </button>
+</div>
+
+<div id="install-notification" class="install-notification hidden">
+                🎉 App installata con successo! Ora puoi usarla offline.
+            </div>
+
+<!-- Schermo di gioco -->
+<div class="game-screen" id="game-screen">
+<div class="level-info">
+<h2 id="game-title"></h2>
+<p id="level-description"></p>
+</div>
+<div class="progress">
+<div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+</div>
+<div class="stats">
+<div class="stat-item domanda">
+<div class="stat-value" id="current-question">1</div>
+<div class="stat-label">Domanda</div>
+</div>
+<div class="stat-item corrette">
+<div class="stat-value" id="correct-answers">0</div>
+<div class="stat-label">Corrette</div>
+</div>
+<div class="stat-item livello">
+<div class="stat-value" id="current-level">1</div>
+<div class="stat-label">Livello</div>
+</div>
+</div>
+<div class="question" id="question"></div>
+<div class="answer-section">
+<input class="answer-input" id="answer-input" placeholder="?" type="number"/>
+<button class="btn" onclick="checkAnswer()">Conferma</button>
+</div>
+<div class="feedback hidden" id="feedback"></div>
+<div class="buttons-container">
+<button class="btn back" onclick="goHome()">🏠 Menu</button>
+</div>
+</div>
+<!-- Schermo completamento livello -->
+<div class="game-screen" id="level-complete-screen">
+<div class="level-complete">
+<div class="trophy" id="trophy"></div>
+<h2 id="completion-title"></h2>
+<p id="completion-message"></p>
+<div class="stats">
+<div class="stat-item">
+<div class="stat-value" id="final-correct" style="color: #4caf50;">0</div>
+<div class="stat-label">Risposte Corrette</div>
+</div>
+<div class="stat-item">
+<div class="stat-value" id="final-errors" style="color: #f44336;">0</div>
+<div class="stat-label">Errori</div>
+</div>
+<div class="stat-item">
+<div class="stat-value" id="completion-level" style="color: #ff9800;">1</div>
+<div class="stat-label">Livello Completato</div>
+</div>
+</div>
+</div>
+<div class="buttons-container">
+<button class="btn" id="continue-btn" onclick="continueGame()">Livello Successivo 🚀</button>
+<button class="btn back" onclick="goHome()">🏠 Menu Principale</button>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+        // PWA Cache API per offline support (senza service worker personalizzato)
+        // Il browser gestirà automaticamente il caching di base delle risorse
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('install-btn').classList.remove('hidden');
+        });
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        showInstallNotification();
+                        document.getElementById('install-btn').classList.add('hidden');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+
+        function showInstallNotification() {
+            const notification = document.getElementById('install-notification');
+            notification.classList.remove('hidden');
+            setTimeout(() => {
+                notification.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Offline/Online status
+        function updateOnlineStatus() {
+            const indicator = document.getElementById('offline-indicator');
+            if (navigator.onLine) {
+                indicator.style.display = 'none';
+            } else {
+                indicator.style.display = 'block';
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
+
+        // Generate Service Worker as blob URL
+        function generateServiceWorker() {
+            const serviceWorkerCode = `
+                const CACHE_NAME = 'matematica-v1';
+                const urlsToCache = [
+                    '/',
+                    '/index.html'
+                ];
+
+                self.addEventListener('install', event => {
+                    event.waitUntil(
+                        caches.open(CACHE_NAME)
+                            .then(cache => {
+                                return cache.addAll(urlsToCache);
+                            })
+                    );
+                });
+
+                self.addEventListener('fetch', event => {
+                    event.respondWith(
+                        caches.match(event.request)
+                            .then(response => {
+                                if (response) {
+                                    return response;
+                                }
+                                return fetch(event.request);
+                            })
+                    );
+                });
+            `;
+            
+            const blob = new Blob([serviceWorkerCode], { type: 'application/javascript' });
+            return URL.createObjectURL(blob);
+        }
+
+        // Sistema Audio
+        let audioContext;
+        let soundEnabled = true;
+
+        // Inizializza il contesto audio
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+        }
+
+        // Crea un tono delicato
+        function playTone(frequency, duration, volume = 0.1, type = 'sine') {
+            if (!soundEnabled || !audioContext) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = type;
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.01);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        // Suoni specifici
+        function playCorrectSound() {
+            if (!soundEnabled) return;
+            // Accordo maggiore delicato (Do-Mi-Sol)
+            setTimeout(() => playTone(523.25, 0.3, 0.08), 0);    // Do
+            setTimeout(() => playTone(659.25, 0.3, 0.06), 50);   // Mi
+            setTimeout(() => playTone(783.99, 0.4, 0.05), 100);  // Sol
+        }
+
+        function playIncorrectSound() {
+            if (!soundEnabled) return;
+            // Nota singola soft e comprensiva
+            playTone(220, 0.4, 0.06, 'triangle');
+        }
+
+        function playLevelCompleteSound() {
+            if (!soundEnabled) return;
+            // Sequenza melodica allegra ma delicata
+            const notes = [523.25, 587.33, 659.25, 698.46, 783.99]; // Do-Re-Mi-Fa-Sol
+            notes.forEach((freq, i) => {
+                setTimeout(() => playTone(freq, 0.4, 0.07), i * 150);
+            });
+        }
+
+        function playClickSound() {
+            if (!soundEnabled) return;
+            // Click molto soft
+            playTone(800, 0.1, 0.03, 'triangle');
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const toggle = document.getElementById('sound-toggle');
+            toggle.textContent = soundEnabled ? '🔊' : '🔇';
+            toggle.title = soundEnabled ? 'Disattiva Suoni' : 'Attiva Suoni';
+            
+            if (soundEnabled) {
+                initAudio();
+                playClickSound(); // Test del suono
+            }
+        }
+
+        // Variabili globali del gioco
+        let currentGame = '';
+        let currentLevel = 1;
+        let currentQuestion = 1;
+        let correctAnswers = 0;
+        let totalErrors = 0;
+        let questionsPerLevel = 10;
+        let currentQuestionData = {};
+        let usedQuestions = [];
+        let gameUsedQuestions = new Set(); // Tutte le domande usate in tutto il gioco
+        let onesTableUsed = false; // Per controllare 1 x qualsiasi numero
+
+        // Configurazioni dei giochi
+        const gameConfigs = {
+            addizioni: {
+                title: "Addizioni",
+                levels: 4,
+                questionsPerLevel: 10,
+                descriptions: [
+                    "Livello 1: Amici del 10",
+                    "Livello 2: Addizioni entro e oltre la decina (max 20)", 
+                    "Livello 3: Tappa alla decina successiva (es: 27+5=30+2)",
+                    "Livello 4: Addizioni senza riporto (es: 23+45=68)"
+                ]
+            },
+            sottrazioni: {
+                title: "Sottrazioni",
+                levels: 5,
+                questionsPerLevel: 10,
+                descriptions: [
+                    "Livello 1: Amici del 10 (es: 10-3=7)",
+                    "Livello 2: Unità - unità (es: 8-5=3)",
+                    "Livello 3: Decine - unità (es: 30-7=23)",
+                    "Livello 4: Tappa alla decina precedente",
+                    "Livello 5: Sottrazioni senza prestito (es: 65-23=42)"
+                ]
+            },
+            tabelline: {
+                title: "Tabelline",
+                levels: 10,
+                questionsPerLevel: 10,
+                descriptions: [
+                    "Livello 1: 10 tabelline casuali (0-10)",
+                    "Livello 2: 10 tabelline casuali (0-10)", 
+                    "Livello 3: 10 tabelline casuali (0-10)",
+                    "Livello 4: 10 tabelline casuali (0-10)",
+                    "Livello 5: 10 tabelline casuali (0-10)",
+                    "Livello 6: 10 tabelline casuali (0-10)",
+                    "Livello 7: 10 tabelline casuali (0-10)",
+                    "Livello 8: 10 tabelline casuali (0-10)",
+                    "Livello 9: 10 tabelline casuali (0-10)",
+                    "Livello 10: 10 tabelline casuali (0-10)"
+                ]
+            },
+        };
+
+        // Messaggi di incoraggiamento
+        const encouragementMessages = [
+            "Non mollare! Puoi farcela! 💪",
+            "Riprova, sei quasi arrivato! 🌟",
+            "Forza! Il prossimo livello ti aspetta! 🚀",
+            "Continua così, stai migliorando! ⭐",
+            "Non arrenderti, sei bravissimo! 🎯"
+        ];
+
+        const successMessages = [
+            "Fantastico! Sei un campione! 🏆",
+            "Bravissimo! Hai superato il livello! 🎉",
+            "Eccezionale! Continua così! ⭐",
+            "Perfetto! Sei davvero bravo! 🌟",
+            "Magnifico! Vai al prossimo livello! 🚀"
+        ];
+
+        // Funzioni per generare domande SENZA RIPETIZIONI
+        function generateAddition(level) {
+            let a, b, attempts = 0;
+            const maxAttempts = 100;
+            
+            do {
+                switch(level) {
+                    case 1: // Amici del 10
+                        a = Math.floor(Math.random() * 9) + 1;
+                        b = 10 - a;
+                        break;
+                    case 2: // Entro e oltre la decina (max 20)
+                        a = Math.floor(Math.random() * 9) + 1;
+                        b = Math.floor(Math.random() * 9) + 1;
+                        // Assicura che non superi 20
+                        if (a + b > 20) {
+                            b = 20 - a;
+                        }
+                        break;
+                    case 3: // Tappa alla decina successiva (max 100)
+                        const base = Math.floor(Math.random() * 8) + 1;
+                        const tens = Math.floor(Math.random() * 7) + 1; // Limitato per non superare 100
+                        a = tens * 10 + Math.floor(Math.random() * 9) + 1;
+                        
+                        const unitsOfA = a % 10;
+                        const minBForTapping = 11 - unitsOfA;
+                        // Limita b per non superare 100
+                        const maxBForTapping = Math.min(9, 100 - a);
+                        
+                        if (maxBForTapping >= minBForTapping) {
+                            b = Math.floor(Math.random() * (maxBForTapping - minBForTapping + 1)) + minBForTapping;
+                        } else {
+                            b = minBForTapping;
+                        }
+                        break;
+                    case 4: // Numeri oltre le decine SENZA riporto (max 100)
+                        // Genera due numeri che sommati NON richiedano riporto
+                        const decineA = Math.floor(Math.random() * 5) + 1; // 1-5 (decine di a)
+                        const unitaA = Math.floor(Math.random() * 9) + 1;   // 1-9 (unità di a)
+                        a = decineA * 10 + unitaA;
+                        
+                        const maxDecineB = Math.floor((100 - a) / 10); // Max decine per b
+                        const maxUnitaB = 9 - unitaA; // Max unità per b (senza riporto)
+                        
+                        const decineB = Math.floor(Math.random() * Math.min(maxDecineB, 4)) + 1; // 1-4
+                        const unitaB = Math.floor(Math.random() * (maxUnitaB + 1)); // 0 a maxUnitaB
+                        b = decineB * 10 + unitaB;
+                        
+                        // Verifica finale: nessun riporto e non supera 100
+                        if ((unitaA + unitaB > 9) || (a + b > 100)) {
+                            continue; // Riprova
+                        }
+                        break;
+                }
+                
+                // Controllo finale: nessun risultato deve superare 100
+                if (a + b > 100) {
+                    continue;
+                }
+                
+                attempts++;
+            } while (gameUsedQuestions.has(`${a}+${b}`) && attempts < maxAttempts);
+            
+            const questionKey = `${a}+${b}`;
+            gameUsedQuestions.add(questionKey);
+            return {a, b, result: a + b, operation: '+'};
+        }
+
+        function generateSubtraction(level) {
+            let a, b, attempts = 0;
+            const maxAttempts = 100;
+            
+            do {
+                switch(level) {
+                    case 1: // Amici del 10
+                        a = 10;
+                        b = Math.floor(Math.random() * 9) + 1;
+                        break;
+                    case 2: // Unità - unità
+                        a = Math.floor(Math.random() * 9) + 1;
+                        b = Math.floor(Math.random() * a) + 1;
+                        break;
+                    case 3: // Decine - unità
+                        a = (Math.floor(Math.random() * 9) + 1) * 10;
+                        b = Math.floor(Math.random() * 9) + 1;
+                        break;
+                    case 4: // Tappa alla decina precedente (con prestito)
+                        a = Math.floor(Math.random() * 80) + 20;
+                        b = Math.floor(Math.random() * 9) + 1;
+                        // Assicura che le unità di a siano minori delle unità di b (serve prestito)
+                        const unitaA = a % 10;
+                        if (unitaA >= b) {
+                            // Modifica a per avere unità minori di b
+                            const decineA = Math.floor(a / 10);
+                            const nuoveUnitaA = Math.floor(Math.random() * b);
+                            a = decineA * 10 + nuoveUnitaA;
+                        }
+                        break;
+                    case 5: // Senza prestito - CORRETTO
+                        a = Math.floor(Math.random() * 80) + 20;
+                        // Genera b in modo che NON serva prestito
+                        const decineA5 = Math.floor(a / 10);
+                        const unitaA5 = a % 10;
+                        
+                        // Le decine di b devono essere <= decine di a
+                        const maxDecineB = Math.min(decineA5 - 1, 7); // Limita per sicurezza
+                        const decineB = Math.floor(Math.random() * maxDecineB) + 1;
+                        
+                        // Le unità di b devono essere <= unità di a (nessun prestito)
+                        const maxUnitaB = unitaA5;
+                        const unitaB = Math.floor(Math.random() * (maxUnitaB + 1));
+                        
+                        b = decineB * 10 + unitaB;
+                        
+                        // Verifica finale: nessun prestito necessario
+                        if (unitaA5 < unitaB || a <= b) {
+                            continue; // Riprova
+                        }
+                        break;
+                }
+                
+                // Controllo: il risultato deve essere positivo
+                if (a <= b) {
+                    continue;
+                }
+                
+                attempts++;
+            } while (gameUsedQuestions.has(`${a}-${b}`) && attempts < maxAttempts);
+            
+            const questionKey = `${a}-${b}`;
+            gameUsedQuestions.add(questionKey);
+            return {a, b, result: a - b, operation: '-'};
+        }
+
+        function generateMultiplication(level) {
+            let a, b, attempts = 0;
+            const maxAttempts = 100;
+            
+            do {
+                a = Math.floor(Math.random() * 11);
+                b = Math.floor(Math.random() * 11);
+                
+                // Controllo speciale per 1 x qualsiasi numero
+                if ((a === 1 || b === 1) && onesTableUsed) {
+                    continue; // Salta se 1 x qualsiasi è già stato usato
+                }
+                
+                attempts++;
+            } while (gameUsedQuestions.has(`${a}×${b}`) && attempts < maxAttempts);
+            
+            // Segna che 1 x qualsiasi è stato usato
+            if (a === 1 || b === 1) {
+                onesTableUsed = true;
+            }
+            
+            const questionKey = `${a}×${b}`;
+            gameUsedQuestions.add(questionKey);
+            return { a, b, result: a * b, operation: '×' };
+        }
+
+        // Funzioni principali del gioco
+        function startGame(gameType) {
+            currentGame = gameType;
+            currentLevel = 1;
+            currentQuestion = 1;
+            correctAnswers = 0;
+            totalErrors = 0;
+            usedQuestions = [];
+            
+            // Reset completo domande utilizzate per nuovo gioco
+            gameUsedQuestions.clear();
+            onesTableUsed = false;
+            
+            questionsPerLevel = gameConfigs[gameType].questionsPerLevel;
+
+            document.getElementById('main-menu').style.display = 'none';
+            document.getElementById('game-screen').classList.remove('hidden');
+            document.getElementById('game-screen').classList.add('active');
+            document.getElementById('level-complete-screen').classList.add('hidden');
+
+            updateGameUI();
+            generateQuestion();
+        }
+
+        function updateGameUI() {
+            const config = gameConfigs[currentGame];
+            document.getElementById('game-title').textContent = config.title;
+            document.getElementById('level-description').textContent = config.descriptions[currentLevel - 1];
+            document.getElementById('current-level').textContent = currentLevel;
+            document.getElementById('current-question').textContent = currentQuestion;
+            document.getElementById('correct-answers').textContent = correctAnswers;
+            
+            const progress = (currentQuestion - 1) / questionsPerLevel * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        }
+
+        function generateQuestion() {
+            let questionData;
+            let attempts = 0;
+            const maxAttempts = 50;
+            
+            // Genera domanda senza ripetizioni
+            do {
+                switch(currentGame) {
+                    case 'addizioni':
+                        questionData = generateAddition(currentLevel);
+                        break;
+                    case 'sottrazioni':
+                        questionData = generateSubtraction(currentLevel);
+                        break;
+                    case 'tabelline':
+                        questionData = generateMultiplication(currentLevel);
+                        break;
+                }
+                attempts++;
+            } while (attempts < maxAttempts && !questionData);
+
+            // Fallback se non si riesce a generare una domanda unica
+            if (!questionData && attempts >= maxAttempts) {
+                console.warn('Difficoltà nel generare domande uniche, espandendo il range...');
+                // Espandi il range per creare più variabilità
+                switch(currentGame) {
+                    case 'addizioni':
+                        questionData = generateAdditionExtended(currentLevel);
+                        break;
+                    case 'sottrazioni':
+                        questionData = generateSubtractionExtended(currentLevel);
+                        break;
+                    case 'tabelline':
+                        questionData = generateMultiplicationExtended(currentLevel);
+                        break;
+                }
+            }
+
+            currentQuestionData = questionData;
+            
+            document.getElementById('question').textContent = 
+                `${questionData.a} ${questionData.operation} ${questionData.b} = `;
+            
+            document.getElementById('answer-input').value = '';
+            document.getElementById('answer-input').focus();
+            document.getElementById('feedback').className = 'feedback hidden';
+            
+            // Debug: mostra quante domande sono state usate (solo in console)
+            console.log(`Domande utilizzate: ${gameUsedQuestions.size}, Livello: ${currentLevel}, Domanda: ${currentQuestion}`);
+        }
+
+        // Funzioni estese per fallback
+        function generateAdditionExtended(level) {
+            let a, b;
+            switch(level) {
+                case 1: // Amici del 10 - espanso
+                    a = Math.floor(Math.random() * 15) + 1;
+                    b = Math.floor(Math.random() * 10) + 1;
+                    if (a + b > 100) b = 100 - a;
+                    break;
+                case 2: // Entro e oltre la decina - espanso (max 25)
+                    a = Math.floor(Math.random() * 15) + 1;
+                    b = Math.floor(Math.random() * 15) + 1;
+                    if (a + b > 25) b = 25 - a;
+                    break;
+                case 3: // Tappa alla decina successiva - CORRETTO anche qui
+                    const base = Math.floor(Math.random() * 12) + 1;
+                    const tens = Math.floor(Math.random() * 7) + 1; // Limitato per non superare 100
+                    a = tens * 10 + Math.floor(Math.random() * 9) + 1;
+                    
+                    const unitsOfA = a % 10;
+                    const minBForTapping = 11 - unitsOfA;
+                    const maxBForTapping = Math.min(15, 100 - a); // Non superare 100
+                    
+                    if (maxBForTapping >= minBForTapping) {
+                        b = Math.floor(Math.random() * (maxBForTapping - minBForTapping + 1)) + minBForTapping;
+                    } else {
+                        b = minBForTapping;
+                    }
+                    break;
+                case 4: // Numeri oltre le decine SENZA riporto - CORRETTO
+                    // Stesso algoritmo della funzione principale ma con range espanso
+                    const decineA = Math.floor(Math.random() * 6) + 1; // 1-6 (espanso)
+                    const unitaA = Math.floor(Math.random() * 9) + 1;
+                    a = decineA * 10 + unitaA;
+                    
+                    const maxDecineB = Math.floor((100 - a) / 10);
+                    const maxUnitaB = 9 - unitaA; // Senza riporto
+                    
+                    const decineB = Math.floor(Math.random() * Math.min(maxDecineB, 5)) + 1; // 1-5 (espanso)
+                    const unitaB = Math.floor(Math.random() * (maxUnitaB + 1));
+                    b = decineB * 10 + unitaB;
+                    
+                    // Assicura che sia senza riporto e non superi 100
+                    if ((unitaA + unitaB > 9) || (a + b > 100)) {
+                        // Fallback sicuro
+                        a = 23;
+                        b = 45; // 23+45=68 (senza riporto)
+                    }
+                    break;
+            }
+            
+            // Controllo finale anche qui
+            if (a + b > 100) {
+                // Fallback sicuro per ogni livello
+                a = 10;
+                b = 20;
+            }
+            
+            return {a, b, result: a + b, operation: '+'};
+        }
+
+        function generateSubtractionExtended(level) {
+            let a, b;
+            switch(level) {
+                case 1: // Amici del 10 - espanso
+                    a = Math.floor(Math.random() * 10) + 10;
+                    b = Math.floor(Math.random() * 10) + 1;
+                    if (a <= b) a = b + Math.floor(Math.random() * 10) + 1;
+                    break;
+                case 2: // Unità - unità - espanso
+                    a = Math.floor(Math.random() * 15) + 1;
+                    b = Math.floor(Math.random() * a) + 1;
+                    break;
+                case 3: // Decine - unità - espanso
+                    a = (Math.floor(Math.random() * 15) + 1) * 10;
+                    b = Math.floor(Math.random() * 15) + 1;
+                    break;
+                case 4: // Con prestito - espanso
+                    a = Math.floor(Math.random() * 90) + 20;
+                    b = Math.floor(Math.random() * 15) + 1;
+                    // Assicura prestito
+                    const unitaA = a % 10;
+                    if (unitaA >= b) {
+                        const decineA = Math.floor(a / 10);
+                        const nuoveUnitaA = Math.floor(Math.random() * b);
+                        a = decineA * 10 + nuoveUnitaA;
+                    }
+                    break;
+                case 5: // Senza prestito - CORRETTO
+                    a = Math.floor(Math.random() * 90) + 20;
+                    const decineA5 = Math.floor(a / 10);
+                    const unitaA5 = a % 10;
+                    
+                    const maxDecineB = Math.min(decineA5 - 1, 8);
+                    const decineB = Math.floor(Math.random() * maxDecineB) + 1;
+                    const maxUnitaB = unitaA5;
+                    const unitaB = Math.floor(Math.random() * (maxUnitaB + 1));
+                    
+                    b = decineB * 10 + unitaB;
+                    
+                    // Fallback sicuro se non funziona
+                    if (unitaA5 < unitaB || a <= b) {
+                        a = 65;
+                        b = 23; // 65-23=42 (senza prestito)
+                    }
+                    break;
+            }
+            
+            // Controllo finale
+            if (a <= b) {
+                a = 50;
+                b = 20;
+            }
+            
+            return {a, b, result: a - b, operation: '-'};
+        }
+
+        function generateMultiplicationExtended(level) {
+            let a = Math.floor(Math.random() * 15);
+            let b = Math.floor(Math.random() * 15);
+            return { a, b, result: a * b, operation: '×' };
+        }
+
+        function checkAnswer() {
+            const userAnswer = parseInt(document.getElementById('answer-input').value);
+            let correctAnswer = currentQuestionData.result;
+            const feedbackElement = document.getElementById('feedback');
+
+            if(userAnswer === correctAnswer) {
+                correctAnswers++;
+                feedbackElement.textContent = '✅ Corretto! Bravo!';
+                feedbackElement.className = 'feedback correct';
+                playCorrectSound(); // Suono di successo
+            } else {
+                totalErrors++;
+                feedbackElement.textContent = `❌ Non è corretto. La risposta giusta è ${correctAnswer}`;
+                feedbackElement.className = 'feedback incorrect';
+                playIncorrectSound(); // Suono soft di errore
+            }
+
+            updateGameUI();
+            
+            setTimeout(() => {
+                nextQuestion();
+            }, 2000);
+        }
+
+        function nextQuestion() {
+            if(currentQuestion >= questionsPerLevel) {
+                completeLevel();
+            } else {
+                currentQuestion++;
+                generateQuestion();
+                updateGameUI();
+            }
+        }
+
+        function completeLevel() {
+            const allCorrect = correctAnswers === questionsPerLevel;
+            const config = gameConfigs[currentGame];
+
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('level-complete-screen').classList.remove('hidden');
+            document.getElementById('level-complete-screen').classList.add('active');
+
+            document.getElementById('final-correct').textContent = correctAnswers;
+            document.getElementById('final-errors').textContent = totalErrors;
+            document.getElementById('completion-level').textContent = currentLevel;
+
+            if(allCorrect) {
+                playLevelCompleteSound(); // Suono di completamento livello
+                const trophies = ['🏆', '🥇', '🎖️', '⭐', '🌟'];
+                const trophy = trophies[Math.min(currentLevel - 1, trophies.length - 1)];
+                
+                document.getElementById('trophy').textContent = trophy;
+                document.getElementById('completion-title').textContent = 'Livello Completato!';
+                document.getElementById('completion-message').textContent = 
+                    successMessages[Math.floor(Math.random() * successMessages.length)];
+                
+                if(currentLevel < config.levels) {
+                    document.getElementById('continue-btn').style.display = 'inline-block';
+                    document.getElementById('continue-btn').textContent = 'Livello Successivo 🚀';
+                } else {
+                    document.getElementById('continue-btn').style.display = 'inline-block';
+                    document.getElementById('continue-btn').textContent = 'Hai Completato Tutto! 🎉';
+                }
+            } else {
+                document.getElementById('trophy').textContent = '📚';
+                document.getElementById('completion-title').textContent = 'Riprova!';
+                document.getElementById('completion-message').textContent = 
+                    encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
+                document.getElementById('continue-btn').style.display = 'inline-block';
+                document.getElementById('continue-btn').textContent = 'Riprova Livello 🔄';
+            }
+        }
+
+        function continueGame() {
+            const config = gameConfigs[currentGame];
+            const allCorrect = correctAnswers === questionsPerLevel;
+
+            if(allCorrect && currentLevel < config.levels) {
+                currentLevel++;
+            }
+            
+            if(allCorrect && currentLevel > config.levels) {
+                goHome();
+                return;
+            }
+
+            currentQuestion = 1;
+            correctAnswers = 0;
+            totalErrors = 0;
+            
+            // NON resetto gameUsedQuestions e onesTableUsed per evitare ripetizioni tra livelli
+
+            document.getElementById('level-complete-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            document.getElementById('game-screen').classList.add('active');
+
+            updateGameUI();
+            generateQuestion();
+        }
+
+        function goHome() {
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('level-complete-screen').classList.add('hidden');
+            document.getElementById('main-menu').style.display = 'grid';
+        }
+
+        // Event listeners
+        document.getElementById('answer-input').addEventListener('keypress', function(e) {
+            if(e.key === 'Enter') {
+                playClickSound(); // Suono per invio
+                checkAnswer();
+            }
+        });
+
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('main-menu').style.display = 'grid';
+            
+            // Inizializza audio al primo click dell'utente
+            document.addEventListener('click', function initializeAudio() {
+                initAudio();
+                document.removeEventListener('click', initializeAudio);
+            }, { once: true });
+
+            // Aggiungi suoni di click a tutti i bottoni
+            document.querySelectorAll('button').forEach(button => {
+                button.addEventListener('click', () => {
+                    playClickSound();
+                });
+            });
+        });
+
+        // PWA Install tracking
+        window.addEventListener('appinstalled', (evt) => {
+            console.log('App installata con successo');
+            showInstallNotification();
+        });
+</script>
+</body>
+</html>

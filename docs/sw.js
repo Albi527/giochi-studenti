@@ -1,11 +1,10 @@
-const CACHE_NAME = 'giochi-educativi-v1';
+const CACHE_NAME = 'giochi-educativi-v2';
 const urlsToCache = [
     './',
     './index.html',
     './matematica.html',
     './tabelline.html'
 ];
-
 self.addEventListener('install', event => {
     console.log('Service Worker: Install Event');
     event.waitUntil(
@@ -20,7 +19,6 @@ self.addEventListener('install', event => {
             })
     );
 });
-
 self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request)
@@ -60,7 +58,6 @@ self.addEventListener('fetch', event => {
             })
     );
 });
-
 self.addEventListener('activate', event => {
     console.log('Service Worker: Activate Event');
     event.waitUntil(
@@ -79,7 +76,6 @@ self.addEventListener('activate', event => {
         })
     );
 });
-
 // Gestisce messaggi dall'app principale
 self.addEventListener('message', event => {
     if (event.data && event.data.type === 'SKIP_WAITING') {

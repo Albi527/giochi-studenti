@@ -3,14 +3,50 @@
     {
       "id": "matematica",
       "title": "Matematica sul Divano",
-      "description": "Addizioni, sottrazioni e tabelline progressive con livelli crescenti di difficoltà. Audio interattivo e PWA installabile!",
+      "description": "Addizioni, sottrazioni, moltiplicazioni e divisioni progressive con 4 operazioni complete. Audio interattivo, PWA installabile e interfaccia ottimizzata!",
       "icon": "🧮",
       "file": "matematica.html",
       "category": "matematica",
       "buttonText": "🚀 Gioca Ora",
       "buttonColor": "matematica",
       "active": true,
-      "featured": true
+      "featured": true,
+      "version": "2.0.0",
+      "lastUpdated": "2025-07-16",
+      "features": [
+        "4 operazioni matematiche complete (+ - × ÷)",
+        "Tabelline classiche (0-10)",
+        "Moltiplicazioni per 10, 100, 1000",
+        "Divisioni con e senza resto",
+        "Sistema audio Web Audio API",
+        "Interfaccia compatta ottimizzata",
+        "Anti-ripetizione domande intelligente",
+        "Design responsive mobile-first",
+        "PWA installabile offline"
+      ],
+      "educational": {
+        "targetAge": "6-12 anni",
+        "subject": "Matematica - 4 Operazioni",
+        "skills": [
+          "Addizioni e sottrazioni",
+          "Tabelline e moltiplicazioni",
+          "Divisioni con resto",
+          "Lettura numeri grandi",
+          "Calcolo mentale"
+        ]
+      },
+      "technical": {
+        "audioSupport": true,
+        "offlineCapable": true,
+        "mobileOptimized": true,
+        "pwaInstallable": true
+      },
+      "stats": {
+        "gameTypes": 4,
+        "totalLevels": 22,
+        "questionsPerLevel": "10-15",
+        "maxOperations": "Fino a 99×1000"
+      }
     },
     {
       "id": "tabelline",
@@ -72,18 +108,6 @@
       "color": "#4CAF50"
     },
     {
-      "id": "italiano",
-      "name": "Italiano",
-      "icon": "📚",
-      "color": "#2196F3"
-    },
-    {
-      "id": "scienze",
-      "name": "Scienze",
-      "icon": "🔬",
-      "color": "#FF9800"
-    },
-    {
       "id": "futuro",
       "name": "In Sviluppo",
       "icon": "🚀",
@@ -93,8 +117,8 @@
   "settings": {
     "title": "Giochi Educativi",
     "subtitle": "by Maestro Alberto",
-    "version": "1.1.0",
-    "lastUpdated": "2025-07-15",
+    "version": "1.2.0",
+    "lastUpdated": "2025-07-16",
     "autoDetectGames": true,
     "showInstallButton": true,
     "showOfflineIndicator": true,

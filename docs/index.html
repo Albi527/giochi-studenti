@@ -492,8 +492,9 @@
                 
             } catch (error) {
                 console.error('❌ Errore nel caricamento giochi:', error);
-                // Mantiene le carte hardcoded in caso di errore
                 console.log('💾 Utilizzo fallback hardcoded');
+                // Aggiungi carta installazione anche se JSON fallisce
+                addInstallCard();
             }
         }
 
@@ -520,10 +521,8 @@
                 gamesGrid.appendChild(gameCard);
             });
             
-            // Aggiungi carta installazione se supportata
-            if (gamesData.settings.showInstallButton !== false) {
-                addInstallCard();
-            }
+            // Aggiungi carta installazione sempre (per ora)
+            addInstallCard();
         }
 
         function createGameCard(game) {
@@ -559,7 +558,7 @@
 
         function addInstallCard() {
             const installCard = document.createElement('div');
-            installCard.className = 'game-card install-card hidden';
+            installCard.className = 'game-card install-card'; // ✅ Rimossa classe 'hidden'
             installCard.id = 'install-card-dynamic';
             
             installCard.innerHTML = `

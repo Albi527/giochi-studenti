@@ -57,7 +57,7 @@
             text-align: center;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
-            padding: 4vh 6vw;
+            padding: 3vh 6vw;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             min-width: 50vw;
             max-width: 80vw;
@@ -142,7 +142,7 @@
         }
         
         .level-selector {
-            margin-bottom: 3vh;
+            margin-bottom: 2vh;
         }
         
         .level-btn {
@@ -238,9 +238,6 @@
                 <button class="btn level-btn easy" onclick="setLevel(1)">Facile (1-3)</button>
                 <button class="btn level-btn medium" onclick="setLevel(2)">Medio (4-6)</button>
                 <button class="btn level-btn hard" onclick="setLevel(3)">Difficile (7-9)</button>
-                <div style="font-size: 0.8em; color: #666; margin-top: 10px; text-align: center;">
-                    💡 Puoi cambiare livello in qualsiasi momento cliccando su un bottone!
-                </div>
             </div>
             
             <div class="question" id="question">5 × 7 = ?</div>
@@ -731,7 +728,7 @@
         if (isGameExpired()) {
             disableExpiredGame();
         } else {
-            document.getElementById('feedback').textContent = '🎯 Scegli un livello per iniziare! Puoi giocare qualsiasi livello in qualsiasi ordine.';
+            document.getElementById('feedback').textContent = '👆 Scegli un livello per iniziare!';
             document.getElementById('feedback').className = 'feedback';
             document.getElementById('answerInput').disabled = true;
         }

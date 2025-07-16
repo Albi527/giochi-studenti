@@ -238,6 +238,9 @@
                 <button class="btn level-btn easy" onclick="setLevel(1)">Facile (1-3)</button>
                 <button class="btn level-btn medium" onclick="setLevel(2)">Medio (4-6)</button>
                 <button class="btn level-btn hard" onclick="setLevel(3)">Difficile (7-9)</button>
+                <div style="font-size: 0.8em; color: #666; margin-top: 10px; text-align: center;">
+                    💡 Puoi cambiare livello in qualsiasi momento cliccando su un bottone!
+                </div>
             </div>
             
             <div class="question" id="question">5 × 7 = ?</div>
@@ -262,213 +265,111 @@
         // Data di scadenza del gioco
         const EXPIRATION_DATE = new Date('2026-01-01');
         
-        // Sistema audio MIGLIORATO per GitHub Pages
+        // Sistema audio SEMPLIFICATO (come Matematica sul Divano)
         let audioContext;
         let soundEnabled = true;
-        let audioInitialized = false;
         
-        // DEBUG: informazioni iniziali
-        console.log('🎵 === SISTEMA AUDIO TABELLINE ===');
-        console.log('📱 User Agent:', navigator.userAgent);
-        console.log('🌐 URL:', window.location.href);
-        console.log('🔒 Protocollo:', window.location.protocol);
-        console.log('🎛️ AudioContext supportato:', !!(window.AudioContext || window.webkitAudioContext));
-        
-        // Inizializza il contesto audio con retry e debug esteso
+        // Inizializza il contesto audio
         function initAudio() {
-            console.log('🎵 Tentativo inizializzazione audio...');
-            
-            if (audioInitialized) {
-                console.log('✅ Audio già inizializzato');
-                return Promise.resolve(true);
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
             }
-            
-            try {
-                if (!audioContext) {
-                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    console.log('🎵 AudioContext creato, stato:', audioContext.state);
-                }
-                
-                // Forza il resume se necessario
-                if (audioContext.state === 'suspended') {
-                    console.log('⏸️ AudioContext sospeso, tentativo riattivazione...');
-                    return audioContext.resume().then(() => {
-                        audioInitialized = true;
-                        console.log('✅ AudioContext riattivato con successo');
-                        updateAudioStatus();
-                        return true;
-                    }).catch((e) => {
-                        console.error('❌ Errore riattivazione audio:', e);
-                        soundEnabled = false;
-                        updateAudioStatus();
-                        return false;
-                    });
-                } else if (audioContext.state === 'running') {
-                    audioInitialized = true;
-                    console.log('✅ AudioContext già in running');
-                    updateAudioStatus();
-                    return Promise.resolve(true);
-                }
-                
-            } catch (e) {
-                console.error('❌ Audio non supportato:', e);
-                soundEnabled = false;
-                updateAudioStatus();
-                return Promise.resolve(false);
-            }
-            
-            return Promise.resolve(false);
-        }
-        
-        // Funzione per forzare l'inizializzazione dell'audio
-        function forceAudioInit() {
-            console.log('🔄 Forzando inizializzazione audio...');
-            return initAudio().then((success) => {
-                if (success) {
-                    console.log('✅ Inizializzazione forzata riuscita');
-                } else {
-                    console.log('❌ Inizializzazione forzata fallita');
-                }
-                return success;
-            });
-        }
-        
-        // Funzione per creare e riprodurre suoni (SUPER ROBUSTA)
-        function playSound(frequency, duration, type = 'sine', volume = 0.1) {
-            if (!soundEnabled) {
-                console.log('🔇 Audio disabilitato');
-                return;
-            }
-            
-            // Prova a inizializzare se necessario
-            if (!audioContext || !audioInitialized) {
-                console.log('🔄 Audio non inizializzato, tento inizializzazione...');
-                forceAudioInit().then((success) => {
-                    if (success) {
-                        setTimeout(() => playSound(frequency, duration, type, volume), 100);
-                    }
-                });
-                return;
-            }
-            
-            // Controlla stato del contesto
-            if (audioContext.state !== 'running') {
-                console.log('⏸️ AudioContext non in running:', audioContext.state);
-                audioContext.resume().then(() => {
-                    console.log('▶️ AudioContext riattivato per riproduzione');
-                    playSound(frequency, duration, type, volume);
-                }).catch((e) => {
-                    console.error('❌ Impossibile riattivare per riproduzione:', e);
-                });
-                return;
-            }
-            
-            try {
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
-                oscillator.type = type;
-                
-                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-                gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.01);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
-                
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + duration);
-                
-                console.log('🎵 Suono riprodotto:', frequency + 'Hz (' + type + ')');
-            } catch (e) {
-                console.error('❌ Errore riproduzione audio:', e);
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
             }
         }
         
-        // Suoni specifici del gioco
+        // Crea un tono (versione semplificata)
+        function playTone(frequency, duration, volume = 0.1, type = 'sine') {
+            if (!soundEnabled || !audioContext) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = type;
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.01);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+        
+        // Suoni specifici del gioco (semplificati)
         function playCorrectSound() {
-            console.log('✅ Riproduco suono corretto');
-            setTimeout(() => playSound(523.25, 0.15, 'triangle', 0.15), 0);   // Do
-            setTimeout(() => playSound(659.25, 0.15, 'triangle', 0.15), 100); // Mi
-            setTimeout(() => playSound(783.99, 0.25, 'triangle', 0.15), 200); // Sol
+            if (!soundEnabled) return;
+            // Accordo maggiore ascendente (Do-Mi-Sol)
+            setTimeout(() => playTone(523.25, 0.3, 0.08), 0);    // Do
+            setTimeout(() => playTone(659.25, 0.3, 0.06), 50);   // Mi
+            setTimeout(() => playTone(783.99, 0.4, 0.05), 100);  // Sol
         }
         
         function playIncorrectSound() {
-            console.log('❌ Riproduco suono errore');
-            setTimeout(() => playSound(400, 0.1, 'sawtooth', 0.1), 0);
-            setTimeout(() => playSound(300, 0.1, 'sawtooth', 0.1), 100);
-            setTimeout(() => playSound(200, 0.3, 'sawtooth', 0.1), 200);
+            if (!soundEnabled) return;
+            // Nota singola soft e comprensiva
+            playTone(220, 0.4, 0.06, 'triangle');
         }
         
         function playClickSound() {
-            console.log('🖱️ Riproduco suono click');
-            playSound(800, 0.1, 'square', 0.05);
+            if (!soundEnabled) return;
+            // Click molto soft
+            playTone(800, 0.1, 0.03, 'triangle');
         }
         
         function playGameEndSound() {
-            console.log('🏁 Riproduco fanfara fine gioco');
-            const melody = [523.25, 659.25, 783.99, 1046.5];
-            melody.forEach((freq, index) => {
-                setTimeout(() => playSound(freq, 0.3, 'triangle', 0.12), index * 150);
+            if (!soundEnabled) return;
+            // Sequenza melodica allegra ma delicata
+            const notes = [523.25, 587.33, 659.25, 698.46, 783.99]; // Do-Re-Mi-Fa-Sol
+            notes.forEach((freq, i) => {
+                setTimeout(() => playTone(freq, 0.4, 0.07), i * 150);
             });
         }
         
         function playWarningSound() {
-            playSound(1000, 0.1, 'triangle', 0.08);
+            if (!soundEnabled) return;
+            playTone(880, 0.1, 0.08, 'triangle');
         }
         
         function playLevelSelectSound() {
-            console.log('🎯 Riproduco suono selezione livello');
-            playSound(600, 0.15, 'sine', 0.1);
+            if (!soundEnabled) return;
+            playTone(523.25, 0.15, 0.1, 'sine');
         }
         
-        // Funzione per attivare/disattivare i suoni (MIGLIORATA)
+        // Funzione per attivare/disattivare i suoni (semplificata)
         function toggleSound() {
-            console.log('🔄 Toggle audio:', !soundEnabled);
+            soundEnabled = !soundEnabled;
+            const toggle = document.getElementById('soundToggle');
+            toggle.textContent = soundEnabled ? '🔊' : '🔇';
+            toggle.title = soundEnabled ? 'Disattiva Suoni' : 'Attiva Suoni';
             
             if (soundEnabled) {
-                soundEnabled = false;
-                document.getElementById('soundToggle').textContent = '🔇';
-                console.log('🔇 Audio disattivato');
-            } else {
-                soundEnabled = true;
-                document.getElementById('soundToggle').textContent = '🔊';
-                console.log('🔊 Audio attivato, tentativo inizializzazione...');
-                
-                forceAudioInit().then((success) => {
-                    if (success) {
-                        setTimeout(() => playClickSound(), 100);
-                    }
-                });
+                initAudio();
+                playClickSound(); // Test del suono
             }
-            updateAudioStatus();
         }
         
-        // Funzione per mostrare stato audio (CON COLORI)
+        // Funzione per mostrare stato audio (semplificata)
         function updateAudioStatus() {
             const toggle = document.getElementById('soundToggle');
             if (!toggle) return;
             
             if (!soundEnabled) {
                 toggle.style.opacity = '0.5';
-                toggle.style.color = 'gray';
-                toggle.title = '🔇 Audio disattivato - Clicca per attivare';
+                toggle.title = 'Audio disattivato - Clicca per attivare';
                 return;
             }
             
-            if (audioContext && audioContext.state === 'running' && audioInitialized) {
+            if (audioContext && audioContext.state === 'running') {
                 toggle.style.opacity = '1';
-                toggle.style.color = 'lightgreen';
-                toggle.title = '🔊 Audio attivo ✅ - Clicca per disattivare';
-            } else if (audioContext && audioContext.state === 'suspended') {
-                toggle.style.opacity = '0.7';
-                toggle.style.color = 'orange';
-                toggle.title = '⏸️ Audio sospeso - Clicca sui bottoni per attivarlo';
+                toggle.title = 'Audio attivo - Clicca per disattivare';
             } else {
-                toggle.style.opacity = '0.5';
-                toggle.style.color = 'white';
-                toggle.title = '⚠️ Audio non inizializzato - Clicca sui bottoni';
+                toggle.style.opacity = '0.7';
+                toggle.title = 'Audio non attivo - Clicca sui bottoni per attivarlo';
             }
         }
         
@@ -515,43 +416,53 @@
         function setLevel(level) {
             if (isGameExpired()) return;
             
-            console.log('🎯 Selezione livello:', level);
+            // Se c'è un gioco in corso, chiedi conferma prima di cambiare livello
+            if (gameActive && gameStarted && questionsAnswered > 0) {
+                const levelNames = ['Facile (1-3)', 'Medio (4-6)', 'Difficile (7-9)'];
+                const confirm = window.confirm(`Vuoi davvero cambiare al livello ${levelNames[level-1]}?\n\nIl punteggio attuale (${score} punti) andrà perso.`);
+                if (!confirm) {
+                    return; // L'utente ha annullato
+                }
+            }
             
-            // Forza inizializzazione audio al primo clic
-            if (!audioInitialized) {
-                forceAudioInit().then(() => {
-                    playLevelSelectSound();
-                });
-            } else {
-                playLevelSelectSound();
+            // Suono di selezione livello
+            playLevelSelectSound();
+            
+            // Ferma il timer corrente se ce n'è uno
+            if (gameActive) {
+                stopTimer();
             }
             
             currentLevel = level;
             
+            // Rimuovi active da tutti i bottoni
             document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Aggiungi active al livello selezionato
             const buttons = document.querySelectorAll('.level-btn');
             buttons[level - 1].classList.add('active');
             
+            // Inizializza il set per questo livello se non esiste
             if (!allTimeUsedQuestions.has(level)) {
                 allTimeUsedQuestions.set(level, new Set());
             }
             
-            if (!gameStarted) {
-                gameStarted = true;
-                gameActive = true;
-                document.getElementById('answerInput').disabled = false;
-                questionsAnswered = 0;
-                score = 0;
-                timeLeft = 60;
-                updateDisplay();
-                startTimer();
-            } else {
-                questionsAnswered = 0;
-                score = 0;
-                updateDisplay();
-            }
+            // SEMPRE avvia una nuova partita per il livello selezionato
+            gameStarted = true;
+            gameActive = true;
+            document.getElementById('answerInput').disabled = false;
+            questionsAnswered = 0;
+            score = 0;
+            timeLeft = 60;
             
+            // Mostra il livello selezionato
+            const levelNames = ['Facile (1-3)', 'Medio (4-6)', 'Difficile (7-9)'];
+            document.getElementById('feedback').textContent = `🎯 Livello ${levelNames[level-1]} selezionato!`;
+            document.getElementById('feedback').className = 'feedback';
+            
+            updateDisplay();
             updateStats();
+            startTimer();
             newQuestion();
         }
         
@@ -679,7 +590,7 @@
                 playCorrectSound();
                 
                 setTimeout(() => {
-                    if (questionsAnswered < totalQuestions) {
+                    if (questionsAnswered < totalQuestions && gameActive) {
                         newQuestion();
                     } else {
                         endGame();
@@ -689,13 +600,17 @@
                 feedback.textContent = `❌ Sbagliato! La risposta è ${currentQuestion.answer}`;
                 feedback.className = 'feedback incorrect';
                 playIncorrectSound();
+                
+                setTimeout(() => {
+                    if (questionsAnswered < totalQuestions && gameActive) {
+                        newQuestion();
+                    } else {
+                        endGame();
+                    }
+                }, 2000);
             }
             
             updateDisplay();
-            
-            if (questionsAnswered >= totalQuestions) {
-                setTimeout(endGame, 2000);
-            }
         }
         
         function updateDisplay() {
@@ -777,34 +692,23 @@
             }, 3000);
         }
         
-        // Event listeners MIGLIORATI
+        // Event listeners SEMPLIFICATI
         document.getElementById('answerInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 checkAnswer();
             }
         });
         
-        // Gestione click con inizializzazione audio
-        document.addEventListener('click', function(e) {
-            // Inizializza audio se non ancora fatto
-            if (!audioInitialized) {
-                console.log('👆 Prima interazione utente - inizializzo audio');
-                forceAudioInit();
-            }
-            
-            // Suono click per bottoni
-            if (e.target.classList.contains('btn')) {
-                setTimeout(() => playClickSound(), 50);
-            }
-        });
+        // Inizializza l'audio al primo click dell'utente
+        document.addEventListener('click', function() {
+            initAudio();
+        }, { once: true });
         
-        // Ascolta vari tipi di interazione per inizializzare audio
-        ['click', 'touchstart', 'keydown', 'mousedown'].forEach(eventType => {
-            document.addEventListener(eventType, function initAudioOnce() {
-                console.log('🎵 Interazione rilevata:', eventType);
-                forceAudioInit();
-                // Non rimuovere i listener per permettere retry
-            }, { passive: true });
+        // Aggiungi suono di click ai bottoni
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('btn')) {
+                playClickSound();
+            }
         });
         
         // Prevent zoom on double tap for mobile
@@ -819,13 +723,15 @@
         
         // Initialize game
         allTimeUsedQuestions.set(1, new Set());
+        allTimeUsedQuestions.set(2, new Set());
+        allTimeUsedQuestions.set(3, new Set());
         updateStats();
         stopTimer();
         
         if (isGameExpired()) {
             disableExpiredGame();
         } else {
-            document.getElementById('feedback').textContent = '👆 Clicca su un bottone sopra per iniziare a giocare';
+            document.getElementById('feedback').textContent = '🎯 Scegli un livello per iniziare! Puoi giocare qualsiasi livello in qualsiasi ordine.';
             document.getElementById('feedback').className = 'feedback';
             document.getElementById('answerInput').disabled = true;
         }
@@ -833,15 +739,7 @@
         document.getElementById('questionProgress').textContent = '0';
         updateAudioStatus();
         
-        // Debug periodico dello stato audio
-        setInterval(() => {
-            updateAudioStatus();
-            if (audioContext) {
-                console.log('🎵 Status Check - State:', audioContext.state, 'Initialized:', audioInitialized, 'Enabled:', soundEnabled);
-            }
-        }, 5000);
-        
-        console.log('🎮 Gioco inizializzato! Clicca per attivare l\'audio.');
+        console.log('🎮 Gioco Tabelline inizializzato!');
     </script>
 </body>
 </html>

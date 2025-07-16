@@ -96,7 +96,7 @@
       "category": "futuro",
       "buttonText": "🔜 Presto",
       "buttonColor": "coming-soon",
-      "active": false,
+      "active": true,
       "featured": false
     }
   ],

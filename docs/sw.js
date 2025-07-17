@@ -1,69 +1,49 @@
-const CACHE_NAME = 'giochi-educativi-v4'; // ⬆️ VERSIONE AGGIORNATA per matematica 3.0.0
+const CACHE_NAME = 'giochi-educativi-v5'; // ⬆️ VERSIONE AGGIORNATA per landing page completa
 const urlsToCache = [
     './',
-    './index.html',
-    './matematica.html',        // ✅ Matematica 3.0.0 con divisioni ÷10,÷100,÷1000 e sfondo verde menta
-    './tabelline.html',
-    './games.json'              // ✅ JSON aggiornato con 6 operazioni e 33 livelli
+    './index.html',                // ✅ Landing page con installazione smart e 2 giochi
+    './matematica.html',           // ✅ Matematica 3.0.0 con 6 operazioni e 33 livelli
+    './tabelline.html',           // ✅ Sfida Tabelline con timer 60s e 3 livelli
+    './games.json',               // ✅ JSON con stats aggiornate (2 disponibili, 1 in sviluppo)
+    './manifest.json',            // ✅ PWA manifest per installazione
+    './icon-192.png',             // ✅ Icone PWA
+    './icon-512.png'
 ];
 
 self.addEventListener('install', event => {
-    console.log('Service Worker: Install Event v4 - Matematica 3.0.0');
+    console.log('Service Worker: Install Event v5 - Landing Page Completa');
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
                 console.log('Service Worker: Cache aperta:', CACHE_NAME);
-                console.log('Service Worker: Caching matematica.html v3.0.0 con:');
-                console.log('  - 6 tipi di operazioni (era 4)');
-                console.log('  - 33 livelli totali (era 22)');
-                console.log('  - Divisioni per 10/100/1000 (7 livelli)');
-                console.log('  - Sfondo verde menta fresco');
+                console.log('Service Worker: Caching landing page completa con:');
+                console.log('  - 🎮 Landing page con design colorato');
+                console.log('  - 🤖 Installazione Smart multi-dispositivo');
+                console.log('  - 🧮 Matematica sul Divano (6 operazioni, 33 livelli)');
+                console.log('  - 🎯 Sfida Tabelline (timer 60s, 3 livelli)');
+                console.log('  - 📊 Stats: 2 giochi disponibili, 1 in sviluppo');
                 return cache.addAll(urlsToCache);
             })
             .then(() => {
-                console.log('Service Worker: Tutti i file v4 cachati con successo');
+                console.log('Service Worker: Tutti i file v5 cachati con successo');
                 self.skipWaiting(); // Forza l'attivazione immediata
             })
             .catch(error => {
-                console.error('Service Worker: Errore durante il caching v4:', error);
+                console.error('Service Worker: Errore durante il caching v5:', error);
             })
     );
 });
 
 self.addEventListener('fetch', event => {
-    // Gestione speciale per games.json (sempre network-first per aggiornamenti)
-    if (event.request.url.includes('games.json')) {
-        event.respondWith(
-            fetch(event.request)
-                .then(response => {
-                    console.log('Service Worker: games.json v1.3.0 aggiornato dalla rete');
-                    console.log('  - Nuove stats: 6 operazioni, 33 livelli');
-                    console.log('  - Descrizione aggiornata con divisioni ÷10,÷100,÷1000');
-                    // Aggiorna la cache con la nuova versione
-                    const responseClone = response.clone();
-                    caches.open(CACHE_NAME)
-                        .then(cache => {
-                            cache.put(event.request, responseClone);
-                        });
-                    return response;
-                })
-                .catch(() => {
-                    console.log('Service Worker: games.json dalla cache (offline)');
-                    return caches.match(event.request);
-                })
-        );
-        return;
-    }
-
-    // Gestione speciale per matematica.html (forza aggiornamento per v3.0.0)
-    if (event.request.url.includes('matematica.html')) {
+    // Gestione speciale per index.html (sempre aggiornata per nuove funzionalità)
+    if (event.request.url.includes('index.html') || event.request.url.endsWith('/')) {
         event.respondWith(
             caches.match(event.request)
                 .then(response => {
-                    // Controlla se abbiamo la versione cached
+                    // Serve dalla cache se disponibile
                     if (response) {
-                        console.log('Service Worker: matematica.html v3.0.0 dalla cache');
-                        // Tenta aggiornamento in background per futuri utilizzi
+                        console.log('Service Worker: index.html v5 dalla cache');
+                        // Aggiornamento background per futures utilizzi
                         fetch(event.request)
                             .then(networkResponse => {
                                 if (networkResponse && networkResponse.status === 200) {
@@ -80,7 +60,108 @@ self.addEventListener('fetch', event => {
                     }
                     
                     // Se non in cache, fetch dalla rete
+                    console.log('Service Worker: index.html v5 dalla rete');
+                    return fetch(event.request)
+                        .then(networkResponse => {
+                            if (networkResponse && networkResponse.status === 200) {
+                                const responseToCache = networkResponse.clone();
+                                caches.open(CACHE_NAME)
+                                    .then(cache => {
+                                        cache.put(event.request, responseToCache);
+                                    });
+                            }
+                            return networkResponse;
+                        });
+                })
+        );
+        return;
+    }
+
+    // Gestione speciale per games.json (sempre network-first per stats aggiornate)
+    if (event.request.url.includes('games.json')) {
+        event.respondWith(
+            fetch(event.request)
+                .then(response => {
+                    console.log('Service Worker: games.json v1.4.0 aggiornato dalla rete');
+                    console.log('  - Stats attuali: 2 giochi disponibili, 1 in sviluppo');
+                    console.log('  - Matematica: 6 operazioni, 33 livelli');
+                    console.log('  - Tabelline: timer 60s, 3 livelli difficoltà');
+                    // Aggiorna la cache con la nuova versione
+                    const responseClone = response.clone();
+                    caches.open(CACHE_NAME)
+                        .then(cache => {
+                            cache.put(event.request, responseClone);
+                        });
+                    return response;
+                })
+                .catch(() => {
+                    console.log('Service Worker: games.json dalla cache (offline)');
+                    return caches.match(event.request);
+                })
+        );
+        return;
+    }
+
+    // Gestione speciale per matematica.html (cache-first con background update)
+    if (event.request.url.includes('matematica.html')) {
+        event.respondWith(
+            caches.match(event.request)
+                .then(response => {
+                    if (response) {
+                        console.log('Service Worker: matematica.html v3.0.0 dalla cache');
+                        // Background update
+                        fetch(event.request)
+                            .then(networkResponse => {
+                                if (networkResponse && networkResponse.status === 200) {
+                                    caches.open(CACHE_NAME)
+                                        .then(cache => {
+                                            cache.put(event.request, networkResponse.clone());
+                                        });
+                                }
+                            })
+                            .catch(() => {});
+                        return response;
+                    }
+                    
                     console.log('Service Worker: matematica.html v3.0.0 dalla rete');
+                    return fetch(event.request)
+                        .then(networkResponse => {
+                            if (networkResponse && networkResponse.status === 200) {
+                                const responseToCache = networkResponse.clone();
+                                caches.open(CACHE_NAME)
+                                    .then(cache => {
+                                        cache.put(event.request, responseToCache);
+                                    });
+                            }
+                            return networkResponse;
+                        });
+                })
+        );
+        return;
+    }
+
+    // Gestione speciale per tabelline.html (cache-first con background update)
+    if (event.request.url.includes('tabelline.html')) {
+        event.respondWith(
+            caches.match(event.request)
+                .then(response => {
+                    if (response) {
+                        console.log('Service Worker: tabelline.html dalla cache');
+                        // Background update
+                        fetch(event.request)
+                            .then(networkResponse => {
+                                if (networkResponse && networkResponse.status === 200) {
+                                    caches.open(CACHE_NAME)
+                                        .then(cache => {
+                                            cache.put(event.request, networkResponse.clone());
+                                        });
+                                }
+                            })
+                            .catch(() => {});
+                        return response;
+                    }
+                    
+                    console.log('Service Worker: tabelline.html dalla rete');
                     return fetch(event.request)
                         .then(networkResponse => {
                             if (networkResponse && networkResponse.status === 200) {
@@ -101,25 +182,20 @@ self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request)
             .then(response => {
-                // Ritorna dalla cache se disponibile
                 if (response) {
-                    console.log('Service Worker: Serving from cache v4:', event.request.url);
+                    console.log('Service Worker: Serving from cache v5:', event.request.url.split('/').pop());
                     return response;
                 }
                 
-                // Altrimenti fetch dalla rete
-                console.log('Service Worker: Fetching from network:', event.request.url);
+                console.log('Service Worker: Fetching from network:', event.request.url.split('/').pop());
                 return fetch(event.request)
                     .then(response => {
-                        // Controlla se è una risposta valida
                         if (!response || response.status !== 200 || response.type !== 'basic') {
                             return response;
                         }
                         
-                        // Clona la risposta
                         const responseToCache = response.clone();
                         
-                        // Aggiunge alla cache solo se è un file importante
                         if (shouldCache(event.request)) {
                             caches.open(CACHE_NAME)
                                 .then(cache => {
@@ -141,26 +217,27 @@ self.addEventListener('fetch', event => {
 });
 
 self.addEventListener('activate', event => {
-    console.log('Service Worker: Activate Event v4 - Matematica 3.0.0');
+    console.log('Service Worker: Activate Event v5 - Landing Page Completa');
     event.waitUntil(
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames.map(cacheName => {
                     if (cacheName !== CACHE_NAME) {
                         console.log('Service Worker: Eliminando cache vecchia:', cacheName);
-                        console.log('  - Aggiornando a v4 con nuove funzionalità matematica');
+                        console.log('  - Aggiornando a v5 con landing page ottimizzata');
                         return caches.delete(cacheName);
                     }
                 })
             );
         }).then(() => {
-            console.log('Service Worker: Ora controlla tutte le pagine con v4');
-            console.log('🎯 Nuove funzionalità disponibili:');
-            console.log('  ✅ Divisioni ÷10, ÷100, ÷1000 (7 livelli)');
-            console.log('  ✅ 6 tipi di operazioni complete');
-            console.log('  ✅ 33 livelli totali di gioco');
-            console.log('  ✅ Sfondo verde menta rilassante');
-            console.log('  ✅ Menu espandibili moltiplicazioni/divisioni');
+            console.log('Service Worker: Ora controlla tutte le pagine con v5');
+            console.log('🎮 Piattaforma completa pronta:');
+            console.log('  ✅ Landing page con design colorato e gradiente');
+            console.log('  ✅ Installazione Smart multi-dispositivo');
+            console.log('  ✅ Matematica sul Divano (6 operazioni, 33 livelli)');
+            console.log('  ✅ Sfida Tabelline (timer 60s, 3 livelli)');
+            console.log('  ✅ Stats aggiornate: 2 disponibili, 1 in sviluppo');
+            console.log('  ✅ PWA installabile su tutti i dispositivi');
             return self.clients.claim();
         })
     );
@@ -169,27 +246,40 @@ self.addEventListener('activate', event => {
 // Gestisce messaggi dall'app principale
 self.addEventListener('message', event => {
     if (event.data && event.data.type === 'SKIP_WAITING') {
-        console.log('Service Worker: Ricevuto comando SKIP_WAITING per v4');
+        console.log('Service Worker: Ricevuto comando SKIP_WAITING per v5');
         self.skipWaiting();
     }
     
     if (event.data && event.data.type === 'CACHE_UPDATE') {
-        console.log('Service Worker: Aggiornamento cache v4 richiesto');
-        // Forza l'aggiornamento della cache
+        console.log('Service Worker: Aggiornamento cache v5 richiesto');
         event.waitUntil(updateCache());
     }
     
     if (event.data && event.data.type === 'GET_VERSION') {
         console.log('Service Worker: Richiesta versione corrente');
         event.ports[0].postMessage({
-            version: 'v4',
+            version: 'v5',
+            landingPageVersion: '2.0.0',
             matematicaVersion: '3.0.0',
+            tabellineVersion: '1.0.0',
             features: [
-                'Divisioni ÷10, ÷100, ÷1000',
-                'Sfondo verde menta',
-                '6 operazioni complete',
-                '33 livelli totali'
+                'Landing page completa con design colorato',
+                'Installazione Smart multi-dispositivo',
+                'Matematica: 6 operazioni, 33 livelli',
+                'Tabelline: timer 60s, 3 livelli',
+                'Stats aggiornate: 2 giochi + 1 in sviluppo'
             ]
+        });
+    }
+    
+    if (event.data && event.data.type === 'GET_STATS') {
+        console.log('Service Worker: Richiesta statistiche attuali');
+        event.ports[0].postMessage({
+            giochiDisponibili: 2,
+            inSviluppo: 1,
+            matematicaLivelli: 33,
+            tabellineLivelli: 3,
+            dispositiviSupportati: ['Desktop', 'Android', 'iOS']
         });
     }
 });
@@ -209,7 +299,7 @@ function shouldCache(request) {
     }
     
     // Cacha manifest e icone PWA
-    if (url.includes('manifest') || url.includes('icon')) {
+    if (url.includes('manifest') || url.includes('icon') || url.includes('.png')) {
         return true;
     }
     
@@ -225,72 +315,83 @@ function shouldCache(request) {
 async function updateCache() {
     try {
         const cache = await caches.open(CACHE_NAME);
-        console.log('Service Worker: Aggiornamento forzato cache v4...');
+        console.log('Service Worker: Aggiornamento forzato cache v5...');
         
-        // Rimuove e ri-aggiunge tutti i file
         await Promise.all(
             urlsToCache.map(async (url) => {
                 await cache.delete(url);
                 const response = await fetch(url);
                 if (response.ok) {
                     await cache.put(url, response);
-                    console.log('Service Worker: Aggiornato v4:', url);
+                    console.log('Service Worker: Aggiornato v5:', url);
                 }
             })
         );
         
-        console.log('Service Worker: Cache v4 aggiornata completamente');
-        console.log('🎉 Matematica 3.0.0 pronta con tutte le nuove funzionalità!');
+        console.log('Service Worker: Cache v5 aggiornata completamente');
+        console.log('🎉 Piattaforma Giochi Educativi v5 pronta!');
         
         // Notifica all'app che l'aggiornamento è completato
         const clients = await self.clients.matchAll();
         clients.forEach(client => {
             client.postMessage({
                 type: 'CACHE_UPDATED',
-                version: 'v4',
-                message: 'Cache aggiornata con successo! Matematica 3.0.0 disponibile.',
-                newFeatures: [
-                    'Divisioni ÷10, ÷100, ÷1000 (7 livelli)',
-                    'Sfondo verde menta rilassante',
-                    '6 operazioni complete (33 livelli totali)',
-                    'Menu espandibili migliorati'
-                ]
+                version: 'v5',
+                message: 'Piattaforma aggiornata! Landing page e giochi pronti.',
+                currentStats: {
+                    giochiDisponibili: 2,
+                    inSviluppo: 1,
+                    features: ['Installazione Smart', 'Matematica 6 operazioni', 'Tabelline 3 livelli']
+                }
             });
         });
         
     } catch (error) {
-        console.error('Service Worker: Errore durante aggiornamento cache v4:', error);
+        console.error('Service Worker: Errore durante aggiornamento cache v5:', error);
     }
 }
 
-// Gestisce sync in background (se supportato)
+// Gestisce sync in background
 self.addEventListener('sync', event => {
     if (event.tag === 'background-sync') {
-        console.log('Service Worker: Background sync triggered per v4');
+        console.log('Service Worker: Background sync triggered per v5');
         event.waitUntil(updateCache());
     }
 });
 
-// Gestione notifiche push (preparazione futura)
+// Gestione notifiche push per nuovi giochi
 self.addEventListener('push', event => {
     if (event.data) {
         const data = event.data.json();
         console.log('Service Worker: Push notification ricevuta:', data);
         
-        // Notifica per nuove funzionalità
-        if (data.type === 'new_features') {
+        if (data.type === 'new_game') {
             event.waitUntil(
-                self.registration.showNotification('🎮 Giochi Educativi', {
-                    body: data.message || 'Nuove funzionalità disponibili in Matematica sul Divano!',
+                self.registration.showNotification('🎮 Nuovo Gioco Disponibile!', {
+                    body: data.message || 'È stato aggiunto un nuovo gioco educativo!',
                     icon: '/icon-192.png',
-                    badge: '/badge-72.png',
-                    tag: 'matematica-update',
+                    badge: '/icon-192.png',
+                    tag: 'new-game',
                     actions: [
                         {
-                            action: 'open',
-                            title: '🚀 Prova Ora'
+                            action: 'play',
+                            title: '🚀 Gioca Ora'
+                        },
+                        {
+                            action: 'later',
+                            title: '⏰ Più Tardi'
                         }
                     ]
+                })
+            );
+        }
+        
+        if (data.type === 'stats_update') {
+            event.waitUntil(
+                self.registration.showNotification('📊 Statistiche Aggiornate', {
+                    body: `Ora disponibili: ${data.available} giochi, ${data.inDev} in sviluppo`,
+                    icon: '/icon-192.png',
+                    tag: 'stats-update'
                 })
             );
         }
@@ -303,15 +404,23 @@ self.addEventListener('notificationclick', event => {
     
     event.notification.close();
     
-    if (event.action === 'open') {
+    if (event.action === 'play') {
         event.waitUntil(
-            clients.openWindow('./matematica.html')
+            clients.openWindow('./index.html')
+        );
+    } else if (event.action === 'later') {
+        // Rimanda la notifica (implementazione futura)
+        console.log('Service Worker: Notifica rimandata');
+    } else {
+        // Click generale sulla notifica
+        event.waitUntil(
+            clients.openWindow('./index.html')
         );
     }
 });
 
-// Notifica quando il service worker v4 è pronto
-self.addEventListener('activate', event => {
-    console.log('🚀 Service Worker v4 attivato e pronto!');
-    console.log('📚 Matematica sul Divano 3.0.0 con divisioni complete disponibile!');
-});
+// Notifica quando il service worker v5 è pronto
+console.log('🚀 Service Worker v5 caricato!');
+console.log('🎮 Piattaforma Giochi Educativi - Maestro Alberto');
+console.log('📊 Stats: 2 giochi disponibili, 1 in sviluppo');
+console.log('✨ Installazione Smart multi-dispositivo attiva');

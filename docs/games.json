@@ -3,7 +3,7 @@
     {
       "id": "matematica",
       "title": "Matematica sul Divano",
-      "description": "Addizioni, sottrazioni, moltiplicazioni e divisioni progressive con 4 operazioni complete. Audio interattivo, PWA installabile e interfaccia ottimizzata!",
+      "description": "Addizioni, sottrazioni, moltiplicazioni e divisioni progressive con 6 tipi di operazioni complete. Include tabelline, divisioni per 10/100/1000, audio interattivo, PWA installabile e interfaccia ottimizzata!",
       "icon": "🧮",
       "file": "matematica.html",
       "category": "matematica",
@@ -11,41 +11,55 @@
       "buttonColor": "matematica",
       "active": true,
       "featured": true,
-      "version": "2.0.0",
-      "lastUpdated": "2025-07-16",
+      "version": "3.0.0",
+      "lastUpdated": "2025-07-17",
       "features": [
-        "4 operazioni matematiche complete (+ - × ÷)",
-        "Tabelline classiche (0-10)",
-        "Moltiplicazioni per 10, 100, 1000",
-        "Divisioni con e senza resto",
+        "6 tipi di operazioni matematiche complete",
+        "Addizioni progressive (4 livelli)",
+        "Sottrazioni con e senza prestito (5 livelli)",
+        "Tabelline classiche 0-10 (10 livelli)",
+        "Moltiplicazioni per 10, 100, 1000 (5 livelli)",
+        "Divisioni classiche con resto (2 livelli)",
+        "Divisioni per 10, 100, 1000 con miste (7 livelli)",
         "Sistema audio Web Audio API",
         "Interfaccia compatta ottimizzata",
         "Anti-ripetizione domande intelligente",
         "Design responsive mobile-first",
+        "Sfondo verde menta rilassante",
         "PWA installabile offline"
       ],
       "educational": {
         "targetAge": "6-12 anni",
-        "subject": "Matematica - 4 Operazioni",
+        "subject": "Matematica - 6 Operazioni Complete",
         "skills": [
-          "Addizioni e sottrazioni",
+          "Addizioni e sottrazioni progressive",
           "Tabelline e moltiplicazioni",
           "Divisioni con resto",
+          "Divisioni per potenze di 10",
           "Lettura numeri grandi",
-          "Calcolo mentale"
+          "Calcolo mentale avanzato"
         ]
       },
       "technical": {
         "audioSupport": true,
         "offlineCapable": true,
         "mobileOptimized": true,
-        "pwaInstallable": true
+        "pwaInstallable": true,
+        "backgroundTheme": "verde menta fresco"
       },
       "stats": {
-        "gameTypes": 4,
-        "totalLevels": 22,
+        "gameTypes": 6,
+        "totalLevels": 33,
         "questionsPerLevel": "10-15",
-        "maxOperations": "Fino a 99×1000"
+        "maxOperations": "Fino a 99000÷1000",
+        "operationBreakdown": {
+          "addizioni": "4 livelli",
+          "sottrazioni": "5 livelli", 
+          "tabelline": "10 livelli",
+          "moltiplicazioni_potenze": "5 livelli",
+          "divisioni": "2 livelli",
+          "divisioni_potenze": "7 livelli"
+        }
       }
     },
     {
@@ -117,11 +131,18 @@
   "settings": {
     "title": "Giochi Educativi",
     "subtitle": "by Maestro Alberto",
-    "version": "1.2.0",
-    "lastUpdated": "2025-07-16",
+    "version": "1.3.0",
+    "lastUpdated": "2025-07-17",
     "autoDetectGames": true,
     "showInstallButton": true,
     "showOfflineIndicator": true,
-    "audioSupported": true
+    "audioSupported": true,
+    "newFeatures": {
+      "matematica": [
+        "Divisioni per 10, 100, 1000 (7 livelli)",
+        "Sfondo verde menta rilassante",
+        "Menu moltiplicazioni/divisioni espandibili"
+      ]
+    }
   }
 }

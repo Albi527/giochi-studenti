@@ -180,6 +180,73 @@
                 gap: 1rem;
             }
         }
+        
+        /* Animazioni per toast e modals */
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        
+        /* Stili per modal installazione */
+        .install-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .install-modal {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .understand-button {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -253,7 +320,8 @@
 
     <script>
         let deviceInfo = {};
-        
+        let deferredPrompt = null;
+
         function detectDevice() {
             const userAgent = navigator.userAgent;
             deviceInfo = {
@@ -262,34 +330,237 @@
                 isMac: /Mac/i.test(navigator.platform),
                 isAndroid: /Android/i.test(userAgent),
                 isiOS: /iPhone|iPad|iPod/i.test(userAgent),
-                isChrome: /Chrome/i.test(userAgent)
+                isChrome: /Chrome/i.test(userAgent) && !/Edg/i.test(userAgent),
+                isEdge: /Edg/i.test(userAgent),
+                isFirefox: /Firefox/i.test(userAgent),
+                isSafari: /Safari/i.test(userAgent) && !/Chrome/i.test(userAgent)
             };
         }
-        
+
         function updateSmartCard() {
             const badge = document.getElementById('device-badge');
             const description = document.getElementById('smart-description');
             
             if (deviceInfo.isDesktop) {
                 badge.textContent = '💻 Desktop';
-                description.innerHTML = '🖥️ <strong>Desktop rilevato!</strong><br>Clicca per installare l\'app sul tuo computer!';
+                
+                if (deviceInfo.isChrome) {
+                    description.innerHTML = '🖥️ <strong>Chrome Desktop rilevato!</strong><br>Installazione PWA supportata - clicca per le istruzioni!';
+                } else if (deviceInfo.isEdge) {
+                    description.innerHTML = '🖥️ <strong>Edge Desktop rilevato!</strong><br>Installazione PWA supportata - clicca per le istruzioni!';
+                } else if (deviceInfo.isFirefox) {
+                    description.innerHTML = '🖥️ <strong>Firefox Desktop rilevato!</strong><br>Supporto PWA limitato - usa Chrome o Edge per installazione!';
+                } else if (deviceInfo.isSafari) {
+                    description.innerHTML = '🖥️ <strong>Safari Desktop rilevato!</strong><br>PWA non supportata su Safari desktop - usa Chrome o Edge!';
+                } else {
+                    description.innerHTML = '🖥️ <strong>Desktop rilevato!</strong><br>Per migliore esperienza, usa Chrome o Edge!';
+                }
             } else if (deviceInfo.isAndroid) {
                 badge.textContent = '📱 Android';
-                description.innerHTML = '📱 <strong>Android rilevato!</strong><br>Aggiungi alla schermata Home!';
+                description.innerHTML = '📱 <strong>Android rilevato!</strong><br>Aggiungi alla schermata Home per accesso rapido!';
             } else if (deviceInfo.isiOS) {
                 badge.textContent = '🍎 iOS';
-                description.innerHTML = '🍎 <strong>iOS rilevato!</strong><br>Usa Condividi → Aggiungi a Home!';
+                description.innerHTML = '🍎 <strong>iOS rilevato!</strong><br>Safari → Condividi → Aggiungi a Home!';
             }
         }
-        
+
         function smartInstall() {
+            // Se abbiamo il prompt di installazione nativo, lo usiamo
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('Utente ha accettato l\'installazione PWA');
+                        showSuccessMessage('🎉 App installata con successo!');
+                    } else {
+                        console.log('Utente ha rifiutato l\'installazione PWA');
+                    }
+                    deferredPrompt = null;
+                });
+                return;
+            }
+            
+            // Altrimenti diamo istruzioni specifiche per browser
             if (deviceInfo.isDesktop) {
-                alert('Per installare su desktop:\n\n1. Cerca l\'icona 📥 nella barra indirizzi\n2. Clicca "Installa"\n3. Conferma installazione');
-            } else {
-                alert('Per installare su mobile:\n\n1. Menu browser\n2. "Aggiungi alla schermata Home"\n3. Conferma');
+                if (deviceInfo.isChrome) {
+                    showInstallInstructions(`
+                        🖥️ <strong>Installazione Chrome Desktop:</strong><br><br>
+                        <strong>Metodo 1 - Menu Chrome:</strong><br>
+                        1. Clicca sui tre puntini (⋮) in alto a destra<br>
+                        2. Cerca "Installa Giochi Educativi..."<br>
+                        3. Clicca su "Installa"<br><br>
+                        
+                        <strong>Metodo 2 - Barra indirizzi:</strong><br>
+                        1. Cerca l'icona 💻 a destra della barra indirizzi<br>
+                        2. Clicca sull'icona e poi "Installa"<br><br>
+                        
+                        <strong>Metodo 3 - Scorciatoia:</strong><br>
+                        Premi <strong>Ctrl+Shift+I</strong> per aprire DevTools,<br>
+                        vai su Application → Manifest → Install
+                    `);
+                } else if (deviceInfo.isEdge) {
+                    showInstallInstructions(`
+                        🖥️ <strong>Installazione Edge Desktop:</strong><br><br>
+                        <strong>Metodo 1 - Menu Edge:</strong><br>
+                        1. Clicca sui tre puntini (...) in alto a destra<br>
+                        2. Vai su "App" → "Installa questo sito come app"<br>
+                        3. Clicca su "Installa"<br><br>
+                        
+                        <strong>Metodo 2 - Barra indirizzi:</strong><br>
+                        1. Cerca l'icona + a destra della barra indirizzi<br>
+                        2. Clicca e seleziona "Installa app"
+                    `);
+                } else if (deviceInfo.isFirefox) {
+                    showInstallInstructions(`
+                        🖥️ <strong>Firefox Desktop:</strong><br><br>
+                        ⚠️ Firefox ha supporto PWA limitato su desktop.<br><br>
+                        <strong>Alternativa consigliata:</strong><br>
+                        1. Apri questo sito in <strong>Chrome</strong> o <strong>Edge</strong><br>
+                        2. Segui le istruzioni di installazione<br><br>
+                        
+                        <strong>Oppure crea collegamento:</strong><br>
+                        1. Clicca sui tre righe (☰) in alto a destra<br>
+                        2. "Aggiungi alla scrivania" o "Crea collegamento"
+                    `);
+                } else if (deviceInfo.isSafari) {
+                    showInstallInstructions(`
+                        🖥️ <strong>Safari Desktop:</strong><br><br>
+                        ❌ Safari non supporta PWA su desktop.<br><br>
+                        <strong>Soluzione:</strong><br>
+                        1. Apri questo sito in <strong>Chrome</strong> o <strong>Edge</strong><br>
+                        2. Segui le istruzioni di installazione<br><br>
+                        
+                        <strong>Oppure aggiungi ai segnalibri:</strong><br>
+                        Cmd+D per aggiungere ai preferiti
+                    `);
+                } else {
+                    showInstallInstructions(`
+                        🖥️ <strong>Browser Desktop Generico:</strong><br><br>
+                        Per la migliore esperienza PWA:<br><br>
+                        1. Apri questo sito in <strong>Google Chrome</strong><br>
+                        2. Menu ⋮ → "Installa Giochi Educativi..."<br>
+                        3. Clicca "Installa"<br><br>
+                        
+                        <strong>Oppure in Microsoft Edge:</strong><br>
+                        Menu ... → App → "Installa questo sito come app"
+                    `);
+                }
+            } else if (deviceInfo.isAndroid) {
+                showInstallInstructions(`
+                    📱 <strong>Installazione Android:</strong><br><br>
+                    <strong>Chrome Android:</strong><br>
+                    1. Menu ⋮ → "Aggiungi alla schermata Home"<br>
+                    2. Conferma "Aggiungi"<br><br>
+                    
+                    <strong>Firefox Android:</strong><br>
+                    1. Menu ⋮ → "Installa"<br>
+                    2. Conferma installazione<br><br>
+                    
+                    <strong>Altri browser:</strong><br>
+                    Menu → "Aggiungi alla Home" o "Installa app"
+                `);
+            } else if (deviceInfo.isiOS) {
+                showInstallInstructions(`
+                    🍎 <strong>Installazione iOS (Safari):</strong><br><br>
+                    1. Apri questo sito in <strong>Safari</strong><br>
+                    2. Tocca il pulsante "Condividi" <strong>📤</strong><br>
+                    3. Scorri e trova "Aggiungi alla schermata Home"<br>
+                    4. Tocca "Aggiungi" in alto a destra<br><br>
+                    
+                    ⚠️ <strong>Importante:</strong> Funziona solo con Safari,<br>
+                    non con Chrome o altri browser su iOS!
+                `);
             }
         }
-        
+
+        function showInstallInstructions(htmlContent) {
+            // Crea un overlay per le istruzioni
+            const overlay = document.createElement('div');
+            overlay.className = 'install-overlay';
+            
+            const modal = document.createElement('div');
+            modal.className = 'install-modal';
+            
+            modal.innerHTML = `
+                <button onclick="this.closest('.install-overlay').remove()" class="close-button">✕</button>
+                
+                <div style="margin-bottom: 20px;">
+                    ${htmlContent}
+                </div>
+                
+                <div style="text-align: center; margin-top: 25px;">
+                    <button onclick="this.closest('.install-overlay').remove()" class="understand-button">✅ Ho Capito</button>
+                </div>
+            `;
+            
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+            
+            // Chiudi cliccando fuori
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.remove();
+                }
+            });
+        }
+
+        function showSuccessMessage(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #4CAF50;
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                font-weight: bold;
+                z-index: 10001;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                animation: slideIn 0.3s ease;
+            `;
+            
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Intercetta l'evento beforeinstallprompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('beforeinstallprompt event captured');
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Aggiorna la card per mostrare che l'installazione è disponibile
+            const description = document.getElementById('smart-description');
+            if (description && deviceInfo.isDesktop) {
+                description.innerHTML = '🎉 <strong>Installazione PWA disponibile!</strong><br>Il tuo browser supporta l\'installazione automatica!';
+            }
+        });
+
+        // Ascolta l'evento appinstalled
+        window.addEventListener('appinstalled', (evt) => {
+            console.log('App installata con successo');
+            showSuccessMessage('🎉 App installata! Controlla il menu Start o le app.');
+        });
+
+        // Registra Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((registration) => {
+                        console.log('Service Worker registrato:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             detectDevice();
             setTimeout(updateSmartCard, 1000);

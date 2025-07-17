@@ -548,17 +548,24 @@
             showSuccessMessage('🎉 App installata! Controlla il menu Start o le app.');
         });
 
-        // Registra Service Worker
-        if ('serviceWorker' in navigator) {
+        // Registra Service Worker (solo su server reale, non nell'artifact)
+        if ('serviceWorker' in navigator && !window.location.href.includes('claudeusercontent.com')) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
                     .then((registration) => {
-                        console.log('Service Worker registrato:', registration.scope);
+                        console.log('✅ Service Worker registrato con successo:', registration.scope);
+                        console.log('🎮 PWA Giochi Educativi pronta per installazione!');
                     })
                     .catch((error) => {
-                        console.log('Service Worker registration failed:', error);
+                        console.error('❌ Service Worker registration failed:', error);
+                        console.log('💡 Assicurati che il file sw.js sia presente sul server');
                     });
             });
+        } else if (window.location.href.includes('claudeusercontent.com')) {
+            console.log('🔧 Ambiente di sviluppo rilevato - Service Worker disabilitato');
+            console.log('📝 Per testare PWA, deploya i file su un server con HTTPS');
+        } else {
+            console.log('❌ Service Worker non supportato in questo browser');
         }
 
         document.addEventListener('DOMContentLoaded', function() {

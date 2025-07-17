@@ -192,6 +192,13 @@
             to { transform: translateX(100%); opacity: 0; }
         }
         
+        /* Transizione fluida per nascondere card installazione */
+        .install-card-hidden {
+            opacity: 0 !important;
+            transform: scale(0.9) !important;
+            pointer-events: none;
+        }
+        
         /* Stili per modal installazione */
         .install-overlay {
             position: fixed;
@@ -258,7 +265,7 @@
     <div class="container">
         <div class="games-grid">
             <!-- Smart Install Card -->
-            <div class="game-card smart-install-card" style="position: relative;">
+            <div class="game-card smart-install-card" style="position: relative;" id="install-card">
                 <div class="device-badge" id="device-badge">🔍 Rilevamento...</div>
                 <div class="game-icon">🤖</div>
                 <div class="game-title">Installazione Smart</div>
@@ -322,6 +329,44 @@
         let deviceInfo = {};
         let deferredPrompt = null;
 
+        function checkIfInstalled() {
+            // Controlla se l'app è già installata
+            if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
+                // App è già installata e in modalità standalone
+                hideInstallCard();
+                return true;
+            }
+            
+            // Controllo per iOS (se aggiunta alla home screen)
+            if (deviceInfo.isiOS && window.navigator.standalone) {
+                hideInstallCard();
+                return true;
+            }
+            
+            return false;
+        }
+
+        function hideInstallCard() {
+            const installCard = document.getElementById('install-card');
+            if (installCard) {
+                installCard.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                installCard.style.opacity = '0';
+                installCard.style.transform = 'scale(0.9)';
+                
+                setTimeout(() => {
+                    installCard.style.display = 'none';
+                    
+                    // Riorganizza la griglia senza la card
+                    const gamesGrid = document.querySelector('.games-grid');
+                    if (gamesGrid) {
+                        gamesGrid.style.transition = 'all 0.3s ease';
+                    }
+                }, 500);
+                
+                console.log('🎉 Card installazione nascosta - App già installata');
+            }
+        }
+
         function detectDevice() {
             const userAgent = navigator.userAgent;
             deviceInfo = {
@@ -371,9 +416,11 @@
                 deferredPrompt.userChoice.then((choiceResult) => {
                     if (choiceResult.outcome === 'accepted') {
                         console.log('Utente ha accettato l\'installazione PWA');
-                        showSuccessMessage('🎉 App installata con successo!');
+                        showSuccessMessage('🎉 Installazione in corso...');
+                        // La card verrà nascosta dall'evento 'appinstalled'
                     } else {
                         console.log('Utente ha rifiutato l\'installazione PWA');
+                        showSuccessMessage('💡 Installazione annullata. Puoi riprovare in qualsiasi momento!');
                     }
                     deferredPrompt = null;
                 });
@@ -387,16 +434,16 @@
                         🖥️ <strong>Installazione Chrome Desktop:</strong><br><br>
                         <strong>Metodo 1 - Menu Chrome:</strong><br>
                         1. Clicca sui tre puntini (⋮) in alto a destra<br>
-                        2. Cerca "Installa Giochi Educativi..."<br>
-                        3. Clicca su "Installa"<br><br>
+                        2. Scorri giù fino a "Trasmetti, salva e condividi"<br>
+                        3. Clicca su "Installa come app"<br>
+                        4. Conferma "Installa"<br><br>
                         
                         <strong>Metodo 2 - Barra indirizzi:</strong><br>
                         1. Cerca l'icona 💻 a destra della barra indirizzi<br>
                         2. Clicca sull'icona e poi "Installa"<br><br>
                         
-                        <strong>Metodo 3 - Scorciatoia:</strong><br>
-                        Premi <strong>Ctrl+Shift+I</strong> per aprire DevTools,<br>
-                        vai su Application → Manifest → Install
+                        <strong>Metodo 3 - Scorciatoia sviluppatori:</strong><br>
+                        Premi <strong>F12</strong> → Application → Manifest → Install
                     `);
                 } else if (deviceInfo.isEdge) {
                     showInstallInstructions(`
@@ -546,6 +593,11 @@
         window.addEventListener('appinstalled', (evt) => {
             console.log('App installata con successo');
             showSuccessMessage('🎉 App installata! Controlla il menu Start o le app.');
+            
+            // Nascondi la card di installazione
+            setTimeout(() => {
+                hideInstallCard();
+            }, 2000); // Aspetta 2 secondi dopo il toast di successo
         });
 
         // Registra Service Worker (solo su server reale, non nell'artifact)
@@ -570,7 +622,13 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             detectDevice();
-            setTimeout(updateSmartCard, 1000);
+            
+            // Controlla se l'app è già installata
+            if (checkIfInstalled()) {
+                console.log('🎮 App già installata - modalità standalone rilevata');
+            } else {
+                setTimeout(updateSmartCard, 1000);
+            }
         });
     </script>
 </body>

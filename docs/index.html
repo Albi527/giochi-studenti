@@ -2,111 +2,74 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#667eea">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Giochi Educativi">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="description" content="Portale di giochi educativi per studenti - Matematica completa con 4 operazioni, Tabelline, Divisioni e molto altro">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giochi Educativi - Maestro Alberto</title>
     
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkdpb2NoaSBFZHVjYXRpdmkgLSBNYWVzdHJvIEFsYmVydG8iLAogICJzaG9ydF9uYW1lIjogIkdpb2NoaSBFZHVjYXRpdmkiLAogICJkZXNjcmlwdGlvbiI6ICJQb3J0YWxlIGRpIGdpb2NoaSBlZHVjYXRpdmkgcGVyIHN0dWRlbnRpIC0gTWF0ZW1hdGljYSwgVGFiZWxsaW5lIGUgbW9sdG8gYWx0cm8iLAogICJzdGFydF91cmwiOiAiLi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiM2NjdlZWEiLAogICJ0aGVtZV9jb2xvciI6ICIjNjY3ZWVhIiwKICAib3JpZW50YXRpb24iOiAicG9ydHJhaXQiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlOVEU0SWlCb1pXbG5hSFE5SWpVeE9DSWdkbWxsZDBKdmVEMGlNQ0F3SURRNE9DQTBPRGdpSUdacGJHdzlJblZ5YkNnaFkyOXNiR1ZqZEdsdmJpa2lJSGh0Ykc1elBTSm9kSFJ3T2k4dmQzZDNMbmN6TG05eVp5OHlNREF3TDNOMlp5SStQSFJsZUhRZ2VEMGlOakFsSWlCNVBTSTJNQ1VpSUdSdmJXbHVZVzUwTFdKaGMyVnNhVzVsUFNKdGFXUmtiR1VpSUhSNGRDMWhibU5vYjNJOUltMXBaR1JzWlNJZ1ptbHNiRDBpSTNabGNXRm1abUZpSUdadmJuUXRjMmw2WlQwaU1USXZJU0lnWm05dWRDMTNaV2xuYUhRaUlqQnZiR1FpUGpvNklHZHBiMk5vYVNCbFpIVmpZWFJwZG1rcWMzUWlJSFI0ZEMxaGJtTm9iM0k5SW0xcFpHUnNaU0lnWm1sc2JEMGlJM1pvYVhSbElpQm1iMjUwTFhObGNtbG1MWE5oYm5NdGMyVnlhV1l0Wm1GdGFXeDVQU0p2Y0hWa2ZEQXdNaTVKSUZCaGNtNWxkQ3M0SWdCa1ozZElJbTl2ZG1Wa1ltcGlJejFsWlNabVppQm1hQ0lqSWlCTWFISmdNQ0IwZVhoMFBDOTBaWGgwUGp3dmNqNWNJR1oxY1hGbGZIUmhibXhqWWliMmRHeG5JREoyUFNFcUlDVjBNR0Y2UVMxaGJpRTNiRWN6Vmw0a1NIaElQU28vY0dKdklBPT0iLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9LAogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjNhV1IwYUQwaU1qVTJJaUJvWldsbmFIUTlJalExT0NJZ2RtbGxkMEp2ZUQwaU1DQXdJRFUyTWlBMU5qSWlJR1pwYkd3OUluVnliQ2doWTI5c2JHVmpkR2x2YmlraUlIaHRiRzV6UFNKb2RIUndPaTh2ZDNkM0xtY3pMbTl5Wnk4eU1EQXdMM04yWnlJK1BIUmxlSFFnZUQwaU5UQXVNU0lnZVQwaU5UQXVNU0lnWkc5dGFXNWhiblF0WW1GelpXeHBibVU5SW0xcFpHUnNaU0lnZEhoMExXRnVZMmh2Y2owaWJXbGtaR3hsU1NJZ1ptbHNiRDBpSTNabGNXRm1abUZpSUdadmJuUXRjMmw2WlQwaU16QnplaUlnWm05dWRDMTNaV2xuYUhRaUlqWjFNbWtpUGpvNklHZHBiMk5vYVNCbFpIVmpZWFJwZG1rcGEzSWlJSFI0ZEMxaGJtTm9iM0k5SW0xcFpHUnNaU0lnWm1sc2JEMGlJM2RvYVhSbElpQm1iMjUwTFhObGNtbG1MWE5oYm5NdGMyVnlhV1l0Wm1GdGFXeDVQU0p2Y0hWa2ZEQXdNaTVKSUZCaGNtNWxkQ3M0SWdCa1ozZElJbTl2ZG1Wa1ltcGlJejFsWlNabVppQm1hQ0lqSWlCTWFISmdNQ0IwZVhoMFBDOTBaWGgwUGp3dmNqNWNJR1oxY1hGbGZIUmhibXhqWWliMmRHeG5JRE4yUFNFcUlDVjBNR0Y2UVMxaGJpRTNiRWN6Vmw0a1NIaElQU28vY0dKdklBPT0iLAogICAgICAic2l6ZXMiOiAiMjU2eDI1NiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9LAogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjNhV1IwYUQwaU1Ua3lJaUJvWldsbmFIUTlJakU1TWlJZ2RtbGxkMEp2ZUQwaU1DQXdJREU1TWlBeE9USWlJR1pwYkd3OUluVnliQ2doWTI5c2JHVmpkR2x2YmlraUlIaHRiRzV6UFNKb2RIUndPaTh2ZDNkM0xtY3pMbTl5Wnk4eU1EQXdMM04yWnlJK1BIUmxlSFFnZUQwaU5UQXVNU0lnZVQwaU5UQXVNU0lnWkc5dGFXNWhiblF0WW1GelpXeHBibVU5SW0xcFpHUnNaU0lnZEhoMExXRnVZMmh2Y2owaWJXbGtaR3hsU1NJZ1ptbHNiRDBpSTNabGNXRm1abUZpSUdadmJuUXRjMmw2WlQwaU16QnplaUlnWm05dWRDMTNaV2xuYUhRaUlqWjFNbWtpUGpvNklHZHBiMk5vYVNCbFpIVmpZWFJwZG1rcGEzSWlJSFI0ZEMxaGJtTm9iM0k5SW0xcFpHUnNaU0lnWm1sc2JEMGlJM2RvYVhSbElpQm1iMjUwTFhObGNtbG1MWE5oYm5NdGMyVnlhV1l0Wm1GdGFXeDVQU0p2Y0hWa2ZEQXdNaTVKSUZCaGNtNWxkQ3M0SWdCa1ozZElJbTl2ZG1Wa1ltcGlJejFsWlNabVppQm1hQ0lqSWlCTWFISmdNQ0IwZVhoMFBDOTBaWGgwUGp3dmNqNWNJR1oxY1hGbGZIUmhibXhqWWliMmRHeG5JREUyUFNFcUlDVjBNR0Y2UVMxaGJpRTNiRWN6Vmw0a1NIaElQU28vY0dKdklBPT0iLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXQp9">
-    
-    <!-- Apple Touch Icons -->
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDQ4OCA0ODgiIGZpbGw9InVybCgjY29sbGVjdGlvbikiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRleHQgeD0iNTAlIiB5PSI2MCUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiN2ZXFhZmZhIiBmb250LXNpemU9IjEyL0kiIGZvbnQtd2VpZ2h0PSI2dTJpIj46IGdpb2NoaSBlZHVjYXRpdmkqc3QiIHR4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI3doaXRlIiBmb250LXNlcmlmLXNhbnMtc2VyaWYtZmFtaWx5PSJvcHVkfDAwMi5JIFBhcm5ldC1zOElnQmtnd0ltOW9kbVZrWW1waUl6MWxaU1ptWmlCbWFDSWpJaUJNYUhKZ01DQjBlWGgwUEM5MFpYaDRQand2Y2o1Y0lHWjFjWEZsZkhSaGJtMWpZaWIyZEhsZ0lETjJQU0VxSUNWME1HRjZRUzFoYmlFM2JFY3pWbDRrU0hoSVBTby9jR0p2SUE9PSI+">
     <style>
-        * {
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            color: #333;
         }
-
+        
         .header {
             background: linear-gradient(45deg, #ff6b6b, #ffa500);
             color: white;
             text-align: center;
             padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
-
+        
         .header h1 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 2.5rem;
+            margin: 0 0 0.5rem 0;
         }
-
-        .header p {
-            font-size: clamp(1rem, 2.5vw, 1.5rem);
-            opacity: 0.9;
-        }
-
+        
         .container {
-            flex: 1;
             padding: 2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
-
+        
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             max-width: 1200px;
-            width: 100%;
+            margin: 0 auto;
         }
-
+        
         .game-card {
             background: white;
             border-radius: 20px;
             padding: 2rem;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
             cursor: pointer;
-            border: 3px solid transparent;
+            transition: transform 0.3s ease;
         }
-
+        
         .game-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            border-color: #667eea;
         }
-
+        
         .game-icon {
             font-size: 4rem;
             margin-bottom: 1rem;
         }
-
+        
         .game-title {
             font-size: 1.8rem;
             margin-bottom: 1rem;
             color: #333;
             font-weight: bold;
         }
-
-        .game-title strong {
-            color: #000;
-        }
-
+        
         .game-description {
             color: #666;
             margin-bottom: 1.5rem;
             line-height: 1.6;
         }
-
+        
         .play-button {
             background: linear-gradient(45deg, #4CAF50, #45a049);
             color: white;
@@ -116,40 +79,42 @@
             font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
-            font-family: inherit;
         }
-
+        
         .play-button:hover {
-            background: linear-gradient(45deg, #45a049, #4CAF50);
             transform: scale(1.05);
         }
-
+        
+        .smart-install-card {
+            background: linear-gradient(45deg, #17a2b8, #138496);
+            color: white;
+        }
+        
+        .smart-install-card .game-description {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .smart-install-card .play-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+        }
+        
         .matematica .play-button {
             background: linear-gradient(45deg, #2196F3, #0D47A1);
         }
-
-        .matematica .play-button:hover {
-            background: linear-gradient(45deg, #0D47A1, #2196F3);
-        }
-
+        
         .tabelline .play-button {
             background: linear-gradient(45deg, #9C27B0, #673AB7);
         }
-
-        .tabelline .play-button:hover {
-            background: linear-gradient(45deg, #673AB7, #9C27B0);
-        }
-
+        
         .coming-soon {
             background: linear-gradient(45deg, #FF9800, #F57C00);
-            opacity: 0.7;
             position: relative;
             overflow: hidden;
         }
-
+        
         .coming-soon::before {
             content: "PRESTO DISPONIBILE";
             position: absolute;
@@ -163,206 +128,56 @@
             font-size: 0.8rem;
             border-radius: 20px;
         }
-
-        .coming-soon .play-button {
-            background: #ccc;
-            cursor: not-allowed;
-            pointer-events: none;
+        
+        .device-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.3);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
         }
-
+        
         .footer {
             background: rgba(0,0,0,0.1);
             color: white;
             text-align: center;
-            padding: 1rem;
-            margin-top: auto;
+            padding: 2rem;
+            margin-top: 2rem;
         }
-
+        
         .stats {
             display: flex;
             justify-content: center;
             gap: 2rem;
-            margin-top: 2rem;
+            margin-bottom: 1rem;
         }
-
+        
         .stat-item {
             text-align: center;
-            color: white;
         }
-
+        
         .stat-number {
             font-size: 2rem;
             font-weight: bold;
         }
-
+        
         .stat-label {
             font-size: 0.9rem;
             opacity: 0.8;
         }
-
-        .loading-card {
-            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
-            border-radius: 20px;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            animation: pulse 2s infinite;
-        }
-
-        .loading-card .game-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            animation: spin 2s linear infinite;
-        }
-
-        .loading-card .game-title {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            color: #666;
-            font-weight: bold;
-        }
-
-        .loading-card .game-description {
-            color: #888;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .error-card {
-            background: linear-gradient(45deg, #ffebee, #ffcdd2);
-            border: 2px solid #f44336;
-            color: #c62828;
-        }
-
-        .error-card .game-icon {
-            animation: none;
-        }
-
-        .install-card {
-            background: linear-gradient(45deg, #17a2b8, #138496);
-            color: white;
-        }
-
-        .install-card .game-description {
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .install-card .play-button {
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid white;
-            color: white;
-        }
-
-        .install-card .play-button:hover {
-            background: white;
-            color: #17a2b8;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .offline-indicator {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #ff6b6b;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            display: none;
-            animation: slideInRight 0.5s ease;
-        }
-
-        .install-notification {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(45deg, #28a745, #20c997);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 25px;
-            font-size: 1.1em;
-            z-index: 1001;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-            display: none;
-            animation: slideInTop 0.5s ease;
-        }
-
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes slideInTop {
-            from { transform: translate(-50%, -100%); opacity: 0; }
-            to { transform: translate(-50%, 0); opacity: 1; }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
+        
         @media (max-width: 768px) {
             .games-grid {
                 grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-            
-            .game-card {
-                padding: 1.5rem;
             }
             
             .stats {
                 flex-direction: column;
                 gap: 1rem;
-            }
-            
-            .offline-indicator {
-                top: 10px;
-                right: 10px;
-                font-size: 0.8em;
-                padding: 6px 12px;
-            }
-            
-            .install-notification {
-                top: 10px;
-                font-size: 1em;
-                padding: 12px 20px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 1rem;
-            }
-            
-            .game-card {
-                padding: 1rem;
-            }
-            
-            .game-icon {
-                font-size: 3rem;
-            }
-            
-            .game-title {
-                font-size: 1.5rem;
             }
         }
     </style>
@@ -374,17 +189,29 @@
     </div>
 
     <div class="container">
-        <div class="games-grid" id="games-grid">
+        <div class="games-grid">
+            <!-- Smart Install Card -->
+            <div class="game-card smart-install-card" style="position: relative;">
+                <div class="device-badge" id="device-badge">🔍 Rilevamento...</div>
+                <div class="game-icon">🤖</div>
+                <div class="game-title">Installazione Smart</div>
+                <div class="game-description" id="smart-description">
+                    🧠 Stiamo rilevando automaticamente il tuo dispositivo per offrirti la migliore esperienza di installazione...
+                </div>
+                <button class="play-button" onclick="smartInstall()">🚀 Installazione Automatica</button>
+            </div>
+
+            <!-- Matematica sul Divano -->
             <div class="game-card matematica" onclick="window.location.href='matematica.html'">
                 <div class="game-icon">🧮</div>
                 <div class="game-title">Matematica sul Divano</div>
                 <div class="game-description">
-                    Addizioni, sottrazioni, moltiplicazioni e divisioni progressive con 4 operazioni complete. Audio interattivo, PWA installabile e interfaccia ottimizzata!
+                    Addizioni, sottrazioni, moltiplicazioni e divisioni progressive con 6 operazioni complete. Audio interattivo, PWA installabile e interfaccia ottimizzata!
                 </div>
                 <a href="matematica.html" class="play-button">🚀 Gioca Ora</a>
             </div>
 
-            <!-- Gioco Tabelline -->
+            <!-- Sfida Tabelline -->
             <div class="game-card tabelline" onclick="window.location.href='tabelline.html'">
                 <div class="game-icon">🎯</div>
                 <div class="game-title">Sfida Tabelline</div>
@@ -403,26 +230,7 @@
                 </div>
                 <button class="play-button">🔜 Presto</button>
             </div>
-
-            <!-- Install App Button -->
-            <div class="game-card install-card hidden" id="install-card">
-                <div class="game-icon">📱</div>
-                <div class="game-title">Installa App</div>
-                <div class="game-description">
-                    Installa i Giochi Educativi come app sul tuo dispositivo per un accesso veloce e funzionalità offline!
-                </div>
-                <button class="play-button" onclick="installApp()">📲 Installa Ora</button>
-            </div>
         </div>
-    </div>
-
-    <!-- Status indicators -->
-    <div class="offline-indicator" id="offline-indicator">
-        📴 Modalità Offline
-    </div>
-    
-    <div class="install-notification" id="install-notification">
-        🎉 App installata con successo! Ora puoi usarla offline.
     </div>
 
     <div class="footer">
@@ -440,272 +248,52 @@
                 <div class="stat-label">Divertimento</div>
             </div>
         </div>
-        <p style="margin-top: 1rem; opacity: 0.8;">© 2025 Maestro Alberto - Giochi Educativi per Studenti</p>
+        <p>© 2025 Maestro Alberto - Giochi Educativi per Studenti</p>
     </div>
 
     <script>
-        // === VARIABILI GLOBALI ===
-        let gamesData = null;
-        let deferredPrompt = null;
-
-        // === INIZIALIZZAZIONE ===
+        let deviceInfo = {};
+        
+        function detectDevice() {
+            const userAgent = navigator.userAgent;
+            deviceInfo = {
+                isDesktop: !/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent),
+                isWindows: /Windows/i.test(navigator.platform),
+                isMac: /Mac/i.test(navigator.platform),
+                isAndroid: /Android/i.test(userAgent),
+                isiOS: /iPhone|iPad|iPod/i.test(userAgent),
+                isChrome: /Chrome/i.test(userAgent)
+            };
+        }
+        
+        function updateSmartCard() {
+            const badge = document.getElementById('device-badge');
+            const description = document.getElementById('smart-description');
+            
+            if (deviceInfo.isDesktop) {
+                badge.textContent = '💻 Desktop';
+                description.innerHTML = '🖥️ <strong>Desktop rilevato!</strong><br>Clicca per installare l\'app sul tuo computer!';
+            } else if (deviceInfo.isAndroid) {
+                badge.textContent = '📱 Android';
+                description.innerHTML = '📱 <strong>Android rilevato!</strong><br>Aggiungi alla schermata Home!';
+            } else if (deviceInfo.isiOS) {
+                badge.textContent = '🍎 iOS';
+                description.innerHTML = '🍎 <strong>iOS rilevato!</strong><br>Usa Condividi → Aggiungi a Home!';
+            }
+        }
+        
+        function smartInstall() {
+            if (deviceInfo.isDesktop) {
+                alert('Per installare su desktop:\n\n1. Cerca l\'icona 📥 nella barra indirizzi\n2. Clicca "Installa"\n3. Conferma installazione');
+            } else {
+                alert('Per installare su mobile:\n\n1. Menu browser\n2. "Aggiungi alla schermata Home"\n3. Conferma');
+            }
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
-            initializeApp();
+            detectDevice();
+            setTimeout(updateSmartCard, 1000);
         });
-
-        async function initializeApp() {
-            console.log('🚀 Inizializzazione app...');
-            
-            // Inizializza PWA
-            initializePWA();
-            
-            // Carica e visualizza giochi
-            await loadGames();
-            
-            // Animazioni di entrata
-            animateCards();
-        }
-
-        // === CARICAMENTO DINAMICO GIOCHI ===
-        async function loadGames() {
-            try {
-                console.log('📚 Caricamento giochi da games.json...');
-                const response = await fetch('./games.json');
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                gamesData = await response.json();
-                console.log('✅ Giochi caricati:', gamesData);
-                
-                // Aggiorna titolo se configurato
-                if (gamesData.settings) {
-                    updateAppTitle(gamesData.settings);
-                }
-                
-                // Genera le carte dei giochi
-                generateGameCards(gamesData.games);
-                
-                // Aggiorna statistiche
-                updateStats(gamesData.games);
-                
-            } catch (error) {
-                console.error('❌ Errore nel caricamento giochi:', error);
-                console.log('💾 Utilizzo fallback hardcoded');
-                // Aggiungi carta installazione anche se JSON fallisce
-                addInstallCard();
-            }
-        }
-
-        function updateAppTitle(settings) {
-            if (settings.title) {
-                document.querySelector('h1').textContent = `🎮 ${settings.title}`;
-            }
-            if (settings.subtitle) {
-                document.querySelector('.header p').textContent = settings.subtitle;
-            }
-        }
-
-        function generateGameCards(games) {
-            const gamesGrid = document.getElementById('games-grid');
-            gamesGrid.innerHTML = ''; // Pulisce il contenuto esistente
-            
-            // Filtra solo giochi attivi e ordina per featured
-            const activeGames = games
-                .filter(game => game.active !== false)
-                .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
-            
-            activeGames.forEach(game => {
-                const gameCard = createGameCard(game);
-                gamesGrid.appendChild(gameCard);
-            });
-            
-            // Aggiungi carta installazione sempre (per ora)
-            addInstallCard();
-        }
-
-        function createGameCard(game) {
-            const card = document.createElement('div');
-            
-            // Determina le classi CSS
-            const cardClasses = ['game-card'];
-            if (game.buttonColor) cardClasses.push(game.buttonColor);
-            if (!game.file) cardClasses.push('coming-soon');
-            
-            card.className = cardClasses.join(' ');
-            
-            // Click handler
-            if (game.file) {
-                card.onclick = () => window.location.href = game.file;
-            } else {
-                card.onclick = (e) => handleComingSoonClick(e, card);
-            }
-            
-            // Contenuto della carta
-            card.innerHTML = `
-                <div class="game-icon">${game.icon}</div>
-                <div class="game-title">${game.title}</div>
-                <div class="game-description">${game.description}</div>
-                ${game.file ? 
-                    `<a href="${game.file}" class="play-button">${game.buttonText}</a>` :
-                    `<button class="play-button">${game.buttonText}</button>`
-                }
-            `;
-            
-            return card;
-        }
-
-        function addInstallCard() {
-            const installCard = document.createElement('div');
-            installCard.className = 'game-card install-card'; // ✅ Rimossa classe 'hidden'
-            installCard.id = 'install-card-dynamic';
-            
-            installCard.innerHTML = `
-                <div class="game-icon">📱</div>
-                <div class="game-title">Installa App</div>
-                <div class="game-description">
-                    Installa i Giochi Educativi come app sul tuo dispositivo per un accesso veloce e funzionalità offline!
-                </div>
-                <button class="play-button" onclick="installApp()">📲 Installa Ora</button>
-            `;
-            
-            document.getElementById('games-grid').appendChild(installCard);
-        }
-
-        function updateStats(games) {
-            const activeGames = games.filter(game => game.active !== false && game.file);
-            const inDevelopment = games.filter(game => !game.file || game.active === false);
-            
-            const stats = document.querySelectorAll('.stat-number');
-            if (stats[0]) stats[0].textContent = activeGames.length;
-            if (stats[1]) stats[1].textContent = inDevelopment.length;
-        }
-
-        function handleComingSoonClick(e, card) {
-            e.preventDefault();
-            card.style.animation = 'shake 0.5s';
-            setTimeout(() => {
-                card.style.animation = '';
-            }, 500);
-        }
-
-        function animateCards() {
-            const cards = document.querySelectorAll('.game-card');
-            cards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(50px)';
-                card.style.transition = 'all 0.6s ease';
-                
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 200);
-            });
-        }
-
-        // === PWA FUNCTIONALITY ===
-        function initializePWA() {
-            // Register Service Worker
-            if ('serviceWorker' in navigator) {
-                registerServiceWorker();
-            }
-
-            // Handle install prompt
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                const installCard = document.getElementById('install-card') || document.getElementById('install-card-dynamic');
-                if (installCard) {
-                    installCard.classList.remove('hidden');
-                }
-            });
-
-            // Handle online/offline status
-            updateOnlineStatus();
-            window.addEventListener('online', updateOnlineStatus);
-            window.addEventListener('offline', updateOnlineStatus);
-
-            // Handle app install
-            window.addEventListener('appinstalled', (evt) => {
-                console.log('✅ App installata con successo');
-                showInstallNotification();
-                const installCard = document.getElementById('install-card') || document.getElementById('install-card-dynamic');
-                if (installCard) {
-                    installCard.classList.add('hidden');
-                }
-            });
-        }
-
-        function registerServiceWorker() {
-            navigator.serviceWorker.register('./sw.js')
-                .then(registration => {
-                    console.log('✅ Service Worker registrato:', registration);
-                    
-                    // Gestisce aggiornamenti
-                    registration.addEventListener('updatefound', () => {
-                        const newWorker = registration.installing;
-                        newWorker.addEventListener('statechange', () => {
-                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                // Nuovo SW disponibile
-                                showUpdateNotification();
-                            }
-                        });
-                    });
-                })
-                .catch(error => {
-                    console.error('❌ Registrazione Service Worker fallita:', error);
-                });
-        }
-
-        function installApp() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('✅ Utente ha accettato installazione');
-                        showInstallNotification();
-                        const installCard = document.getElementById('install-card') || document.getElementById('install-card-dynamic');
-                        if (installCard) {
-                            installCard.classList.add('hidden');
-                        }
-                    } else {
-                        console.log('❌ Utente ha rifiutato installazione');
-                    }
-                    deferredPrompt = null;
-                });
-            } else {
-                // Fallback per browser che non supportano install prompt
-                alert('Per installare l\'app:\n\n• Su Android: Menu browser → "Aggiungi alla schermata Home"\n• Su iPhone: Tasto condividi → "Aggiungi alla schermata Home"');
-            }
-        }
-
-        function showInstallNotification() {
-            const notification = document.getElementById('install-notification');
-            notification.style.display = 'block';
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 4000);
-        }
-
-        function showUpdateNotification() {
-            const updateNotification = document.createElement('div');
-            updateNotification.className = 'install-notification';
-            updateNotification.innerHTML = '🔄 Aggiornamento disponibile! <button onclick="location.reload()" style="margin-left: 10px; padding: 5px 10px; border: none; border-radius: 5px; background: white; color: #28a745; cursor: pointer;">Aggiorna</button>';
-            document.body.appendChild(updateNotification);
-            updateNotification.style.display = 'block';
-        }
-
-        function updateOnlineStatus() {
-            const indicator = document.getElementById('offline-indicator');
-            if (!gamesData?.settings?.showOfflineIndicator) return;
-            
-            if (navigator.onLine) {
-                indicator.style.display = 'none';
-            } else {
-                indicator.style.display = 'block';
-            }
-        }
     </script>
 </body>
 </html>

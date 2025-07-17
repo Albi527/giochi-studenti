@@ -273,6 +273,14 @@
                     🧠 Stiamo rilevando automaticamente il tuo dispositivo per offrirti la migliore esperienza di installazione...
                 </div>
                 <button class="play-button" onclick="smartInstall()">🚀 Installazione Automatica</button>
+                <br><br>
+                <!-- Pulsanti di test per artifact -->
+                <button class="play-button" onclick="testHideCard()" style="background: linear-gradient(45deg, #ff6b6b, #ffa500); font-size: 0.9rem; padding: 0.5rem 1rem;">
+                    🧪 Test: Simula Installazione
+                </button>
+                <button class="play-button" onclick="resetTest()" style="background: linear-gradient(45deg, #6c757d, #495057); font-size: 0.9rem; padding: 0.5rem 1rem; margin-left: 10px;">
+                    🔄 Reset Test
+                </button>
             </div>
 
             <!-- Matematica sul Divano -->
@@ -330,40 +338,97 @@
         let deferredPrompt = null;
 
         function checkIfInstalled() {
+            console.log('🔍 Controllo se app già installata...');
+            
             // Controlla se l'app è già installata
             if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
-                // App è già installata e in modalità standalone
+                console.log('✅ App in modalità standalone rilevata');
                 hideInstallCard();
                 return true;
             }
             
             // Controllo per iOS (se aggiunta alla home screen)
             if (deviceInfo.isiOS && window.navigator.standalone) {
+                console.log('✅ iOS standalone rilevato');
                 hideInstallCard();
                 return true;
             }
             
+            // Controllo localStorage per flag manuale (per testing)
+            if (localStorage.getItem('app-installed') === 'true') {
+                console.log('✅ Flag installazione trovato in localStorage');
+                hideInstallCard();
+                return true;
+            }
+            
+            console.log('📱 App non ancora installata');
             return false;
         }
 
         function hideInstallCard() {
             const installCard = document.getElementById('install-card');
+            console.log('🔍 Tentativo di nascondere card installazione...', installCard);
+            
             if (installCard) {
+                console.log('✅ Card trovata, avvio animazione...');
                 installCard.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
                 installCard.style.opacity = '0';
                 installCard.style.transform = 'scale(0.9)';
                 
                 setTimeout(() => {
                     installCard.style.display = 'none';
+                    console.log('🎉 Card nascosta completamente');
                     
                     // Riorganizza la griglia senza la card
                     const gamesGrid = document.querySelector('.games-grid');
                     if (gamesGrid) {
                         gamesGrid.style.transition = 'all 0.3s ease';
+                        console.log('📐 Griglia riorganizzata');
                     }
                 }, 500);
                 
-                console.log('🎉 Card installazione nascosta - App già installata');
+                showSuccessMessage('🎉 Card installazione nascosta!');
+            } else {
+                console.error('❌ Card installazione non trovata con ID: install-card');
+            }
+        }
+
+        function testHideCard() {
+            console.log('🧪 Test: Simulazione installazione app...');
+            showSuccessMessage('🧪 Test: Simulazione installazione completata!');
+            
+            // Salva flag installazione per simulare app installata
+            try {
+                localStorage.setItem('app-installed', 'true');
+                console.log('💾 Flag installazione salvato in localStorage');
+            } catch (e) {
+                console.log('⚠️ localStorage non disponibile in questo ambiente');
+            }
+            
+            setTimeout(() => {
+                hideInstallCard();
+            }, 1500);
+        }
+
+        function resetTest() {
+            console.log('🔄 Reset test installazione...');
+            
+            // Rimuovi flag installazione
+            try {
+                localStorage.removeItem('app-installed');
+                console.log('🗑️ Flag installazione rimosso da localStorage');
+            } catch (e) {
+                console.log('⚠️ localStorage non disponibile in questo ambiente');
+            }
+            
+            // Rimostra la card
+            const installCard = document.getElementById('install-card');
+            if (installCard) {
+                installCard.style.display = 'block';
+                installCard.style.opacity = '1';
+                installCard.style.transform = 'scale(1)';
+                console.log('👀 Card installazione ripristinata');
+                showSuccessMessage('🔄 Test resettato - Card ripristinata!');
             }
         }
 

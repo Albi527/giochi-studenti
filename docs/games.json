@@ -3,7 +3,7 @@
     {
       "id": "matematica",
       "title": "Matematica sul Divano",
-      "description": "Addizioni, sottrazioni, moltiplicazioni e divisioni progressive con 6 tipi di operazioni complete. Include tabelline, divisioni per 10/100/1000, audio interattivo, PWA installabile e interfaccia ottimizzata!",
+      "description": "Addizioni, sottrazioni, moltiplicazioni e divisioni progressive con 6 operazioni complete. Audio interattivo, PWA installabile e interfaccia ottimizzata!",
       "icon": "🧮",
       "file": "matematica.html",
       "category": "matematica",
@@ -12,7 +12,7 @@
       "active": true,
       "featured": true,
       "version": "3.0.0",
-      "lastUpdated": "2025-07-17",
+      "lastUpdated": "2025-07-18",
       "features": [
         "6 tipi di operazioni matematiche complete",
         "Addizioni progressive (4 livelli)",
@@ -65,7 +65,7 @@
     {
       "id": "tabelline",
       "title": "Sfida Tabelline",
-      "description": "Timer di 60 secondi, 3 livelli di difficoltà, sistema audio interattivo e anti-ripetizione domande. Sistema di scadenza integrato!",
+      "description": "Timer di 60 secondi, 3 livelli di difficoltà e sistema anti-ripetizione. Perfetto per allenarsi con le tabelline!",
       "icon": "🎯",
       "file": "tabelline.html",
       "category": "matematica",
@@ -74,7 +74,7 @@
       "active": true,
       "featured": true,
       "version": "2.1.0",
-      "lastUpdated": "2025-07-15",
+      "lastUpdated": "2025-07-18",
       "features": [
         "Sistema audio Web Audio API",
         "3 livelli di difficoltà progressiva", 
@@ -98,7 +98,8 @@
       "stats": {
         "questionsPerGame": 15,
         "maxScore": 150,
-        "gameDuration": "60 secondi"
+        "gameDuration": "60 secondi",
+        "difficultyLevels": 3
       }
     },
     {
@@ -111,7 +112,9 @@
       "buttonText": "🔜 Presto",
       "buttonColor": "coming-soon",
       "active": true,
-      "featured": false
+      "featured": false,
+      "version": "1.0.0",
+      "lastUpdated": "2025-07-18"
     }
   ],
   "categories": [
@@ -128,21 +131,130 @@
       "color": "#9C27B0"
     }
   ],
+  "installation": {
+    "smartInstallation": true,
+    "persistentHiding": true,
+    "supportedPlatforms": ["Desktop", "Android", "iOS"],
+    "instructions": {
+      "chrome_desktop": {
+        "steps": [
+          "Clicca sui tre puntini (⋮) in alto a destra",
+          "Scorri giù fino a \"Trasmetti, salva e condividi\"",
+          "Clicca su \"Installa come app\"",
+          "Conferma \"Installa\""
+        ]
+      },
+      "chrome_android": {
+        "steps": [
+          "Clicca sui tre trattini (≡) in basso a destra",
+          "Clicca su \"Aggiungi al telefono\"",
+          "Clicca \"Aggiungi\""
+        ]
+      },
+      "edge_desktop": {
+        "steps": [
+          "Clicca sui tre puntini (...) in alto a destra",
+          "Vai su \"App\" → \"Installa questo sito come app\"",
+          "Clicca su \"Installa\""
+        ]
+      },
+      "safari_ios": {
+        "steps": [
+          "Apri questo sito in Safari",
+          "Tocca il pulsante \"Condividi\" 📤",
+          "Scorri e trova \"Aggiungi alla schermata Home\"",
+          "Tocca \"Aggiungi\" in alto a destra"
+        ]
+      }
+    }
+  },
   "settings": {
     "title": "Giochi Educativi",
     "subtitle": "by Maestro Alberto",
-    "version": "1.3.0",
-    "lastUpdated": "2025-07-17",
+    "version": "1.5.0",
+    "lastUpdated": "2025-07-18",
     "autoDetectGames": true,
     "showInstallButton": true,
     "showOfflineIndicator": true,
     "audioSupported": true,
+    "installationPersistent": true,
+    "cardHidesPermanently": true,
     "newFeatures": {
+      "v1.5.0": [
+        "Installazione Smart persistente",
+        "Card installazione sparisce permanentemente",
+        "Istruzioni Android corrette (tre trattini)",
+        "Gestione localStorage per persistenza",
+        "Feedback installazione migliorato"
+      ],
       "matematica": [
         "Divisioni per 10, 100, 1000 (7 livelli)",
         "Sfondo verde menta rilassante",
-        "Menu moltiplicazioni/divisioni espandibili"
+        "Menu moltiplicazioni/divisioni espandibili",
+        "Sistema anti-ripetizione migliorato"
+      ],
+      "tabelline": [
+        "Sistema audio Web Audio API",
+        "Timer 60 secondi con avvisi sonori",
+        "3 livelli di difficoltà progressiva"
       ]
     }
+  },
+  "stats": {
+    "totalGames": 3,
+    "availableGames": 2,
+    "inDevelopment": 1,
+    "totalLevels": 36,
+    "mathematicaLevels": 33,
+    "tabellineLevels": 3,
+    "supportedDevices": 3,
+    "pwaInstallable": true,
+    "offlineCapable": true,
+    "audioSupported": true,
+    "lastMajorUpdate": "2025-07-18"
+  },
+  "compatibility": {
+    "browsers": {
+      "chrome": {
+        "desktop": true,
+        "mobile": true,
+        "pwaSupport": true,
+        "installInstructions": "chrome_desktop"
+      },
+      "edge": {
+        "desktop": true,
+        "mobile": true,
+        "pwaSupport": true,
+        "installInstructions": "edge_desktop"
+      },
+      "firefox": {
+        "desktop": true,
+        "mobile": true,
+        "pwaSupport": "limited",
+        "installInstructions": null
+      },
+      "safari": {
+        "desktop": false,
+        "mobile": true,
+        "pwaSupport": "ios_only",
+        "installInstructions": "safari_ios"
+      }
+    },
+    "platforms": {
+      "windows": true,
+      "mac": true,
+      "linux": true,
+      "android": true,
+      "ios": true
+    }
+  },
+  "metadata": {
+    "author": "Maestro Alberto",
+    "description": "Piattaforma di giochi educativi per studenti con installazione PWA smart e persistente",
+    "keywords": ["educativo", "matematica", "tabelline", "PWA", "giochi", "studenti"],
+    "language": "it",
+    "target_audience": "6-12 anni",
+    "educational_subjects": ["Matematica", "Calcolo mentale", "Operazioni aritmetiche"],
+    "technical_features": ["PWA", "Audio interattivo", "Offline", "Responsive", "Installazione persistente"]
   }
 }

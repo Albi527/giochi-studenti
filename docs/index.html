@@ -273,14 +273,6 @@
                     🧠 Stiamo rilevando automaticamente il tuo dispositivo per offrirti la migliore esperienza di installazione...
                 </div>
                 <button class="play-button" onclick="smartInstall()">🚀 Installazione Automatica</button>
-                <br><br>
-                <!-- Pulsanti di test per artifact -->
-                <button class="play-button" onclick="testHideCard()" style="background: linear-gradient(45deg, #ff6b6b, #ffa500); font-size: 0.9rem; padding: 0.5rem 1rem;">
-                    🧪 Test: Simula Installazione
-                </button>
-                <button class="play-button" onclick="resetTest()" style="background: linear-gradient(45deg, #6c757d, #495057); font-size: 0.9rem; padding: 0.5rem 1rem; margin-left: 10px;">
-                    🔄 Reset Test
-                </button>
             </div>
 
             <!-- Matematica sul Divano -->
@@ -338,58 +330,56 @@
         let deferredPrompt = null;
 
         function checkIfInstalled() {
-            console.log('🔍 Controllo se app già installata...');
-            
-            // Controlla se l'app è già installata
+            // Controlla se l'app è già installata (modalità standalone)
             if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
-                console.log('✅ App in modalità standalone rilevata');
                 hideInstallCard();
                 return true;
             }
             
             // Controllo per iOS (se aggiunta alla home screen)
             if (deviceInfo.isiOS && window.navigator.standalone) {
-                console.log('✅ iOS standalone rilevato');
                 hideInstallCard();
                 return true;
             }
             
-            // Controllo localStorage per flag manuale (per testing)
-            if (localStorage.getItem('app-installed') === 'true') {
-                console.log('✅ Flag installazione trovato in localStorage');
-                hideInstallCard();
-                return true;
+            // Controlla flag persistente di installazione
+            try {
+                if (localStorage.getItem('app-installed') === 'true') {
+                    hideInstallCard();
+                    return true;
+                }
+            } catch (e) {
+                // localStorage non disponibile
             }
             
-            console.log('📱 App non ancora installata');
             return false;
         }
 
         function hideInstallCard() {
             const installCard = document.getElementById('install-card');
-            console.log('🔍 Tentativo di nascondere card installazione...', installCard);
             
             if (installCard) {
-                console.log('✅ Card trovata, avvio animazione...');
+                // Salva permanentemente che l'app è installata
+                try {
+                    localStorage.setItem('app-installed', 'true');
+                    localStorage.setItem('app-installed-date', new Date().toISOString());
+                } catch (e) {
+                    console.log('⚠️ localStorage non disponibile');
+                }
+                
                 installCard.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
                 installCard.style.opacity = '0';
                 installCard.style.transform = 'scale(0.9)';
                 
                 setTimeout(() => {
                     installCard.style.display = 'none';
-                    console.log('🎉 Card nascosta completamente');
                     
                     // Riorganizza la griglia senza la card
                     const gamesGrid = document.querySelector('.games-grid');
                     if (gamesGrid) {
                         gamesGrid.style.transition = 'all 0.3s ease';
-                        console.log('📐 Griglia riorganizzata');
                     }
                 }, 500);
-                
-                showSuccessMessage('🎉 Card installazione nascosta!');
-            } else {
-                console.error('❌ Card installazione non trovata con ID: install-card');
             }
         }
 
@@ -448,6 +438,11 @@
         }
 
         function updateSmartCard() {
+            // Prima controlla se l'app è già installata
+            if (checkIfInstalled()) {
+                return; // Se già installata, non aggiornare la card
+            }
+            
             const badge = document.getElementById('device-badge');
             const description = document.getElementById('smart-description');
             
@@ -475,6 +470,12 @@
         }
 
         function smartInstall() {
+            // Controlla se l'app è già installata
+            if (checkIfInstalled()) {
+                showSuccessMessage('✅ App già installata!');
+                return;
+            }
+            
             // Se abbiamo il prompt di installazione nativo, lo usiamo
             if (deferredPrompt) {
                 deferredPrompt.prompt();
@@ -561,8 +562,9 @@
                 showInstallInstructions(`
                     📱 <strong>Installazione Android:</strong><br><br>
                     <strong>Chrome Android:</strong><br>
-                    1. Menu ⋮ → "Aggiungi alla schermata Home"<br>
-                    2. Conferma "Aggiungi"<br><br>
+                    1. Clicca sui tre trattini (≡) in basso a destra<br>
+                    2. Clicca su "Aggiungi al telefono"<br>
+                    3. Clicca "Aggiungi"<br><br>
                     
                     <strong>Firefox Android:</strong><br>
                     1. Menu ⋮ → "Installa"<br>
@@ -645,6 +647,12 @@
         window.addEventListener('beforeinstallprompt', (e) => {
             console.log('beforeinstallprompt event captured');
             e.preventDefault();
+            
+            // Controlla se l'app è già installata
+            if (checkIfInstalled()) {
+                return; // Se già installata, ignora l'evento
+            }
+            
             deferredPrompt = e;
             
             // Aggiorna la card per mostrare che l'installazione è disponibile
@@ -688,11 +696,21 @@
         document.addEventListener('DOMContentLoaded', function() {
             detectDevice();
             
-            // Controlla se l'app è già installata
+            // Controlla immediatamente se l'app è già installata
             if (checkIfInstalled()) {
-                console.log('🎮 App già installata - modalità standalone rilevata');
-            } else {
-                setTimeout(updateSmartCard, 1000);
+                // App già installata, card nascosta
+                return;
+            }
+            
+            // App non installata, mostra la card con le istruzioni
+            setTimeout(updateSmartCard, 1000);
+        });
+
+        // Controllo aggiuntivo al caricamento completo della pagina
+        window.addEventListener('load', function() {
+            // Ricontrolla se l'app è installata (per sicurezza)
+            if (checkIfInstalled()) {
+                return;
             }
         });
     </script>

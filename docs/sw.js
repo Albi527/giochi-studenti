@@ -1,35 +1,36 @@
-const CACHE_NAME = 'giochi-educativi-v5'; // ⬆️ VERSIONE AGGIORNATA per landing page completa
+const CACHE_NAME = 'giochi-educativi-v6'; // ⬆️ VERSIONE FINALE con installazione persistente
 const urlsToCache = [
     './',
-    './index.html',                // ✅ Landing page con installazione smart e 2 giochi
+    './index.html',                // ✅ Landing page finale con installazione smart persistente
     './matematica.html',           // ✅ Matematica 3.0.0 con 6 operazioni e 33 livelli
     './tabelline.html',           // ✅ Sfida Tabelline con timer 60s e 3 livelli
-    './games.json',               // ✅ JSON con stats aggiornate (2 disponibili, 1 in sviluppo)
+    './games.json',               // ✅ JSON con stats finali (2 disponibili, 1 in sviluppo)
     './manifest.json',            // ✅ PWA manifest per installazione
     './icon-192.png',             // ✅ Icone PWA
     './icon-512.png'
 ];
 
 self.addEventListener('install', event => {
-    console.log('Service Worker: Install Event v5 - Landing Page Completa');
+    console.log('Service Worker: Install Event v6 - Versione Finale');
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
                 console.log('Service Worker: Cache aperta:', CACHE_NAME);
-                console.log('Service Worker: Caching landing page completa con:');
-                console.log('  - 🎮 Landing page con design colorato');
-                console.log('  - 🤖 Installazione Smart multi-dispositivo');
+                console.log('Service Worker: Versione finale con:');
+                console.log('  - 🎮 Landing page con installazione smart persistente');
+                console.log('  - 🤖 Card installazione che scompare permanentemente');
                 console.log('  - 🧮 Matematica sul Divano (6 operazioni, 33 livelli)');
                 console.log('  - 🎯 Sfida Tabelline (timer 60s, 3 livelli)');
-                console.log('  - 📊 Stats: 2 giochi disponibili, 1 in sviluppo');
+                console.log('  - 📱 Istruzioni Android corrette (tre trattini)');
+                console.log('  - 💾 Persistenza installazione con localStorage');
                 return cache.addAll(urlsToCache);
             })
             .then(() => {
-                console.log('Service Worker: Tutti i file v5 cachati con successo');
+                console.log('Service Worker: Tutti i file v6 cachati con successo');
                 self.skipWaiting(); // Forza l'attivazione immediata
             })
             .catch(error => {
-                console.error('Service Worker: Errore durante il caching v5:', error);
+                console.error('Service Worker: Errore durante il caching v6:', error);
             })
     );
 });
@@ -42,8 +43,8 @@ self.addEventListener('fetch', event => {
                 .then(response => {
                     // Serve dalla cache se disponibile
                     if (response) {
-                        console.log('Service Worker: index.html v5 dalla cache');
-                        // Aggiornamento background per futures utilizzi
+                        console.log('Service Worker: index.html v6 dalla cache');
+                        // Aggiornamento background per future visite
                         fetch(event.request)
                             .then(networkResponse => {
                                 if (networkResponse && networkResponse.status === 200) {
@@ -60,7 +61,7 @@ self.addEventListener('fetch', event => {
                     }
                     
                     // Se non in cache, fetch dalla rete
-                    console.log('Service Worker: index.html v5 dalla rete');
+                    console.log('Service Worker: index.html v6 dalla rete');
                     return fetch(event.request)
                         .then(networkResponse => {
                             if (networkResponse && networkResponse.status === 200) {
@@ -82,10 +83,11 @@ self.addEventListener('fetch', event => {
         event.respondWith(
             fetch(event.request)
                 .then(response => {
-                    console.log('Service Worker: games.json v1.4.0 aggiornato dalla rete');
-                    console.log('  - Stats attuali: 2 giochi disponibili, 1 in sviluppo');
+                    console.log('Service Worker: games.json v1.5.0 aggiornato dalla rete');
+                    console.log('  - Stats finali: 2 giochi disponibili, 1 in sviluppo');
                     console.log('  - Matematica: 6 operazioni, 33 livelli');
-                    console.log('  - Tabelline: timer 60s, 3 livelli difficoltà');
+                    console.log('  - Tabelline: timer 60s, 3 livelli');
+                    console.log('  - Installazione: persistente con localStorage');
                     // Aggiorna la cache con la nuova versione
                     const responseClone = response.clone();
                     caches.open(CACHE_NAME)
@@ -183,7 +185,7 @@ self.addEventListener('fetch', event => {
         caches.match(event.request)
             .then(response => {
                 if (response) {
-                    console.log('Service Worker: Serving from cache v5:', event.request.url.split('/').pop());
+                    console.log('Service Worker: Serving from cache v6:', event.request.url.split('/').pop());
                     return response;
                 }
                 
@@ -217,27 +219,27 @@ self.addEventListener('fetch', event => {
 });
 
 self.addEventListener('activate', event => {
-    console.log('Service Worker: Activate Event v5 - Landing Page Completa');
+    console.log('Service Worker: Activate Event v6 - Versione Finale');
     event.waitUntil(
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames.map(cacheName => {
                     if (cacheName !== CACHE_NAME) {
                         console.log('Service Worker: Eliminando cache vecchia:', cacheName);
-                        console.log('  - Aggiornando a v5 con landing page ottimizzata');
+                        console.log('  - Aggiornando a v6 con installazione persistente');
                         return caches.delete(cacheName);
                     }
                 })
             );
         }).then(() => {
-            console.log('Service Worker: Ora controlla tutte le pagine con v5');
-            console.log('🎮 Piattaforma completa pronta:');
-            console.log('  ✅ Landing page con design colorato e gradiente');
-            console.log('  ✅ Installazione Smart multi-dispositivo');
+            console.log('Service Worker: Ora controlla tutte le pagine con v6');
+            console.log('🎮 Piattaforma finale pronta:');
+            console.log('  ✅ Landing page con installazione smart persistente');
+            console.log('  ✅ Card installazione che scompare permanentemente');
             console.log('  ✅ Matematica sul Divano (6 operazioni, 33 livelli)');
             console.log('  ✅ Sfida Tabelline (timer 60s, 3 livelli)');
-            console.log('  ✅ Stats aggiornate: 2 disponibili, 1 in sviluppo');
-            console.log('  ✅ PWA installabile su tutti i dispositivi');
+            console.log('  ✅ Istruzioni Android corrette (tre trattini)');
+            console.log('  ✅ PWA installabile con persistenza localStorage');
             return self.clients.claim();
         })
     );
@@ -246,40 +248,58 @@ self.addEventListener('activate', event => {
 // Gestisce messaggi dall'app principale
 self.addEventListener('message', event => {
     if (event.data && event.data.type === 'SKIP_WAITING') {
-        console.log('Service Worker: Ricevuto comando SKIP_WAITING per v5');
+        console.log('Service Worker: Ricevuto comando SKIP_WAITING per v6');
         self.skipWaiting();
     }
     
     if (event.data && event.data.type === 'CACHE_UPDATE') {
-        console.log('Service Worker: Aggiornamento cache v5 richiesto');
+        console.log('Service Worker: Aggiornamento cache v6 richiesto');
         event.waitUntil(updateCache());
     }
     
     if (event.data && event.data.type === 'GET_VERSION') {
         console.log('Service Worker: Richiesta versione corrente');
         event.ports[0].postMessage({
-            version: 'v5',
-            landingPageVersion: '2.0.0',
+            version: 'v6',
+            landingPageVersion: '3.0.0',
             matematicaVersion: '3.0.0',
             tabellineVersion: '1.0.0',
+            installationFeatures: [
+                'Card installazione persistente',
+                'Nasconde automaticamente dopo installazione',
+                'Istruzioni Android corrette',
+                'Gestione localStorage per persistenza'
+            ],
             features: [
-                'Landing page completa con design colorato',
-                'Installazione Smart multi-dispositivo',
+                'Landing page finale con installazione smart',
                 'Matematica: 6 operazioni, 33 livelli',
                 'Tabelline: timer 60s, 3 livelli',
-                'Stats aggiornate: 2 giochi + 1 in sviluppo'
+                'Installazione persistente - card sparisce per sempre',
+                'Istruzioni specifiche per ogni browser/dispositivo'
             ]
         });
     }
     
     if (event.data && event.data.type === 'GET_STATS') {
-        console.log('Service Worker: Richiesta statistiche attuali');
+        console.log('Service Worker: Richiesta statistiche finali');
         event.ports[0].postMessage({
             giochiDisponibili: 2,
             inSviluppo: 1,
             matematicaLivelli: 33,
             tabellineLivelli: 3,
-            dispositiviSupportati: ['Desktop', 'Android', 'iOS']
+            dispositiviSupportati: ['Desktop', 'Android', 'iOS'],
+            installationPersistent: true,
+            androidInstructionsFixed: true
+        });
+    }
+    
+    if (event.data && event.data.type === 'CHECK_INSTALLATION') {
+        console.log('Service Worker: Controllo stato installazione');
+        // Coordina con l'index.html per controlli installazione
+        event.ports[0].postMessage({
+            shouldCheckInstallation: true,
+            useLocalStorage: true,
+            hideCardPermanently: true
         });
     }
 });
@@ -315,7 +335,7 @@ function shouldCache(request) {
 async function updateCache() {
     try {
         const cache = await caches.open(CACHE_NAME);
-        console.log('Service Worker: Aggiornamento forzato cache v5...');
+        console.log('Service Worker: Aggiornamento forzato cache v6...');
         
         await Promise.all(
             urlsToCache.map(async (url) => {
@@ -323,47 +343,73 @@ async function updateCache() {
                 const response = await fetch(url);
                 if (response.ok) {
                     await cache.put(url, response);
-                    console.log('Service Worker: Aggiornato v5:', url);
+                    console.log('Service Worker: Aggiornato v6:', url);
                 }
             })
         );
         
-        console.log('Service Worker: Cache v5 aggiornata completamente');
-        console.log('🎉 Piattaforma Giochi Educativi v5 pronta!');
+        console.log('Service Worker: Cache v6 aggiornata completamente');
+        console.log('🎉 Piattaforma Giochi Educativi v6 finale pronta!');
         
         // Notifica all'app che l'aggiornamento è completato
         const clients = await self.clients.matchAll();
         clients.forEach(client => {
             client.postMessage({
                 type: 'CACHE_UPDATED',
-                version: 'v5',
-                message: 'Piattaforma aggiornata! Landing page e giochi pronti.',
-                currentStats: {
+                version: 'v6',
+                message: 'Piattaforma aggiornata alla versione finale!',
+                finalFeatures: {
                     giochiDisponibili: 2,
                     inSviluppo: 1,
-                    features: ['Installazione Smart', 'Matematica 6 operazioni', 'Tabelline 3 livelli']
+                    installationPersistent: true,
+                    cardHidesPermanently: true,
+                    androidInstructionsFixed: true,
+                    features: [
+                        'Installazione Smart persistente',
+                        'Card sparisce permanentemente',
+                        'Istruzioni Android corrette',
+                        'Matematica 6 operazioni complete',
+                        'Tabelline 3 livelli difficoltà'
+                    ]
                 }
             });
         });
         
     } catch (error) {
-        console.error('Service Worker: Errore durante aggiornamento cache v5:', error);
+        console.error('Service Worker: Errore durante aggiornamento cache v6:', error);
     }
 }
 
 // Gestisce sync in background
 self.addEventListener('sync', event => {
     if (event.tag === 'background-sync') {
-        console.log('Service Worker: Background sync triggered per v5');
+        console.log('Service Worker: Background sync triggered per v6');
         event.waitUntil(updateCache());
     }
 });
 
-// Gestione notifiche push per nuovi giochi
+// Gestione notifiche push per aggiornamenti
 self.addEventListener('push', event => {
     if (event.data) {
         const data = event.data.json();
         console.log('Service Worker: Push notification ricevuta:', data);
+        
+        if (data.type === 'installation_complete') {
+            event.waitUntil(
+                self.registration.showNotification('🎉 Installazione Completata!', {
+                    body: 'Giochi Educativi è ora installato sul tuo dispositivo!',
+                    icon: '/icon-192.png',
+                    badge: '/icon-192.png',
+                    tag: 'installation-complete',
+                    actions: [
+                        {
+                            action: 'open',
+                            title: '🚀 Apri App'
+                        }
+                    ]
+                })
+            );
+        }
         
         if (data.type === 'new_game') {
             event.waitUntil(
@@ -376,22 +422,8 @@ self.addEventListener('push', event => {
                         {
                             action: 'play',
                             title: '🚀 Gioca Ora'
-                        },
-                        {
-                            action: 'later',
-                            title: '⏰ Più Tardi'
                         }
                     ]
-                })
-            );
-        }
-        
-        if (data.type === 'stats_update') {
-            event.waitUntil(
-                self.registration.showNotification('📊 Statistiche Aggiornate', {
-                    body: `Ora disponibili: ${data.available} giochi, ${data.inDev} in sviluppo`,
-                    icon: '/icon-192.png',
-                    tag: 'stats-update'
                 })
             );
         }
@@ -404,13 +436,10 @@ self.addEventListener('notificationclick', event => {
     
     event.notification.close();
     
-    if (event.action === 'play') {
+    if (event.action === 'open' || event.action === 'play') {
         event.waitUntil(
             clients.openWindow('./index.html')
         );
-    } else if (event.action === 'later') {
-        // Rimanda la notifica (implementazione futura)
-        console.log('Service Worker: Notifica rimandata');
     } else {
         // Click generale sulla notifica
         event.waitUntil(
@@ -419,8 +448,19 @@ self.addEventListener('notificationclick', event => {
     }
 });
 
-// Notifica quando il service worker v5 è pronto
-console.log('🚀 Service Worker v5 caricato!');
+// Gestione installazione app
+self.addEventListener('install', event => {
+    console.log('🚀 Service Worker v6 installato!');
+    console.log('🎮 Piattaforma Giochi Educativi - Versione Finale');
+    console.log('✨ Installazione Smart persistente attiva');
+    console.log('📱 Istruzioni Android corrette implementate');
+    console.log('💾 Persistenza localStorage configurata');
+});
+
+// Notifica quando il service worker v6 è pronto
+console.log('🚀 Service Worker v6 caricato - Versione Finale!');
 console.log('🎮 Piattaforma Giochi Educativi - Maestro Alberto');
-console.log('📊 Stats: 2 giochi disponibili, 1 in sviluppo');
-console.log('✨ Installazione Smart multi-dispositivo attiva');
+console.log('📊 Stats finali: 2 giochi disponibili, 1 in sviluppo');
+console.log('✨ Installazione Smart persistente con localStorage');
+console.log('🤖 Card installazione che scompare permanentemente');
+console.log('📱 Istruzioni Android corrette (tre trattini)');

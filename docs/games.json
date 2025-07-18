@@ -134,6 +134,9 @@
   "installation": {
     "smartInstallation": true,
     "persistentHiding": true,
+    "universalSupport": true,
+    "periodicChecks": true,
+    "debugModeAvailable": true,
     "supportedPlatforms": ["Desktop", "Android", "iOS"],
     "instructions": {
       "chrome_desktop": {
@@ -141,37 +144,46 @@
           "Clicca sui tre puntini (⋮) in alto a destra",
           "Scorri giù fino a \"Trasmetti, salva e condividi\"",
           "Clicca su \"Installa come app\"",
-          "Conferma \"Installa\""
-        ]
+          "Conferma \"Installa\"",
+          "La card di installazione scomparirà automaticamente"
+        ],
+        "autoHide": true
       },
       "chrome_android": {
         "steps": [
           "Clicca sui tre trattini (≡) in basso a destra",
           "Clicca su \"Aggiungi al telefono\"",
-          "Clicca \"Aggiungi\""
-        ]
+          "Clicca \"Aggiungi\"",
+          "Riapri la pagina per far scomparire la card"
+        ],
+        "autoHide": "periodic"
       },
       "edge_desktop": {
         "steps": [
           "Clicca sui tre puntini (...) in alto a destra",
           "Vai su \"App\" → \"Installa questo sito come app\"",
-          "Clicca su \"Installa\""
-        ]
+          "Clicca su \"Installa\"",
+          "La card di installazione scomparirà automaticamente"
+        ],
+        "autoHide": true
       },
       "safari_ios": {
         "steps": [
           "Apri questo sito in Safari",
           "Tocca il pulsante \"Condividi\" 📤",
           "Scorri e trova \"Aggiungi alla schermata Home\"",
-          "Tocca \"Aggiungi\" in alto a destra"
-        ]
+          "Tocca \"Aggiungi\" in alto a destra",
+          "Nelle istruzioni, clicca \"Ho Installato l'App\""
+        ],
+        "autoHide": "manual",
+        "manualConfirmation": true
       }
     }
   },
   "settings": {
     "title": "Giochi Educativi",
     "subtitle": "by Maestro Alberto",
-    "version": "1.5.0",
+    "version": "1.6.0",
     "lastUpdated": "2025-07-18",
     "autoDetectGames": true,
     "showInstallButton": true,
@@ -179,7 +191,21 @@
     "audioSupported": true,
     "installationPersistent": true,
     "cardHidesPermanently": true,
+    "universalCompatibility": true,
+    "periodicInstallationChecks": true,
+    "debugFunctionsAvailable": true,
     "newFeatures": {
+      "v1.6.0": [
+        "🎉 Risoluzione completa problema iOS",
+        "🔄 Controlli automatici ogni 3 secondi",
+        "⚡ Controlli immediati al caricamento",
+        "🎯 Gestione universale tutti i browser",
+        "🛠️ Funzioni debug per testing",
+        "📱 Pulsante 'Ho Installato l'App' per iOS",
+        "🚀 Prevenzione controlli multipli",
+        "💾 Gestione errori localStorage migliorata",
+        "✅ Card scompare al 100% su tutte le piattaforme"
+      ],
       "v1.5.0": [
         "Installazione Smart persistente",
         "Card installazione sparisce permanentemente",
@@ -211,6 +237,9 @@
     "pwaInstallable": true,
     "offlineCapable": true,
     "audioSupported": true,
+    "universalInstallation": true,
+    "iOSFullySupported": true,
+    "debugModeAvailable": true,
     "lastMajorUpdate": "2025-07-18"
   },
   "compatibility": {
@@ -219,42 +248,143 @@
         "desktop": true,
         "mobile": true,
         "pwaSupport": true,
-        "installInstructions": "chrome_desktop"
+        "installInstructions": "chrome_desktop",
+        "autoHideCard": true,
+        "supportLevel": "excellent"
       },
       "edge": {
         "desktop": true,
         "mobile": true,
         "pwaSupport": true,
-        "installInstructions": "edge_desktop"
+        "installInstructions": "edge_desktop",
+        "autoHideCard": true,
+        "supportLevel": "excellent"
       },
       "firefox": {
         "desktop": true,
         "mobile": true,
         "pwaSupport": "limited",
-        "installInstructions": null
+        "installInstructions": null,
+        "autoHideCard": "periodic",
+        "supportLevel": "good"
       },
       "safari": {
         "desktop": false,
         "mobile": true,
         "pwaSupport": "ios_only",
-        "installInstructions": "safari_ios"
+        "installInstructions": "safari_ios",
+        "autoHideCard": "manual",
+        "manualConfirmation": true,
+        "supportLevel": "full"
       }
     },
     "platforms": {
-      "windows": true,
-      "mac": true,
-      "linux": true,
-      "android": true,
-      "ios": true
+      "windows": {
+        "supported": true,
+        "browsers": ["chrome", "edge", "firefox"],
+        "installationMethod": "pwa",
+        "cardBehavior": "auto-hide"
+      },
+      "mac": {
+        "supported": true,
+        "browsers": ["chrome", "edge", "firefox"],
+        "installationMethod": "pwa",
+        "cardBehavior": "auto-hide"
+      },
+      "linux": {
+        "supported": true,
+        "browsers": ["chrome", "edge", "firefox"],
+        "installationMethod": "pwa",
+        "cardBehavior": "auto-hide"
+      },
+      "android": {
+        "supported": true,
+        "browsers": ["chrome", "firefox", "edge"],
+        "installationMethod": "add-to-home",
+        "cardBehavior": "periodic-check"
+      },
+      "ios": {
+        "supported": true,
+        "browsers": ["safari"],
+        "installationMethod": "add-to-home",
+        "cardBehavior": "manual-confirmation",
+        "specialFeatures": ["manual-button", "instructions-modal"]
+      }
+    }
+  },
+  "debug": {
+    "functionsAvailable": true,
+    "functions": {
+      "testInstallation": {
+        "command": "testInstallation()",
+        "description": "Simula l'installazione dell'app per testing"
+      },
+      "resetInstallation": {
+        "command": "resetInstallation()",
+        "description": "Ripristina la card di installazione per testing"
+      }
+    },
+    "periodicChecks": {
+      "enabled": true,
+      "interval": "3 secondi",
+      "description": "Controlla automaticamente se l'app è stata installata"
+    },
+    "logging": {
+      "enabled": true,
+      "level": "info",
+      "messages": [
+        "Rilevamento dispositivo",
+        "Controlli installazione",
+        "Eventi PWA",
+        "Nascondere card"
+      ]
     }
   },
   "metadata": {
     "author": "Maestro Alberto",
-    "description": "Piattaforma di giochi educativi per studenti con installazione PWA smart e persistente",
-    "keywords": ["educativo", "matematica", "tabelline", "PWA", "giochi", "studenti"],
+    "description": "Piattaforma di giochi educativi per studenti con installazione PWA universale e persistente",
+    "keywords": ["educativo", "matematica", "tabelline", "PWA", "giochi", "studenti", "iOS", "Android", "Desktop"],
     "language": "it",
     "target_audience": "6-12 anni",
     "educational_subjects": ["Matematica", "Calcolo mentale", "Operazioni aritmetiche"],
-    "technical_features": ["PWA", "Audio interattivo", "Offline", "Responsive", "Installazione persistente"]
+    "technical_features": [
+      "PWA universale",
+      "Audio interattivo", 
+      "Offline completo",
+      "Responsive design",
+      "Installazione persistente",
+      "Controlli automatici",
+      "Debug integrato",
+      "Supporto iOS completo",
+      "Gestione errori robusta"
+    ],
+    "changelog": {
+      "v1.6.0": {
+        "date": "2025-07-18",
+        "type": "major",
+        "description": "Risoluzione completa problemi iOS e miglioramenti installazione universale",
+        "changes": [
+          "Risolto problema iOS: card ora scompare anche su iPhone/iPad",
+          "Controlli automatici ogni 3 secondi per rilevare installazioni",
+          "Pulsante 'Ho Installato l'App' per conferma manuale iOS",
+          "Controlli immediati al caricamento senza timeout",
+          "Funzioni debug per testing e sviluppo",
+          "Gestione errori localStorage migliorata",
+          "Prevenzione controlli multipli con flag dedicato",
+          "Supporto universale tutti browser e dispositivi"
+        ]
+      },
+      "v1.5.0": {
+        "date": "2025-07-18",
+        "type": "minor", 
+        "description": "Installazione Smart persistente implementata",
+        "changes": [
+          "Card installazione sparisce permanentemente",
+          "Istruzioni Android corrette (tre trattini)",
+          "Gestione localStorage per persistenza",
+          "Feedback installazione migliorato"
+        ]
+      }
+    }
   }
 }

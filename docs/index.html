@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giochi Educativi - Maestro Alberto</title>
+    <title>Attività e giochi educativi by Maestro Alberto Fogliata</title>
     
     <style>
         body {
@@ -256,8 +256,8 @@
 </head>
 <body>
     <div class="header">
-        <h1>🎮 Giochi Educativi</h1>
-        <p>by Maestro Alberto</p>
+        <h1>🎮 Attività e giochi educativi</h1>
+        <p>by Maestro Alberto Fogliata</p>
     </div>
 
     <div class="container">
@@ -270,7 +270,7 @@
                 <div class="game-description" id="smart-description">
                     🧠 Stiamo rilevando automaticamente il tuo dispositivo per offrirti la migliore esperienza di installazione...
                 </div>
-                <button class="play-button" onclick="smartInstall()">🚀 Installazione Automatica</button>
+                <button class="play-button" onclick="smartInstall()">🚀 Installazione guidata</button>
             </div>
 
             <!-- Matematica sul Divano -->
@@ -278,7 +278,8 @@
                 <div class="game-icon">🧮</div>
                 <div class="game-title">Matematica sul Divano</div>
                 <div class="game-description">
-                    Addizioni, sottrazioni, moltiplicazioni e divisioni progressive con 6 operazioni complete. Audio interattivo, PWA installabile e interfaccia ottimizzata!
+                    Addizioni, sottrazioni, moltiplicazioni e divisioni progressive. Audio interattivo e interfaccia ottimizzata!<br>
+                    <strong>LEGGI SEMPRE LE CONSEGNE</strong>
                 </div>
                 <a href="matematica.html" class="play-button">🚀 Gioca Ora</a>
             </div>
@@ -320,7 +321,7 @@
                 <div class="stat-label">Divertimento</div>
             </div>
         </div>
-        <p>© 2025 Maestro Alberto - Giochi Educativi per Studenti</p>
+        <p>© 2025 Maestro Alberto Fogliata - Docente Scuola Primaria I.C. Verolanuova</p>
     </div>
 
     <script>
@@ -415,292 +416,4 @@
                 } else if (deviceInfo.isFirefox) {
                     description.innerHTML = '🖥️ <strong>Firefox Desktop rilevato!</strong><br>Supporto PWA limitato - usa Chrome o Edge per installazione!';
                 } else if (deviceInfo.isSafari) {
-                    description.innerHTML = '🖥️ <strong>Safari Desktop rilevato!</strong><br>PWA non supportata su Safari desktop - usa Chrome o Edge!';
-                } else {
-                    description.innerHTML = '🖥️ <strong>Desktop rilevato!</strong><br>Per migliore esperienza, usa Chrome o Edge!';
-                }
-            } else if (deviceInfo.isAndroid) {
-                badge.textContent = '📱 Android';
-                description.innerHTML = '📱 <strong>Android rilevato!</strong><br>Aggiungi alla schermata Home per accesso rapido!';
-            } else if (deviceInfo.isiOS) {
-                badge.textContent = '🍎 iOS';
-                description.innerHTML = '🍎 <strong>iOS rilevato!</strong><br>Safari → Condividi → Aggiungi a Home!';
-            }
-        }
-
-        // ========== INSTALLAZIONE SMART ==========
-        
-        function smartInstall() {
-            // Se l'app è già installata, non fare nulla
-            if (isAppInstalled()) {
-                showSuccessMessage('✅ App già installata!');
-                return;
-            }
-            
-            // Prova installazione automatica PWA
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('✅ Installazione PWA accettata');
-                        showSuccessMessage('🎉 Installazione in corso...');
-                        // L'evento 'appinstalled' nasconderà la card
-                    } else {
-                        console.log('❌ Installazione PWA rifiutata');
-                        showSuccessMessage('💡 Installazione annullata. Puoi riprovare in qualsiasi momento!');
-                    }
-                    deferredPrompt = null;
-                });
-                return;
-            }
-            
-            // Mostra istruzioni manuali
-            showInstallInstructions();
-        }
-
-        function showInstallInstructions() {
-            let instructionsHTML = '';
-            
-            if (deviceInfo.isDesktop) {
-                if (deviceInfo.isChrome) {
-                    instructionsHTML = `
-                        🖥️ <strong>Installazione Chrome Desktop:</strong><br><br>
-                        <strong>Metodo 1 - Menu Chrome:</strong><br>
-                        1. Clicca sui tre puntini (⋮) in alto a destra<br>
-                        2. Scorri giù fino a "Trasmetti, salva e condividi"<br>
-                        3. Clicca su "Installa come app"<br>
-                        4. Conferma "Installa"<br><br>
-                        
-                        <strong>Metodo 2 - Barra indirizzi:</strong><br>
-                        1. Cerca l'icona 💻 a destra della barra indirizzi<br>
-                        2. Clicca sull'icona e poi "Installa"<br><br>
-                        
-                        <strong>⚠️ Importante:</strong> Dopo l'installazione, questa card scomparirà per sempre!
-                    `;
-                } else if (deviceInfo.isEdge) {
-                    instructionsHTML = `
-                        🖥️ <strong>Installazione Edge Desktop:</strong><br><br>
-                        <strong>Metodo 1 - Menu Edge:</strong><br>
-                        1. Clicca sui tre puntini (...) in alto a destra<br>
-                        2. Vai su "App" → "Installa questo sito come app"<br>
-                        3. Clicca su "Installa"<br><br>
-                        
-                        <strong>Metodo 2 - Barra indirizzi:</strong><br>
-                        1. Cerca l'icona + a destra della barra indirizzi<br>
-                        2. Clicca e seleziona "Installa app"<br><br>
-                        
-                        <strong>⚠️ Importante:</strong> Dopo l'installazione, questa card scomparirà per sempre!
-                    `;
-                } else {
-                    instructionsHTML = `
-                        🖥️ <strong>Browser Desktop:</strong><br><br>
-                        Per la migliore esperienza PWA:<br><br>
-                        1. Apri questo sito in <strong>Google Chrome</strong><br>
-                        2. Menu ⋮ → "Installa Giochi Educativi..."<br>
-                        3. Clicca "Installa"<br><br>
-                        
-                        <strong>⚠️ Importante:</strong> Dopo l'installazione, questa card scomparirà per sempre!
-                    `;
-                }
-            } else if (deviceInfo.isAndroid) {
-                instructionsHTML = `
-                    📱 <strong>Installazione Android:</strong><br><br>
-                    <strong>Chrome Android:</strong><br>
-                    1. Clicca sui tre trattini (≡) in basso a destra<br>
-                    2. Clicca su "Aggiungi al telefono"<br>
-                    3. Clicca "Aggiungi"<br><br>
-                    
-                    <strong>Firefox Android:</strong><br>
-                    1. Menu ⋮ → "Installa"<br>
-                    2. Conferma installazione<br><br>
-                    
-                    <strong>⚠️ Importante:</strong> Dopo l'installazione, <strong>riapri questa pagina</strong> per far scomparire questa card!
-                `;
-            } else if (deviceInfo.isiOS) {
-                instructionsHTML = `
-                    🍎 <strong>Installazione iOS (Safari):</strong><br><br>
-                    1. Apri questo sito in <strong>Safari</strong><br>
-                    2. Tocca il pulsante "Condividi" <strong>📤</strong><br>
-                    3. Scorri e trova "Aggiungi alla schermata Home"<br>
-                    4. Tocca "Aggiungi" in alto a destra<br><br>
-                    
-                    <strong>⚠️ Importante:</strong> Dopo l'installazione, <strong>riapri questa pagina</strong> per far scomparire questa card!<br><br>
-                    
-                    <strong>📱 Note:</strong> Funziona solo con Safari, non con Chrome o altri browser su iOS!
-                `;
-            }
-            
-            // Crea modal con istruzioni
-            const overlay = document.createElement('div');
-            overlay.className = 'install-overlay';
-            
-            const modal = document.createElement('div');
-            modal.className = 'install-modal';
-            
-            modal.innerHTML = `
-                <button onclick="this.closest('.install-overlay').remove()" class="close-button">✕</button>
-                <div style="margin-bottom: 20px;">${instructionsHTML}</div>
-                <div style="text-align: center; margin-top: 25px;">
-                    <button onclick="markAsInstalled()" class="understand-button">✅ Ho Installato l'App</button>
-                </div>
-            `;
-            
-            overlay.appendChild(modal);
-            document.body.appendChild(overlay);
-            
-            // Chiudi cliccando fuori
-            overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) {
-                    overlay.remove();
-                }
-            });
-        }
-
-        // ========== CONTROLLO MANUALE INSTALLAZIONE ==========
-        
-        function markAsInstalled() {
-            // Nascondi modal
-            const overlay = document.querySelector('.install-overlay');
-            if (overlay) overlay.remove();
-            
-            // Mostra messaggio e nascondi card
-            showSuccessMessage('🎉 Perfetto! Card di installazione nascosta per sempre!');
-            
-            setTimeout(() => {
-                hideInstallCardPermanently();
-            }, 1000);
-        }
-
-        // ========== EVENTI PWA ==========
-        
-        window.addEventListener('beforeinstallprompt', (e) => {
-            console.log('📲 beforeinstallprompt event captured');
-            e.preventDefault();
-            
-            // Se l'app è già installata, ignora
-            if (isAppInstalled()) {
-                return;
-            }
-            
-            deferredPrompt = e;
-            
-            // Aggiorna descrizione card
-            const description = document.getElementById('smart-description');
-            if (description && deviceInfo.isDesktop) {
-                description.innerHTML = '🎉 <strong>Installazione PWA disponibile!</strong><br>Il tuo browser supporta l\'installazione automatica!';
-            }
-        });
-
-        window.addEventListener('appinstalled', (evt) => {
-            console.log('🎉 App installata tramite PWA');
-            showSuccessMessage('🎉 App installata con successo!');
-            
-            // Nascondi card dopo 2 secondi
-            setTimeout(() => {
-                hideInstallCardPermanently();
-            }, 2000);
-        });
-
-        // ========== CONTROLLI PERIODICI ==========
-        
-        function periodicInstallationCheck() {
-            // Controlla ogni 3 secondi se l'app è stata installata
-            setInterval(() => {
-                if (!installationCheckComplete && isAppInstalled()) {
-                    console.log('🔄 Controllo periodico: App installata rilevata');
-                    installationCheckComplete = true;
-                    hideInstallCardPermanently();
-                }
-            }, 3000);
-        }
-
-        // ========== UTILITY ==========
-        
-        function showSuccessMessage(message) {
-            const toast = document.createElement('div');
-            toast.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: #4CAF50;
-                color: white;
-                padding: 15px 25px;
-                border-radius: 10px;
-                font-weight: bold;
-                z-index: 10001;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-                animation: slideIn 0.3s ease;
-            `;
-            
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.animation = 'slideOut 0.3s ease forwards';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        // ========== INIZIALIZZAZIONE ==========
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Inizializzazione Giochi Educativi');
-            
-            // Rileva dispositivo
-            detectDevice();
-            
-            // Controllo immediato installazione
-            if (isAppInstalled()) {
-                console.log('✅ App già installata - nascondo card');
-                hideInstallCardPermanently();
-                installationCheckComplete = true;
-            } else {
-                console.log('📱 App non installata - mostro card');
-                // Aggiorna card dopo breve delay
-                setTimeout(updateSmartCard, 500);
-                
-                // Avvia controlli periodici
-                periodicInstallationCheck();
-            }
-        });
-
-        // ========== SERVICE WORKER ==========
-        
-        if ('serviceWorker' in navigator && !window.location.href.includes('claudeusercontent.com')) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then((registration) => {
-                        console.log('✅ Service Worker registrato:', registration.scope);
-                    })
-                    .catch((error) => {
-                        console.error('❌ Service Worker registration failed:', error);
-                    });
-            });
-        }
-        
-        // ========== FUNZIONI DEBUG (rimuovere in produzione) ==========
-        
-        function testInstallation() {
-            console.log('🧪 TEST: Simulazione installazione');
-            showSuccessMessage('🧪 TEST: Installazione simulata!');
-            setTimeout(() => {
-                hideInstallCardPermanently();
-            }, 1500);
-        }
-        
-        function resetInstallation() {
-            console.log('🔄 RESET: Ripristino card installazione');
-            try {
-                localStorage.removeItem('app-installed');
-                localStorage.removeItem('app-installed-date');
-            } catch (e) {}
-            location.reload();
-        }
-        
-        // Esponi funzioni per debug console
-        window.testInstallation = testInstallation;
-        window.resetInstallation = resetInstallation;
-        
-    </script>
-</body>
-</html>
+                    description.innerHTML = '🖥️ <strong>Safari Desktop rilevato!</strong><br>PWA non

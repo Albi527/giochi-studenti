@@ -36,6 +36,7 @@
             gap: 2rem;
             max-width: 1200px;
             margin: 0 auto;
+            transition: all 0.3s ease;
         }
         
         .game-card {
@@ -200,6 +201,14 @@
             justify-content: center;
             padding: 20px;
             box-sizing: border-box;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .install-overlay.show {
+            opacity: 1;
+            visibility: visible;
         }
         
         .install-modal {
@@ -212,6 +221,12 @@
             overflow-y: auto;
             position: relative;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+        
+        .install-overlay.show .install-modal {
+            transform: scale(1);
         }
         
         .close-button {
@@ -240,6 +255,8 @@
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
         }
         
         /* Animazioni per toast */
@@ -251,6 +268,22 @@
         @keyframes slideOut {
             from { transform: translateX(0); opacity: 1; }
             to { transform: translateX(100%); opacity: 0; }
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            z-index: 10001;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .toast.error {
+            background: #f44336;
         }
     </style>
 </head>
@@ -324,6 +357,16 @@
         <p>© 2025 Maestro Alberto Fogliata - Docente Scuola Primaria I.C. Verolanuova</p>
     </div>
 
+    <!-- Modal di installazione -->
+    <div class="install-overlay" id="install-overlay">
+        <div class="install-modal">
+            <button class="close-button" onclick="closeInstallModal()">×</button>
+            <div id="install-content">
+                <!-- Contenuto dinamico generato da JavaScript -->
+            </div>
+        </div>
+    </div>
+
     <script>
         let deviceInfo = {};
         let deferredPrompt = null;
@@ -334,18 +377,25 @@
         function isAppInstalled() {
             // Controllo 1: Modalità standalone (app già aperta come PWA)
             if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
+                console.log('📱 App aperta in modalità standalone');
                 return true;
             }
             
             // Controllo 2: iOS standalone mode
             if (deviceInfo.isiOS && window.navigator.standalone) {
+                console.log('📱 App installata su iOS');
                 return true;
             }
             
             // Controllo 3: Flag persistente localStorage
             try {
-                return localStorage.getItem('app-installed') === 'true';
+                const isInstalled = localStorage.getItem('app-installed') === 'true';
+                if (isInstalled) {
+                    console.log('📱 App marcata come installata nel localStorage');
+                }
+                return isInstalled;
             } catch (e) {
+                console.log('⚠️ localStorage non disponibile');
                 return false;
             }
         }
@@ -353,26 +403,37 @@
         function hideInstallCardPermanently() {
             const installCard = document.getElementById('install-card');
             if (installCard) {
-                console.log('🚫 Nascondendo card installazione per sempre');
+                console.log('🚫 Nascondendo card installazione permanentemente');
                 
                 // Salva flag persistente
                 try {
                     localStorage.setItem('app-installed', 'true');
                     localStorage.setItem('app-installed-date', new Date().toISOString());
+                    console.log('💾 Flag di installazione salvato');
                 } catch (e) {
-                    console.log('⚠️ localStorage non disponibile');
+                    console.log('⚠️ Impossibile salvare nel localStorage');
                 }
                 
-                // Nascondi immediatamente
-                installCard.classList.add('install-card-hidden');
+                // Nascondi con animazione
+                installCard.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                installCard.style.opacity = '0';
+                installCard.style.transform = 'scale(0.8)';
                 
-                // Riorganizza la griglia
                 setTimeout(() => {
-                    const gamesGrid = document.querySelector('.games-grid');
-                    if (gamesGrid) {
-                        gamesGrid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(300px, 1fr))';
-                    }
-                }, 100);
+                    installCard.remove(); // Rimuovi completamente dall'DOM
+                    reorganizeGrid();
+                }, 500);
+            }
+        }
+
+        function reorganizeGrid() {
+            const gamesGrid = document.querySelector('.games-grid');
+            if (gamesGrid) {
+                // Forza il ricalcolo del layout
+                gamesGrid.style.display = 'none';
+                setTimeout(() => {
+                    gamesGrid.style.display = 'grid';
+                }, 10);
             }
         }
 
@@ -380,40 +441,350 @@
         
         function detectDevice() {
             const userAgent = navigator.userAgent;
+            const platform = navigator.platform;
+            
             deviceInfo = {
                 isDesktop: !/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent),
-                isWindows: /Windows/i.test(navigator.platform),
-                isMac: /Mac/i.test(navigator.platform),
+                isWindows: /Windows/i.test(platform),
+                isMac: /Mac/i.test(platform),
                 isAndroid: /Android/i.test(userAgent),
                 isiOS: /iPhone|iPad|iPod/i.test(userAgent),
                 isChrome: /Chrome/i.test(userAgent) && !/Edg/i.test(userAgent),
                 isEdge: /Edg/i.test(userAgent),
                 isFirefox: /Firefox/i.test(userAgent),
-                isSafari: /Safari/i.test(userAgent) && !/Chrome/i.test(userAgent)
+                isSafari: /Safari/i.test(userAgent) && !/Chrome/i.test(userAgent),
+                userAgent: userAgent,
+                platform: platform
             };
+            
+            console.log('🔍 Dispositivo rilevato:', deviceInfo);
+            return deviceInfo;
         }
 
         // ========== AGGIORNAMENTO SMART CARD ==========
         
         function updateSmartCard() {
-            // Se l'app è già installata, non aggiornare la card
+            // Se l'app è già installata, nascondi la card
             if (isAppInstalled()) {
+                console.log('✅ App già installata, nascondo la card');
+                hideInstallCardPermanently();
                 return;
             }
             
             const badge = document.getElementById('device-badge');
             const description = document.getElementById('smart-description');
             
-            if (!badge || !description) return;
+            if (!badge || !description) {
+                console.log('❌ Elementi card non trovati');
+                return;
+            }
+            
+            console.log('🔄 Aggiornamento smart card per dispositivo:', deviceInfo);
             
             if (deviceInfo.isDesktop) {
                 badge.textContent = '💻 Desktop';
                 
                 if (deviceInfo.isChrome) {
-                    description.innerHTML = '🖥️ <strong>Chrome Desktop rilevato!</strong><br>Installazione PWA supportata - clicca per le istruzioni!';
+                    description.innerHTML = '🖥️ <strong>Chrome Desktop rilevato!</strong><br>Installazione PWA supportata - clicca per installare l\'app sul tuo computer!';
                 } else if (deviceInfo.isEdge) {
-                    description.innerHTML = '🖥️ <strong>Edge Desktop rilevato!</strong><br>Installazione PWA supportata - clicca per le istruzioni!';
+                    description.innerHTML = '🖥️ <strong>Edge Desktop rilevato!</strong><br>Installazione PWA supportata - clicca per installare l\'app sul tuo computer!';
                 } else if (deviceInfo.isFirefox) {
-                    description.innerHTML = '🖥️ <strong>Firefox Desktop rilevato!</strong><br>Supporto PWA limitato - usa Chrome o Edge per installazione!';
+                    description.innerHTML = '🖥️ <strong>Firefox Desktop rilevato!</strong><br>⚠️ Supporto PWA limitato. Ti consigliamo di usare Chrome o Edge per l\'installazione!';
                 } else if (deviceInfo.isSafari) {
-                    description.innerHTML = '🖥️ <strong>Safari Desktop rilevato!</strong><br>PWA non
+                    description.innerHTML = '🖥️ <strong>Safari Desktop rilevato!</strong><br>⚠️ PWA non supportato. Usa Chrome, Edge o Firefox per installare l\'app!';
+                } else {
+                    description.innerHTML = '🖥️ <strong>Browser Desktop rilevato!</strong><br>Per la migliore esperienza, usa Chrome o Edge per installare l\'app!';
+                }
+            } else if (deviceInfo.isAndroid) {
+                badge.textContent = '📱 Android';
+                
+                if (deviceInfo.isChrome) {
+                    description.innerHTML = '📱 <strong>Android Chrome rilevato!</strong><br>Perfetto! Clicca per installare l\'app direttamente sul tuo telefono!';
+                } else if (deviceInfo.isFirefox) {
+                    description.innerHTML = '📱 <strong>Android Firefox rilevato!</strong><br>⚠️ Supporto PWA limitato. Ti consigliamo Chrome per l\'installazione!';
+                } else {
+                    description.innerHTML = '📱 <strong>Android rilevato!</strong><br>Apri questa pagina con Chrome per installare l\'app!';
+                }
+            } else if (deviceInfo.isiOS) {
+                badge.textContent = '🍎 iOS';
+                
+                if (deviceInfo.isSafari) {
+                    description.innerHTML = '🍎 <strong>iOS Safari rilevato!</strong><br>Clicca per le istruzioni su come aggiungere l\'app alla schermata home!';
+                } else {
+                    description.innerHTML = '🍎 <strong>iOS rilevato!</strong><br>⚠️ Apri questa pagina con Safari per aggiungere l\'app alla schermata home!';
+                }
+            } else {
+                badge.textContent = '🔍 Sconosciuto';
+                description.innerHTML = '❓ <strong>Dispositivo non riconosciuto!</strong><br>Clicca per istruzioni generali di installazione.';
+            }
+            
+            console.log('✅ Smart card aggiornata');
+        }
+
+        // ========== INSTALLAZIONE SMART ==========
+        
+        function smartInstall() {
+            console.log('🚀 Avvio installazione smart');
+            
+            const overlay = document.getElementById('install-overlay');
+            const content = document.getElementById('install-content');
+            
+            if (!overlay || !content) {
+                console.log('❌ Elementi modal non trovati');
+                return;
+            }
+            
+            let modalContent = '';
+            
+            if (deviceInfo.isDesktop) {
+                if (deviceInfo.isChrome || deviceInfo.isEdge) {
+                    modalContent = `
+                        <div style="text-align: center;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">💻</div>
+                            <h2>Installazione Desktop</h2>
+                            <p><strong>Il tuo browser supporta l'installazione PWA!</strong></p>
+                            <div style="text-align: left; background: #f5f5f5; padding: 15px; border-radius: 10px; margin: 20px 0;">
+                                <h4>📋 Istruzioni:</h4>
+                                <ol>
+                                    <li>Cerca l'icona "Installa" nella barra degli indirizzi (di solito in alto a destra)</li>
+                                    <li>Oppure apri il menu ⋮ e cerca "Installa Giochi Educativi"</li>
+                                    <li>Clicca su "Installa" nella finestra che appare</li>
+                                    <li>L'app apparirà come programma installato!</li>
+                                </ol>
+                            </div>
+                            <p><small>💡 Una volta installata, l'app si aprirà in una finestra dedicata!</small></p>
+                            <button class="understand-button" onclick="markAsInstalled()">✅ Ho installato l'app</button>
+                        </div>
+                    `;
+                } else {
+                    modalContent = `
+                        <div style="text-align: center;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+                            <h2>Browser non supportato</h2>
+                            <p>Il tuo browser non supporta l'installazione PWA.</p>
+                            <div style="text-align: left; background: #fff3cd; padding: 15px; border-radius: 10px; margin: 20px 0;">
+                                <h4>💡 Soluzione:</h4>
+                                <p>Apri questa pagina con <strong>Google Chrome</strong> o <strong>Microsoft Edge</strong> per installare l'app sul computer.</p>
+                            </div>
+                            <button class="understand-button" onclick="closeInstallModal()">Ho capito</button>
+                        </div>
+                    `;
+                }
+            } else if (deviceInfo.isAndroid) {
+                if (deviceInfo.isChrome) {
+                    modalContent = `
+                        <div style="text-align: center;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">📱</div>
+                            <h2>Installazione Android</h2>
+                            <p><strong>Perfetto! Chrome supporta l'installazione!</strong></p>
+                            <div style="text-align: left; background: #f5f5f5; padding: 15px; border-radius: 10px; margin: 20px 0;">
+                                <h4>📋 Istruzioni:</h4>
+                                <ol>
+                                    <li>Cerca il banner "Installa app" che dovrebbe apparire in basso</li>
+                                    <li>Oppure tocca il menu ⋮ e cerca "Installa app" o "Aggiungi a schermata home"</li>
+                                    <li>Tocca "Installa" nella finestra che appare</li>
+                                    <li>L'app apparirà nella schermata home!</li>
+                                </ol>
+                            </div>
+                            <p><small>💡 Una volta installata, l'app funzionerà come un'app nativa!</small></p>
+                            <button class="understand-button" onclick="markAsInstalled()">✅ Ho installato l'app</button>
+                        </div>
+                    `;
+                } else {
+                    modalContent = `
+                        <div style="text-align: center;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+                            <h2>Browser non ottimale</h2>
+                            <p>Il tuo browser ha supporto limitato per l'installazione.</p>
+                            <div style="text-align: left; background: #fff3cd; padding: 15px; border-radius: 10px; margin: 20px 0;">
+                                <h4>💡 Soluzione:</h4>
+                                <p>Apri questa pagina con <strong>Google Chrome</strong> per una migliore esperienza di installazione.</p>
+                            </div>
+                            <button class="understand-button" onclick="closeInstallModal()">Ho capito</button>
+                        </div>
+                    `;
+                }
+            } else if (deviceInfo.isiOS) {
+                modalContent = `
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🍎</div>
+                        <h2>Installazione iOS</h2>
+                        <p><strong>Aggiungi l'app alla schermata home!</strong></p>
+                        <div style="text-align: left; background: #f5f5f5; padding: 15px; border-radius: 10px; margin: 20px 0;">
+                            <h4>📋 Istruzioni per Safari:</h4>
+                            <ol>
+                                <li>Tocca il pulsante "Condividi" 📤 in basso</li>
+                                <li>Scorri e trova "Aggiungi a schermata Home" 📲</li>
+                                <li>Tocca "Aggiungi" in alto a destra</li>
+                                <li>L'app apparirà nella schermata home!</li>
+                            </ol>
+                        </div>
+                        <p><small>💡 Se non usi Safari, apri questa pagina con Safari per aggiungere l'app!</small></p>
+                        <button class="understand-button" onclick="markAsInstalled()">✅ Ho aggiunto l'app</button>
+                    </div>
+                `;
+            } else {
+                modalContent = `
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">❓</div>
+                        <h2>Dispositivo non riconosciuto</h2>
+                        <p>Non siamo riusciti a rilevare il tuo dispositivo.</p>
+                        <div style="text-align: left; background: #f5f5f5; padding: 15px; border-radius: 10px; margin: 20px 0;">
+                            <h4>💡 Suggerimenti generali:</h4>
+                            <ul>
+                                <li><strong>Desktop:</strong> Usa Chrome o Edge, cerca "Installa" nella barra degli indirizzi</li>
+                                <li><strong>Android:</strong> Usa Chrome, cerca "Installa app" nel menu</li>
+                                <li><strong>iOS:</strong> Usa Safari, tocca Condividi → Aggiungi a schermata Home</li>
+                            </ul>
+                        </div>
+                        <button class="understand-button" onclick="closeInstallModal()">Ho capito</button>
+                    </div>
+                `;
+            }
+            
+            content.innerHTML = modalContent;
+            overlay.classList.add('show');
+        }
+
+        function closeInstallModal() {
+            const overlay = document.getElementById('install-overlay');
+            if (overlay) {
+                overlay.classList.remove('show');
+            }
+        }
+
+        function markAsInstalled() {
+            try {
+                localStorage.setItem('app-installed', 'true');
+                localStorage.setItem('app-installed-date', new Date().toISOString());
+                showToast('✅ Perfetto! La card di installazione non apparirà più.', 'success');
+                closeInstallModal();
+                setTimeout(() => {
+                    hideInstallCardPermanently();
+                }, 1000);
+            } catch (e) {
+                showToast('⚠️ Impossibile salvare le impostazioni', 'error');
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // ========== EVENT LISTENERS ==========
+        
+        // Listener per il prompt di installazione PWA nativo
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('📲 Prompt di installazione PWA rilevato');
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Se la card è ancora visibile, aggiorna il comportamento
+            const installCard = document.getElementById('install-card');
+            if (installCard && !installCard.classList.contains('install-card-hidden')) {
+                console.log('🔄 Aggiornamento card per prompt nativo');
+                const playButton = installCard.querySelector('.play-button');
+                if (playButton) {
+                    playButton.onclick = function(event) {
+                        event.stopPropagation();
+                        triggerNativeInstall();
+                    };
+                }
+            }
+        });
+
+        // Listener per installazione completata
+        window.addEventListener('appinstalled', (evt) => {
+            console.log('🎉 App installata con successo!');
+            deferredPrompt = null;
+            showToast('🎉 App installata con successo!', 'success');
+            markAsInstalled();
+        });
+
+        function triggerNativeInstall() {
+            if (deferredPrompt) {
+                console.log('🚀 Attivazione prompt nativo di installazione');
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('✅ Utente ha accettato l\'installazione');
+                        markAsInstalled();
+                    } else {
+                        console.log('❌ Utente ha rifiutato l\'installazione');
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                console.log('📱 Prompt nativo non disponibile, uso modal personalizzato');
+                smartInstall();
+            }
+        }
+
+        // ========== INIZIALIZZAZIONE ==========
+        
+        function initializeApp() {
+            console.log('🚀 Inizializzazione app...');
+            
+            // 1. Rileva il dispositivo
+            detectDevice();
+            
+            // 2. Controlla se l'app è già installata
+            if (isAppInstalled()) {
+                console.log('✅ App già installata');
+                hideInstallCardPermanently();
+                return;
+            }
+            
+            // 3. Aggiorna la smart card
+            setTimeout(() => {
+                updateSmartCard();
+                installationCheckComplete = true;
+                console.log('✅ Inizializzazione completata');
+            }, 500);
+        }
+
+        // Avvia l'inizializzazione quando la pagina è caricata
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeApp);
+        } else {
+            initializeApp();
+        }
+
+        // Gestisci click fuori dal modal per chiuderlo
+        document.addEventListener('click', function(event) {
+            const overlay = document.getElementById('install-overlay');
+            const modal = document.querySelector('.install-modal');
+            
+            if (overlay && modal && event.target === overlay) {
+                closeInstallModal();
+            }
+        });
+
+        // Debug: funzione per resettare lo stato di installazione (solo per test)
+        function resetInstallationStatus() {
+            try {
+                localStorage.removeItem('app-installed');
+                localStorage.removeItem('app-installed-date');
+                console.log('🔄 Stato di installazione resettato - ricarica la pagina');
+                location.reload();
+            } catch (e) {
+                console.log('❌ Impossibile resettare lo stato');
+            }
+        }
+
+        // Esponi la funzione di reset per debug (rimuovi in produzione)
+        window.resetInstallationStatus = resetInstallationStatus;
+        
+    </script>
+</body>
+</html>

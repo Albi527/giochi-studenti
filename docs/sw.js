@@ -1,38 +1,38 @@
-const CACHE_NAME = 'giochi-educativi-v8'; // ⬆️ VERSIONE v8 con matematica.html integrato
+const CACHE_NAME = 'giochi-educativi-v9'; // ⬆️ VERSIONE v9 con matematica.html v4.0.2 integrato
 const urlsToCache = [
     './',
     './index.html',                // ✅ Landing page con installazione smart persistente
-    './matematica.html',           // ✅ Matematica v4.0.0 integrata nel sistema PWA unificato
+    './matematica.html',           // ✅ Matematica v4.0.2 integrata nel sistema PWA unificato
     './tabelline.html',           // ✅ Sfida Tabelline con timer 60s e 3 livelli
-    './games.json',               // ✅ JSON v1.7.0 con integrazione matematica completa
+    './games.json',               // ✅ JSON v1.7.1 con integrazione matematica completa
     './manifest.json',            // ✅ PWA manifest per installazione
     './icon-192.png',             // ✅ Icone PWA
     './icon-512.png'
 ];
 
 self.addEventListener('install', event => {
-    console.log('Service Worker: Install Event v8 - Sistema PWA Unificato Completo');
+    console.log('Service Worker: Install Event v9 - Sistema PWA Unificato Completo');
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
                 console.log('Service Worker: Cache aperta:', CACHE_NAME);
-                console.log('Service Worker: Sistema PWA Unificato v8 con:');
+                console.log('Service Worker: Sistema PWA Unificato v9 con:');
                 console.log('  - 🎮 Landing page con installazione smart persistente');
-                console.log('  - 🧮 Matematica v4.0.0 completamente integrata');
+                console.log('  - 🧮 Matematica v4.0.2 completamente integrata');
                 console.log('  - 🎯 Sfida Tabelline sincronizzata');
-                console.log('  - 📄 Games.json v1.7.0 con metadati integrazione');
+                console.log('  - 📄 Games.json v1.7.1 con metadati integrazione');
                 console.log('  - 🔄 Sincronizzazione localStorage unificata');
                 console.log('  - 📱 PWA installabile con controlli integrati');
                 console.log('  - 🚫 Rimossi sistemi PWA duplicati');
                 return cache.addAll(urlsToCache);
             })
             .then(() => {
-                console.log('Service Worker: Tutti i file v8 cachati con successo');
+                console.log('Service Worker: Tutti i file v9 cachati con successo');
                 console.log('🎉 Sistema PWA Unificato Completo operativo!');
                 self.skipWaiting(); // Forza l'attivazione immediata
             })
             .catch(error => {
-                console.error('Service Worker: Errore durante il caching v8:', error);
+                console.error('Service Worker: Errore durante il caching v9:', error);
             })
     );
 });
@@ -45,7 +45,7 @@ self.addEventListener('fetch', event => {
                 .then(response => {
                     // Serve dalla cache se disponibile
                     if (response) {
-                        console.log('Service Worker: index.html v8 dalla cache');
+                        console.log('Service Worker: index.html v9 dalla cache');
                         // Aggiornamento background per future visite
                         fetch(event.request)
                             .then(networkResponse => {
@@ -63,7 +63,7 @@ self.addEventListener('fetch', event => {
                     }
                     
                     // Se non in cache, fetch dalla rete
-                    console.log('Service Worker: index.html v8 dalla rete');
+                    console.log('Service Worker: index.html v9 dalla rete');
                     return fetch(event.request)
                         .then(networkResponse => {
                             if (networkResponse && networkResponse.status === 200) {
@@ -85,8 +85,8 @@ self.addEventListener('fetch', event => {
         event.respondWith(
             fetch(event.request)
                 .then(response => {
-                    console.log('Service Worker: games.json v1.7.0 aggiornato dalla rete');
-                    console.log('  - Matematica v4.0.0: Integrata nel sistema PWA unificato');
+                    console.log('Service Worker: games.json v1.7.1 aggiornato dalla rete');
+                    console.log('  - Matematica v4.0.2: Integrata nel sistema PWA unificato');
                     console.log('  - Tabelline: timer 60s, 3 livelli');
                     console.log('  - Sistema: PWA unificato senza duplicazioni');
                     console.log('  - localStorage: Sincronizzazione completa');
@@ -113,7 +113,7 @@ self.addEventListener('fetch', event => {
             caches.match(event.request)
                 .then(response => {
                     if (response) {
-                        console.log('Service Worker: matematica.html v4.0.0 dalla cache (integrata)');
+                        console.log('Service Worker: matematica.html v4.0.2 dalla cache (integrata)');
                         console.log('  - Sistema PWA: Completamente unificato');
                         console.log('  - localStorage: Sincronizzato con index.html');
                         console.log('  - PWA: Rimosse duplicazioni installazione');
@@ -133,7 +133,7 @@ self.addEventListener('fetch', event => {
                         return response;
                     }
                     
-                    console.log('Service Worker: matematica.html v4.0.0 dalla rete (integrata)');
+                    console.log('Service Worker: matematica.html v4.0.2 dalla rete (integrata)');
                     return fetch(event.request)
                         .then(networkResponse => {
                             if (networkResponse && networkResponse.status === 200) {
@@ -193,7 +193,7 @@ self.addEventListener('fetch', event => {
         caches.match(event.request)
             .then(response => {
                 if (response) {
-                    console.log('Service Worker: Serving from cache v8:', event.request.url.split('/').pop());
+                    console.log('Service Worker: Serving from cache v9:', event.request.url.split('/').pop());
                     return response;
                 }
                 
@@ -227,14 +227,14 @@ self.addEventListener('fetch', event => {
 });
 
 self.addEventListener('activate', event => {
-    console.log('Service Worker: Activate Event v8 - Sistema PWA Unificato Completo');
+    console.log('Service Worker: Activate Event v9 - Sistema PWA Unificato Completo');
     event.waitUntil(
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames.map(cacheName => {
                     if (cacheName !== CACHE_NAME) {
                         console.log('Service Worker: Eliminando cache vecchia:', cacheName);
-                        console.log('  - Aggiornando a v8 con matematica integrata');
+                        console.log('  - Aggiornando a v9 con matematica v4.0.2 integrata');
                         console.log('  - Rimuovendo sistemi PWA duplicati');
                         console.log('  - Implementando sincronizzazione localStorage');
                         return caches.delete(cacheName);
@@ -242,12 +242,12 @@ self.addEventListener('activate', event => {
                 })
             );
         }).then(() => {
-            console.log('Service Worker: Ora controlla tutte le pagine con v8');
-            console.log('🎉 Sistema PWA Unificato Completo v8 attivo:');
+            console.log('Service Worker: Ora controlla tutte le pagine con v9');
+            console.log('🎉 Sistema PWA Unificato Completo v9 attivo:');
             console.log('  ✅ Landing page con installazione smart persistente');
-            console.log('  ✅ Matematica v4.0.0 completamente integrata');
+            console.log('  ✅ Matematica v4.0.2 completamente integrata');
             console.log('  ✅ Tabelline sincronizzate nel sistema');
-            console.log('  ✅ Games.json v1.7.0 con metadati integrazione');
+            console.log('  ✅ Games.json v1.7.1 con metadati integrazione');
             console.log('  ✅ localStorage unificato per stato installazione');
             console.log('  ✅ Navigazione fluida tra componenti');
             console.log('  ✅ Nessuna duplicazione PWA/Service Worker');
@@ -260,25 +260,25 @@ self.addEventListener('activate', event => {
 // Gestisce messaggi dall'app principale
 self.addEventListener('message', event => {
     if (event.data && event.data.type === 'SKIP_WAITING') {
-        console.log('Service Worker: Ricevuto comando SKIP_WAITING per v8');
+        console.log('Service Worker: Ricevuto comando SKIP_WAITING per v9');
         self.skipWaiting();
     }
     
     if (event.data && event.data.type === 'CACHE_UPDATE') {
-        console.log('Service Worker: Aggiornamento cache v8 richiesto');
+        console.log('Service Worker: Aggiornamento cache v9 richiesto');
         event.waitUntil(updateCache());
     }
     
     if (event.data && event.data.type === 'GET_VERSION') {
         console.log('Service Worker: Richiesta versione corrente');
         event.ports[0].postMessage({
-            version: 'v8',
+            version: 'v9',
             landingPageVersion: '3.0.0',
-            matematicaVersion: '4.0.0',
-            tabellineVersion: '1.0.0',
-            gamesJsonVersion: '1.7.0',
+            matematicaVersion: '4.0.2',
+            tabellineVersion: '2.1.0',
+            gamesJsonVersion: '1.7.1',
             unifiedSystemFeatures: [
-                'Matematica completamente integrata',
+                'Matematica v4.0.2 completamente integrata',
                 'localStorage sincronizzato tra componenti',
                 'Navigazione unificata',
                 'Controlli installazione centralizzati',
@@ -307,9 +307,9 @@ self.addEventListener('message', event => {
             matematicaIntegrata: true,
             duplicazioniPWA: false,
             localStorageSincronizzato: true,
-            versioneServiceWorker: 'v8',
-            versioneMatematica: '4.0.0',
-            versioneGamesJson: '1.7.0'
+            versioneServiceWorker: 'v9',
+            versioneMatematica: '4.0.2',
+            versioneGamesJson: '1.7.1'
         });
     }
     
@@ -333,8 +333,8 @@ self.addEventListener('message', event => {
             localStorageSincronizzato: true,
             navigationeUnificata: true,
             serviceWorkerUnificato: true,
-            versioneMatematica: '4.0.0',
-            versioneServiceWorker: 'v8',
+            versioneMatematica: '4.0.2',
+            versioneServiceWorker: 'v9',
             statoIntegrazione: 'COMPLETA',
             conflittiPWA: false,
             funzionamentoOttimale: true
@@ -373,7 +373,7 @@ function shouldCache(request) {
 async function updateCache() {
     try {
         const cache = await caches.open(CACHE_NAME);
-        console.log('Service Worker: Aggiornamento forzato cache v8...');
+        console.log('Service Worker: Aggiornamento forzato cache v9...');
         
         await Promise.all(
             urlsToCache.map(async (url) => {
@@ -381,21 +381,21 @@ async function updateCache() {
                 const response = await fetch(url);
                 if (response.ok) {
                     await cache.put(url, response);
-                    console.log('Service Worker: Aggiornato v8:', url);
+                    console.log('Service Worker: Aggiornato v9:', url);
                 }
             })
         );
         
-        console.log('Service Worker: Cache v8 aggiornata completamente');
-        console.log('🎉 Sistema PWA Unificato v8 completo pronto!');
+        console.log('Service Worker: Cache v9 aggiornata completamente');
+        console.log('🎉 Sistema PWA Unificato v9 completo pronto!');
         
         // Notifica all'app che l'aggiornamento è completato
         const clients = await self.clients.matchAll();
         clients.forEach(client => {
             client.postMessage({
                 type: 'CACHE_UPDATED',
-                version: 'v8',
-                message: 'Sistema PWA Unificato aggiornato alla versione v8!',
+                version: 'v9',
+                message: 'Sistema PWA Unificato aggiornato alla versione v9!',
                 unifiedSystemFeatures: {
                     giochiDisponibili: 2,
                     inSviluppo: 1,
@@ -404,7 +404,7 @@ async function updateCache() {
                     duplicazioniRimosse: true,
                     localStorageSincronizzato: true,
                     features: [
-                        'Matematica v4.0.0 completamente integrata',
+                        'Matematica v4.0.2 completamente integrata',
                         'Sistema PWA unificato senza duplicazioni',
                         'localStorage sincronizzato tra componenti',
                         'Navigazione fluida e unificata',
@@ -416,14 +416,14 @@ async function updateCache() {
         });
         
     } catch (error) {
-        console.error('Service Worker: Errore durante aggiornamento cache v8:', error);
+        console.error('Service Worker: Errore durante aggiornamento cache v9:', error);
     }
 }
 
 // Gestisce sync in background
 self.addEventListener('sync', event => {
     if (event.tag === 'background-sync') {
-        console.log('Service Worker: Background sync triggered per v8');
+        console.log('Service Worker: Background sync triggered per v9');
         event.waitUntil(updateCache());
     }
 });
@@ -458,7 +458,7 @@ self.addEventListener('push', event => {
         if (data.type === 'matematica_integrated') {
             event.waitUntil(
                 self.registration.showNotification('🧮 Matematica Integrata!', {
-                    body: 'Matematica sul Divano è ora completamente integrata nel sistema PWA!',
+                    body: 'Matematica sul Divano v4.0.2 è completamente integrata nel sistema PWA!',
                     icon: '/icon-192.png',
                     badge: '/icon-192.png',
                     tag: 'matematica-integrated',
@@ -515,22 +515,22 @@ self.addEventListener('notificationclick', event => {
 
 // Gestione installazione app
 self.addEventListener('install', event => {
-    console.log('🚀 Service Worker v8 installato!');
+    console.log('🚀 Service Worker v9 installato!');
     console.log('🎮 Sistema PWA Unificato Completo - Maestro Alberto');
-    console.log('✨ Matematica v4.0.0 completamente integrata');
+    console.log('✨ Matematica v4.0.2 completamente integrata');
     console.log('📱 localStorage sincronizzato tra componenti');
     console.log('🔄 Cache strategy ottimizzata per ogni file');
     console.log('🚫 Rimossi sistemi PWA duplicati');
     console.log('💾 Controlli installazione centralizzati');
 });
 
-// Notifica quando il service worker v8 è pronto
-console.log('🚀 Service Worker v8 caricato - Sistema PWA Unificato Completo!');
+// Notifica quando il service worker v9 è pronto
+console.log('🚀 Service Worker v9 caricato - Sistema PWA Unificato Completo!');
 console.log('🎮 Piattaforma Giochi Educativi - Maestro Alberto');
 console.log('📊 Sistema completamente unificato:');
-console.log('  ✅ Matematica v4.0.0 integrata (6 operazioni, 33 livelli)');
+console.log('  ✅ Matematica v4.0.2 integrata (6 operazioni, 33 livelli)');
 console.log('  ✅ Tabelline sincronizzate (timer 60s, 3 livelli)');
-console.log('  ✅ Games.json v1.7.0 con metadati integrazione');
+console.log('  ✅ Games.json v1.7.1 con metadati integrazione');
 console.log('  ✅ localStorage unificato per stato installazione');
 console.log('  ✅ Navigazione fluida tra componenti');
 console.log('  ✅ Cache strategy ottimizzata per performance');

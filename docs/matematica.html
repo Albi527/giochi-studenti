@@ -639,7 +639,7 @@
 </div>
 <div class="feedback hidden" id="feedback"></div>
 <div class="buttons-container">
-<button class="btn back" onclick="goHome()">🏠 Menu</button>
+<button class="btn back" onclick="goHome()">🏠 Menu Principale</button>
 </div>
 </div>
 <!-- Schermo completamento livello -->
@@ -795,6 +795,8 @@
         let isMultiplicationMenuOpen = false;
 
         function toggleMultiplicationMenu() {
+            playClickSound(); // Assicura il suono
+            
             // Chiudi il menu divisioni se aperto
             if (isDivisionMenuOpen) {
                 toggleDivisionMenu();
@@ -814,14 +816,14 @@
                 btn.classList.add('expanded');
                 isMultiplicationMenuOpen = true;
             }
-            
-            playClickSound();
         }
 
         // Gestione sottomenu divisione
         let isDivisionMenuOpen = false;
 
         function toggleDivisionMenu() {
+            playClickSound(); // Assicura il suono
+            
             // Chiudi il menu moltiplicazioni se aperto
             if (isMultiplicationMenuOpen) {
                 toggleMultiplicationMenu();
@@ -841,8 +843,6 @@
                 btn.classList.add('expanded');
                 isDivisionMenuOpen = true;
             }
-            
-            playClickSound();
         }
 
         // ========================================
@@ -882,7 +882,7 @@
                     "Livello 1: Amici del 10 (es: 10-3=7)",
                     "Livello 2: Unità - unità (es: 8-5=3)",
                     "Livello 3: Decine - unità (es: 30-7=23)",
-                    "Livello 4: Tappa alla decina precedente",
+                    "Livello 4: Tappa alla decina precedente (es: 31-3)",
                     "Livello 5: Sottrazioni senza prestito (es: 65-23=42)"
                 ]
             },
@@ -930,7 +930,7 @@
                 questionsPerLevel: 10,
                 descriptions: [
                     "Dividi per 10",
-                    "Dividi per 10 numeri con unità di migliaia", 
+                    "Dividi per 10 numeri con unità di migliaia e leggi il numero", 
                     "Dividi per 100",
                     "Dividi per 100 numeri più grandi",
                     "Dividi per 1000",
@@ -1046,39 +1046,63 @@
                         a = (Math.floor(Math.random() * 9) + 1) * 10;
                         b = Math.floor(Math.random() * 9) + 1;
                         break;
-                    case 4: // Tappa alla decina precedente (con prestito)
-                        a = Math.floor(Math.random() * 80) + 20;
-                        b = Math.floor(Math.random() * 9) + 1;
-                        // Assicura che le unità di a siano minori delle unità di b (serve prestito)
-                        const unitaA = a % 10;
-                        if (unitaA >= b) {
-                            // Modifica a per avere unità minori di b
-                            const decineA = Math.floor(a / 10);
-                            const nuoveUnitaA = Math.floor(Math.random() * b);
-                            a = decineA * 10 + nuoveUnitaA;
+                    case 4: { // Tappa alla decina precedente (con prestito) - CORRETTO
+                        // Genera numeri che richiedano SEMPRE la tappa alla decina precedente
+                        a = Math.floor(Math.random() * 80) + 20; // Da 20 a 99
+                        
+                        // Le unità di a DEVONO essere minori di quelle di b per richiedere prestito
+                        const unitaA4 = a % 10;
+                        
+                        // b deve avere unità maggiori di quelle di a
+                        const minUnitaB4 = unitaA4 + 1; // Almeno 1 in più delle unità di a
+                        const maxUnitaB4 = 9; // Massimo 9
+                        
+                        if (minUnitaB4 <= maxUnitaB4) {
+                            const unitaB4 = Math.floor(Math.random() * (maxUnitaB4 - minUnitaB4 + 1)) + minUnitaB4;
+                            
+                            // Assegna delle decine a b (facoltativo, può essere 0)
+                            const maxDecineB4 = Math.min(Math.floor(a / 10) - 1, 3); // Massimo 3 decine, deve essere < decine di a
+                            const decineB4 = maxDecineB4 > 0 ? Math.floor(Math.random() * (maxDecineB4 + 1)) : 0;
+                            
+                            b = decineB4 * 10 + unitaB4;
+                        } else {
+                            // Se le unità di a sono già 9, modifica a
+                            const decineA4 = Math.floor(a / 10);
+                            const nuoveUnitaA4 = Math.floor(Math.random() * 8); // 0-7 (così b può avere unità 1-9)
+                            a = decineA4 * 10 + nuoveUnitaA4;
+                            
+                            const unitaB4 = Math.floor(Math.random() * (9 - nuoveUnitaA4)) + nuoveUnitaA4 + 1;
+                            b = unitaB4; // Solo unità per semplicità
+                        }
+                        
+                        // Verifica finale: deve richiedere prestito
+                        if ((a % 10) >= (b % 10) || a <= b) {
+                            continue; // Riprova
                         }
                         break;
-                    case 5: // Senza prestito - CORRETTO
+                    }
+                    case 5: { // Senza prestito - CORRETTO
                         a = Math.floor(Math.random() * 80) + 20;
                         // Genera b in modo che NON serva prestito
                         const decineA5 = Math.floor(a / 10);
                         const unitaA5 = a % 10;
                         
                         // Le decine di b devono essere <= decine di a
-                        const maxDecineB = Math.min(decineA5 - 1, 7); // Limita per sicurezza
-                        const decineB = Math.floor(Math.random() * maxDecineB) + 1;
+                        const maxDecineB5 = Math.min(decineA5 - 1, 7); // Limita per sicurezza
+                        const decineB5 = Math.floor(Math.random() * maxDecineB5) + 1;
                         
                         // Le unità di b devono essere <= unità di a (nessun prestito)
-                        const maxUnitaB = unitaA5;
-                        const unitaB = Math.floor(Math.random() * (maxUnitaB + 1));
+                        const maxUnitaB5 = unitaA5;
+                        const unitaB5 = Math.floor(Math.random() * (maxUnitaB5 + 1));
                         
-                        b = decineB * 10 + unitaB;
+                        b = decineB5 * 10 + unitaB5;
                         
                         // Verifica finale: nessun prestito necessario
-                        if (unitaA5 < unitaB || a <= b) {
+                        if (unitaA5 < unitaB5 || a <= b) {
                             continue; // Riprova
                         }
                         break;
+                    }
                 }
                 
                 // Controllo: il risultato deve essere positivo
@@ -1303,6 +1327,8 @@
         // ========================================
         
         function startGame(gameType) {
+            playClickSound(); // Assicura il suono
+            
             // Chiudi entrambi i sottomenu se aperti
             if (isMultiplicationMenuOpen) {
                 toggleMultiplicationMenu();
@@ -1440,6 +1466,8 @@
         }
 
         function checkAnswer() {
+            playClickSound(); // Assicura il suono per il click
+            
             // Controlla se il bottone è disabilitato
             const confirmBtn = document.getElementById('confirm-btn');
             if (confirmBtn.disabled) {
@@ -1458,12 +1486,12 @@
                     correctAnswers++;
                     feedbackElement.textContent = `✅ Perfetto! ${currentQuestionData.a} ÷ ${currentQuestionData.b} = ${correctQuotient} resto ${correctRemainder}`;
                     feedbackElement.className = 'feedback correct';
-                    playCorrectSound();
+                    playCorrectSound(); // Assicura il suono per risposta corretta
                 } else {
                     totalErrors++;
                     feedbackElement.textContent = `❌ Non è corretto. La risposta giusta è ${correctQuotient} resto ${correctRemainder}`;
                     feedbackElement.className = 'feedback incorrect';
-                    playIncorrectSound();
+                    playIncorrectSound(); // Assicura il suono per risposta sbagliata
                 }
             } else {
                 // Controlla solo il quoziente
@@ -1471,12 +1499,12 @@
                     correctAnswers++;
                     feedbackElement.textContent = '✅ Corretto! Bravo!';
                     feedbackElement.className = 'feedback correct';
-                    playCorrectSound();
+                    playCorrectSound(); // Assicura il suono per risposta corretta
                 } else {
                     totalErrors++;
                     feedbackElement.textContent = `❌ Non è corretto. La risposta giusta è ${correctQuotient}`;
                     feedbackElement.className = 'feedback incorrect';
-                    playIncorrectSound();
+                    playIncorrectSound(); // Assicura il suono per risposta sbagliata
                 }
             }
 
@@ -1537,6 +1565,8 @@
         }
 
         function continueGame() {
+            playClickSound(); // Assicura il suono
+            
             const config = gameConfigs[currentGame];
             const allCorrect = correctAnswers === questionsPerLevel;
 
@@ -1564,6 +1594,8 @@
         }
 
         function goHome() {
+            playClickSound(); // Assicura il suono
+            
             // Chiudi entrambi i sottomenu se aperti
             if (isMultiplicationMenuOpen) {
                 const submenu = document.getElementById('multiplication-submenu');
@@ -1580,8 +1612,19 @@
                 isDivisionMenuOpen = false;
             }
             
-            // Torna all'app principale invece di rimanere solo nel menu matematica
-            goToMainApp();
+            // Torna al menu principale del gioco matematica invece che all'index
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('level-complete-screen').classList.add('hidden');
+            document.getElementById('main-menu').style.display = 'grid';
+            
+            // Reset delle variabili di gioco
+            currentGame = '';
+            currentLevel = 1;
+            currentQuestion = 1;
+            correctAnswers = 0;
+            totalErrors = 0;
+            gameUsedQuestions.clear();
+            onesTableUsed = false;
         }
 
         // ========================================
@@ -1603,7 +1646,6 @@
                 // Se non c'è il campo resto o è già compilato, conferma
                 const confirmBtn = document.getElementById('confirm-btn');
                 if (!confirmBtn.disabled) {
-                    playClickSound();
                     checkAnswer();
                 }
             }
@@ -1616,7 +1658,6 @@
             if(e.key === 'Enter') {
                 const confirmBtn = document.getElementById('confirm-btn');
                 if (!confirmBtn.disabled) {
-                    playClickSound();
                     checkAnswer();
                 }
             }
@@ -1624,12 +1665,8 @@
 
         document.getElementById('remainder-input').addEventListener('input', updateConfirmButton);
 
-        // Gestione navigazione con header
-        document.querySelector('.header').addEventListener('click', function(e) {
-            if (e.target === this.querySelector('::before') || e.clientX < 50) {
-                goToMainApp();
-            }
-        });
+        // Gestione navigazione con header - RIMOSSO per evitare conflitti
+        // (Il bottone home nell'header rimane decorativo)
 
         // Inizializzazione
         document.addEventListener('DOMContentLoaded', function() {
@@ -1648,17 +1685,21 @@
                 document.removeEventListener('click', initializeAudio);
             }, { once: true });
 
-            // Aggiungi suoni di click a tutti i bottoni
+            // Aggiungi suoni di click a tutti i bottoni che non hanno già il suono
             document.querySelectorAll('button').forEach(button => {
-                button.addEventListener('click', () => {
-                    playClickSound();
-                });
+                // Non aggiungere listener duplicati per bottoni che già chiamano playClickSound
+                if (!button.onclick || button.onclick.toString().indexOf('playClickSound') === -1) {
+                    button.addEventListener('click', () => {
+                        playClickSound();
+                    });
+                }
             });
             
             // Integrazione completa con sistema PWA unificato
-            console.log('🧮 Matematica sul Divano v4.0.0 - Integrato nel Sistema PWA Unificato');
+            console.log('🧮 Matematica sul Divano v4.0.2 - Fix Errore Sintassi');
             console.log('✨ Sincronizzato con Service Worker v8');
             console.log('🔗 Collegato a games.json v1.7.0');
+            console.log('🔧 Correzioni: Menu Principale, Sottrazioni L4, Divisioni Potenze L2, Suoni');
         });
 
         window.addEventListener('online', updateOnlineStatus);

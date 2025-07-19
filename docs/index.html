@@ -285,9 +285,78 @@
         .toast.error {
             background: #f44336;
         }
+
+        /* Stili per il bottone di aggiornamento PWA */
+        .update-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            z-index: 10002;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .update-banner.show {
+            transform: translateY(0);
+        }
+        
+        .update-banner .update-text {
+            margin: 0 0 10px 0;
+            font-weight: bold;
+        }
+        
+        .update-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .update-button:hover {
+            background: white;
+            color: #4CAF50;
+        }
+        
+        .dismiss-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .dismiss-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Adatta il layout quando c'è il banner di aggiornamento */
+        body.update-banner-visible {
+            padding-top: 80px;
+        }
     </style>
 </head>
 <body>
+    <!-- Banner di aggiornamento PWA -->
+    <div class="update-banner" id="update-banner">
+        <div class="update-text">🚀 Nuova versione disponibile!</div>
+        <button class="update-button" onclick="updateApp()">Aggiorna ora</button>
+        <button class="dismiss-button" onclick="dismissUpdate()">Più tardi</button>
+    </div>
+
     <div class="header">
         <h1>🎮 Attività e giochi educativi</h1>
         <p>by Maestro Alberto Fogliata</p>
@@ -371,6 +440,112 @@
         let deviceInfo = {};
         let deferredPrompt = null;
         let installationCheckComplete = false;
+        let newWorker = null;
+        let refreshing = false;
+
+        // ========== GESTIONE AGGIORNAMENTI PWA ==========
+        
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                console.log('🔧 Registrazione Service Worker...');
+                
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('✅ Service Worker registrato:', registration.scope);
+                        
+                        // Controlla aggiornamenti ogni 30 secondi
+                        setInterval(() => {
+                            registration.update();
+                        }, 30000);
+                        
+                        // Gestisci aggiornamenti in attesa
+                        registration.addEventListener('updatefound', () => {
+                            console.log('🔄 Nuovo Service Worker trovato');
+                            newWorker = registration.installing;
+                            
+                            newWorker.addEventListener('statechange', () => {
+                                console.log('📱 State change del nuovo SW:', newWorker.state);
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    console.log('🚀 Nuova versione pronta');
+                                    showUpdateBanner();
+                                }
+                            });
+                        });
+                    })
+                    .catch(function(error) {
+                        console.log('❌ Errore registrazione Service Worker:', error);
+                    });
+
+                // Ascolta messaggi dal Service Worker
+                navigator.serviceWorker.addEventListener('message', event => {
+                    console.log('💬 Messaggio dal SW:', event.data);
+                    if (event.data && event.data.type === 'REFRESH') {
+                        console.log('🔄 Refresh richiesto dal SW');
+                        if (!refreshing) {
+                            refreshing = true;
+                            window.location.reload();
+                        }
+                    }
+                });
+
+                // Gestisci il ricaricamento quando il SW prende controllo
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    console.log('🔄 Controller cambiato');
+                    if (!refreshing) {
+                        refreshing = true;
+                        window.location.reload();
+                    }
+                });
+            }
+        }
+
+        function showUpdateBanner() {
+            console.log('📢 Mostrando banner di aggiornamento');
+            const banner = document.getElementById('update-banner');
+            const body = document.body;
+            
+            if (banner) {
+                banner.classList.add('show');
+                body.classList.add('update-banner-visible');
+                
+                // Auto-dismiss dopo 10 secondi se l'utente non agisce
+                setTimeout(() => {
+                    if (banner.classList.contains('show')) {
+                        dismissUpdate();
+                    }
+                }, 10000);
+            }
+        }
+
+        function updateApp() {
+            console.log('🚀 Aggiornamento app richiesto dall\'utente');
+            const banner = document.getElementById('update-banner');
+            
+            if (banner) {
+                banner.classList.remove('show');
+                document.body.classList.remove('update-banner-visible');
+            }
+            
+            if (newWorker) {
+                console.log('📤 Invio messaggio SKIP_WAITING al nuovo SW');
+                newWorker.postMessage({ action: 'skipWaiting' });
+            } else {
+                console.log('🔄 Ricarico la pagina direttamente');
+                window.location.reload();
+            }
+            
+            showToast('🔄 Aggiornamento in corso...', 'success');
+        }
+
+        function dismissUpdate() {
+            console.log('❌ Banner di aggiornamento chiuso dall\'utente');
+            const banner = document.getElementById('update-banner');
+            
+            if (banner) {
+                banner.classList.remove('show');
+                document.body.classList.remove('update-banner-visible');
+            }
+        }
 
         // ========== CONTROLLI IMMEDIATI INSTALLAZIONE ==========
         
@@ -748,17 +923,20 @@
         function initializeApp() {
             console.log('🚀 Inizializzazione app...');
             
-            // 1. Rileva il dispositivo
+            // 1. Registra il service worker per gestire aggiornamenti
+            registerServiceWorker();
+            
+            // 2. Rileva il dispositivo
             detectDevice();
             
-            // 2. Controlla se l'app è già installata
+            // 3. Controlla se l'app è già installata
             if (isAppInstalled()) {
                 console.log('✅ App già installata');
                 hideInstallCardPermanently();
                 return;
             }
             
-            // 3. Aggiorna la smart card
+            // 4. Aggiorna la smart card
             setTimeout(() => {
                 updateSmartCard();
                 installationCheckComplete = true;

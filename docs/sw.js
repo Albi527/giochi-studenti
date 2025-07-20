@@ -1,616 +1,326 @@
-const CACHE_NAME = 'giochi-educativi-v10'; // ⬆️ VERSIONE v10 con gestione aggiornamenti PWA
-const urlsToCache = [
-    './',
-    './index.html',                // ✅ Landing page con installazione smart + aggiornamenti PWA
-    './matematica.html',           // ✅ Matematica v4.0.2 integrata nel sistema PWA unificato
-    './tabelline.html',           // ✅ Sfida Tabelline con timer 60s e 3 livelli
-    './games.json',               // ✅ JSON v1.7.1 con integrazione matematica completa
-    './manifest.json',            // ✅ PWA manifest per installazione
-    './icon-192.png',             // ✅ Icone PWA
-    './icon-512.png'
+// Service Worker v8.1 - Sistema unificato v1.8.0
+// Aggiornato per: Matematica v4.1.0, Tabelline v2.2.0
+
+const CACHE_VERSION = 'v8.1.0';
+const CACHE_NAME = `giochi-educativi-${CACHE_VERSION}`;
+
+// File essenziali del sistema unificato
+const CORE_FILES = [
+    '/',
+    '/index.html',
+    '/matematica.html',
+    '/tabelline.html',
+    '/games.json',
+    '/manifest.json'
 ];
 
+// File statici da pre-cachare
+const STATIC_RESOURCES = [
+    // Nessun file statico esterno per mantenere l'app completamente standalone
+];
+
+// Tutte le risorse da cachare
+const CACHE_RESOURCES = [...CORE_FILES, ...STATIC_RESOURCES];
+
+// Strategia di cache per tipo di risorsa
+const CACHE_STRATEGIES = {
+    core: 'cache-first',           // File core dell'app
+    api: 'network-first',          // games.json e dati dinamici  
+    assets: 'cache-first',         // Immagini e risorse statiche
+    pages: 'stale-while-revalidate' // Pagine HTML
+};
+
+console.log(`🔧 Service Worker v8.1 inizializzazione - Sistema v1.8.0`);
+console.log(`📱 Supporto giochi: Matematica v4.1.0, Tabelline v2.2.0`);
+
+// === INSTALLAZIONE ===
 self.addEventListener('install', event => {
-    console.log('Service Worker: Install Event v10 - Sistema PWA con Aggiornamenti Automatici');
+    console.log(`📦 SW v8.1: Installazione iniziata`);
+    
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => {
-                console.log('Service Worker: Cache aperta:', CACHE_NAME);
-                console.log('Service Worker: Sistema PWA Unificato v10 con:');
-                console.log('  - 🎮 Landing page con installazione smart persistente');
-                console.log('  - 🧮 Matematica v4.0.2 completamente integrata');
-                console.log('  - 🎯 Sfida Tabelline sincronizzata');
-                console.log('  - 📄 Games.json v1.7.1 con metadati integrazione');
-                console.log('  - 🔄 Gestione aggiornamenti PWA automatici');
-                console.log('  - 📱 PWA installabile con controlli integrati');
-                console.log('  - 🚫 Rimossi sistemi PWA duplicati');
-                return cache.addAll(urlsToCache);
-            })
-            .then(() => {
-                console.log('Service Worker: Tutti i file v10 cachati con successo');
-                console.log('🎉 Sistema PWA con Aggiornamenti Automatici operativo!');
-                // NON facciamo skipWaiting() automaticamente nell'install
-                // Lo faremo solo quando l'utente lo richiede
-            })
-            .catch(error => {
-                console.error('Service Worker: Errore durante il caching v10:', error);
-            })
-    );
-});
-
-self.addEventListener('fetch', event => {
-    // Gestione speciale per index.html (sempre aggiornata per nuove funzionalità)
-    if (event.request.url.includes('index.html') || event.request.url.endsWith('/')) {
-        event.respondWith(
-            caches.match(event.request)
-                .then(response => {
-                    // Serve dalla cache se disponibile
-                    if (response) {
-                        console.log('Service Worker: index.html v10 dalla cache');
-                        // Aggiornamento background per future visite
-                        fetch(event.request)
-                            .then(networkResponse => {
-                                if (networkResponse && networkResponse.status === 200) {
-                                    caches.open(CACHE_NAME)
-                                        .then(cache => {
-                                            cache.put(event.request, networkResponse.clone());
-                                        });
-                                }
-                            })
-                            .catch(() => {
-                                // Ignora errori di rete per aggiornamenti background
-                            });
-                        return response;
-                    }
-                    
-                    // Se non in cache, fetch dalla rete
-                    console.log('Service Worker: index.html v10 dalla rete');
-                    return fetch(event.request)
-                        .then(networkResponse => {
-                            if (networkResponse && networkResponse.status === 200) {
-                                const responseToCache = networkResponse.clone();
-                                caches.open(CACHE_NAME)
-                                    .then(cache => {
-                                        cache.put(event.request, responseToCache);
-                                    });
-                            }
-                            return networkResponse;
-                        });
-                })
-        );
-        return;
-    }
-
-    // Gestione speciale per games.json (sempre network-first per stats aggiornate)
-    if (event.request.url.includes('games.json')) {
-        event.respondWith(
-            fetch(event.request)
-                .then(response => {
-                    console.log('Service Worker: games.json v1.7.1 aggiornato dalla rete');
-                    // Aggiorna la cache con la nuova versione
-                    const responseClone = response.clone();
-                    caches.open(CACHE_NAME)
-                        .then(cache => {
-                            cache.put(event.request, responseClone);
-                        });
-                    return response;
-                })
-                .catch(() => {
-                    console.log('Service Worker: games.json dalla cache (offline)');
-                    return caches.match(event.request);
-                })
-        );
-        return;
-    }
-
-    // Gestione speciale per matematica.html integrata (cache-first con background update)
-    if (event.request.url.includes('matematica.html')) {
-        event.respondWith(
-            caches.match(event.request)
-                .then(response => {
-                    if (response) {
-                        console.log('Service Worker: matematica.html v4.0.2 dalla cache (integrata)');
-                        
-                        // Background update
-                        fetch(event.request)
-                            .then(networkResponse => {
-                                if (networkResponse && networkResponse.status === 200) {
-                                    caches.open(CACHE_NAME)
-                                        .then(cache => {
-                                            cache.put(event.request, networkResponse.clone());
-                                        });
-                                }
-                            })
-                            .catch(() => {});
-                        return response;
-                    }
-                    
-                    console.log('Service Worker: matematica.html v4.0.2 dalla rete (integrata)');
-                    return fetch(event.request)
-                        .then(networkResponse => {
-                            if (networkResponse && networkResponse.status === 200) {
-                                const responseToCache = networkResponse.clone();
-                                caches.open(CACHE_NAME)
-                                    .then(cache => {
-                                        cache.put(event.request, responseToCache);
-                                    });
-                            }
-                            return networkResponse;
-                        });
-                })
-        );
-        return;
-    }
-
-    // Gestione speciale per tabelline.html (cache-first con background update)
-    if (event.request.url.includes('tabelline.html')) {
-        event.respondWith(
-            caches.match(event.request)
-                .then(response => {
-                    if (response) {
-                        console.log('Service Worker: tabelline.html dalla cache');
-                        // Background update
-                        fetch(event.request)
-                            .then(networkResponse => {
-                                if (networkResponse && networkResponse.status === 200) {
-                                    caches.open(CACHE_NAME)
-                                        .then(cache => {
-                                            cache.put(event.request, networkResponse.clone());
-                                        });
-                                }
-                            })
-                            .catch(() => {});
-                        return response;
-                    }
-                    
-                    console.log('Service Worker: tabelline.html dalla rete');
-                    return fetch(event.request)
-                        .then(networkResponse => {
-                            if (networkResponse && networkResponse.status === 200) {
-                                const responseToCache = networkResponse.clone();
-                                caches.open(CACHE_NAME)
-                                    .then(cache => {
-                                        cache.put(event.request, responseToCache);
-                                    });
-                            }
-                            return networkResponse;
-                        });
-                })
-        );
-        return;
-    }
-
-    // Strategia cache-first per tutti gli altri file
-    event.respondWith(
-        caches.match(event.request)
-            .then(response => {
-                if (response) {
-                    console.log('Service Worker: Serving from cache v10:', event.request.url.split('/').pop());
-                    return response;
-                }
+        (async () => {
+            try {
+                // Apri cache
+                const cache = await caches.open(CACHE_NAME);
+                console.log(`✅ Cache aperta: ${CACHE_NAME}`);
                 
-                console.log('Service Worker: Fetching from network:', event.request.url.split('/').pop());
-                return fetch(event.request)
-                    .then(response => {
-                        if (!response || response.status !== 200 || response.type !== 'basic') {
-                            return response;
-                        }
-                        
-                        const responseToCache = response.clone();
-                        
-                        if (shouldCache(event.request)) {
-                            caches.open(CACHE_NAME)
-                                .then(cache => {
-                                    cache.put(event.request, responseToCache);
-                                });
-                        }
-                        
-                        return response;
-                    })
-                    .catch(() => {
-                        // Fallback per pagine non trovate
-                        if (event.request.destination === 'document') {
-                            console.log('Service Worker: Fallback a index.html');
-                            return caches.match('./index.html');
-                        }
-                    });
-            })
-    );
-});
-
-self.addEventListener('activate', event => {
-    console.log('Service Worker: Activate Event v10 - Sistema PWA con Aggiornamenti Automatici');
-    event.waitUntil(
-        caches.keys().then(cacheNames => {
-            return Promise.all(
-                cacheNames.map(cacheName => {
-                    if (cacheName !== CACHE_NAME) {
-                        console.log('Service Worker: Eliminando cache vecchia:', cacheName);
-                        console.log('  - Aggiornando a v10 con gestione aggiornamenti PWA');
-                        console.log('  - Matematica v4.0.2 integrata + aggiornamenti automatici');
-                        console.log('  - Sistema di notifica aggiornamenti implementato');
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        }).then(() => {
-            console.log('Service Worker: Ora controlla tutte le pagine con v10');
-            console.log('🎉 Sistema PWA con Aggiornamenti Automatici v10 attivo:');
-            console.log('  ✅ Landing page con installazione smart persistente');
-            console.log('  ✅ Matematica v4.0.2 completamente integrata');
-            console.log('  ✅ Tabelline sincronizzate nel sistema');
-            console.log('  ✅ Games.json v1.7.1 con metadati integrazione');
-            console.log('  ✅ localStorage unificato per stato installazione');
-            console.log('  ✅ Navigazione fluida tra componenti');
-            console.log('  ✅ Gestione aggiornamenti PWA automatici');
-            console.log('  ✅ Banner di aggiornamento integrato');
-            console.log('  ✅ Skip waiting controllato dall\'utente');
-            
-            // Prendi il controllo immediatamente solo se esplicitamente richiesto
-            return self.clients.claim();
-        })
-    );
-});
-
-// ========== GESTIONE AGGIORNAMENTI PWA ==========
-
-// Gestisce messaggi dall'app principale
-self.addEventListener('message', event => {
-    console.log('Service Worker: Messaggio ricevuto:', event.data);
-    
-    // Gestione skip waiting per aggiornamenti
-    if (event.data && event.data.action === 'skipWaiting') {
-        console.log('Service Worker: Comando skipWaiting ricevuto dall\'utente');
-        console.log('🚀 Attivando nuova versione v10...');
-        self.skipWaiting().then(() => {
-            console.log('✅ Service Worker v10 attivato con successo');
-            // Invia messaggio di refresh a tutti i client
-            notifyClientsToRefresh();
-        });
-        return;
-    }
-    
-    // Gestioni legacy per compatibilità
-    if (event.data && event.data.type === 'SKIP_WAITING') {
-        console.log('Service Worker: Ricevuto comando SKIP_WAITING legacy per v10');
-        self.skipWaiting().then(() => {
-            notifyClientsToRefresh();
-        });
-        return;
-    }
-    
-    if (event.data && event.data.type === 'CACHE_UPDATE') {
-        console.log('Service Worker: Aggiornamento cache v10 richiesto');
-        event.waitUntil(updateCache());
-        return;
-    }
-    
-    if (event.data && event.data.type === 'GET_VERSION') {
-        console.log('Service Worker: Richiesta versione corrente');
-        event.ports[0].postMessage({
-            version: 'v10',
-            landingPageVersion: '3.1.0',
-            matematicaVersion: '4.0.2',
-            tabellineVersion: '2.1.0',
-            gamesJsonVersion: '1.7.1',
-            updateSystemVersion: '1.0.0',
-            unifiedSystemFeatures: [
-                'Matematica v4.0.2 completamente integrata',
-                'localStorage sincronizzato tra componenti',
-                'Navigazione unificata',
-                'Controlli installazione centralizzati',
-                'Cache strategy ottimizzata per ogni file',
-                'Gestione aggiornamenti PWA automatici',
-                'Banner di aggiornamento utente-friendly',
-                'Skip waiting controllato dall\'utente',
-                'Nessuna duplicazione PWA/Service Worker'
-            ],
-            integrationStatus: {
-                matematicaIntegrata: true,
-                duplicazioniRimosse: true,
-                localStorageSincronizzato: true,
-                navigationeUnificata: true,
-                aggiornamentoPWAAttivo: true,
-                sistemaFunzionante: true
+                // Pre-carica file core
+                await cache.addAll(CACHE_RESOURCES);
+                console.log(`📂 ${CACHE_RESOURCES.length} risorse core pre-cachate`);
+                
+                // Forza l'attivazione immediata
+                await self.skipWaiting();
+                console.log(`🚀 SW v8.1: Installazione completata, skip waiting attivato`);
+                
+            } catch (error) {
+                console.error(`❌ Errore installazione SW v8.1:`, error);
             }
-        });
-        return;
-    }
-    
-    if (event.data && event.data.type === 'GET_STATS') {
-        console.log('Service Worker: Richiesta statistiche sistema unificato');
-        event.ports[0].postMessage({
-            giochiDisponibili: 2,
-            inSviluppo: 1,
-            matematicaLivelli: 33,
-            tabellineLivelli: 3,
-            dispositiviSupportati: ['Desktop', 'Android', 'iOS'],
-            sistemaUnificato: true,
-            matematicaIntegrata: true,
-            duplicazioniPWA: false,
-            localStorageSincronizzato: true,
-            aggiornamentoPWA: true,
-            versioneServiceWorker: 'v10',
-            versioneMatematica: '4.0.2',
-            versioneGamesJson: '1.7.1'
-        });
-        return;
-    }
-    
-    if (event.data && event.data.type === 'CHECK_INSTALLATION') {
-        console.log('Service Worker: Controllo stato installazione unificato');
-        // Coordina con tutto il sistema per controlli installazione
-        event.ports[0].postMessage({
-            shouldCheckInstallation: true,
-            useLocalStorage: true,
-            hideCardPermanently: true,
-            unifiedSystem: true,
-            matematicaIntegrated: true,
-            updateSystemEnabled: true
-        });
-        return;
-    }
-    
-    if (event.data && event.data.type === 'MATEMATICA_INTEGRATION_STATUS') {
-        console.log('Service Worker: Richiesta stato integrazione matematica');
-        event.ports[0].postMessage({
-            matematicaIntegrata: true,
-            sistemiPWADuplicatiRimossi: true,
-            localStorageSincronizzato: true,
-            navigationeUnificata: true,
-            serviceWorkerUnificato: true,
-            aggiornamentoPWAAttivo: true,
-            versioneMatematica: '4.0.2',
-            versioneServiceWorker: 'v10',
-            statoIntegrazione: 'COMPLETA',
-            conflittiPWA: false,
-            funzionamentoOttimale: true
-        });
-        return;
-    }
+        })()
+    );
 });
 
-// Funzione per notificare i client di ricaricare
-async function notifyClientsToRefresh() {
-    console.log('Service Worker: Notificando i client di ricaricare...');
+// === ATTIVAZIONE ===
+self.addEventListener('activate', event => {
+    console.log(`🔄 SW v8.1: Attivazione iniziata`);
+    
+    event.waitUntil(
+        (async () => {
+            try {
+                // Pulisci cache vecchie
+                const cacheNames = await caches.keys();
+                const oldCaches = cacheNames.filter(name => 
+                    name.startsWith('giochi-educativi-') && name !== CACHE_NAME
+                );
+                
+                await Promise.all(
+                    oldCaches.map(cacheName => {
+                        console.log(`🗑️ Eliminazione cache obsoleta: ${cacheName}`);
+                        return caches.delete(cacheName);
+                    })
+                );
+                
+                // Prendi controllo di tutti i client
+                await self.clients.claim();
+                console.log(`✅ SW v8.1: Attivazione completata, controllo client acquisito`);
+                
+                // Notifica i client dell'aggiornamento
+                const clients = await self.clients.matchAll();
+                clients.forEach(client => {
+                    client.postMessage({
+                        type: 'SW_ACTIVATED',
+                        version: CACHE_VERSION,
+                        message: 'Service Worker v8.1 attivato con successo'
+                    });
+                });
+                
+            } catch (error) {
+                console.error(`❌ Errore attivazione SW v8.1:`, error);
+            }
+        })()
+    );
+});
+
+// === GESTIONE RICHIESTE ===
+self.addEventListener('fetch', event => {
+    const { request } = event;
+    const url = new URL(request.url);
+    
+    // Ignora richieste non-GET e richieste esterne (eccetto manifest)
+    if (request.method !== 'GET') return;
+    if (!url.origin.includes(self.location.origin) && 
+        !request.url.includes('manifest.json')) return;
+    
+    event.respondWith(handleRequest(request));
+});
+
+// Gestore principale delle richieste
+async function handleRequest(request) {
+    const url = new URL(request.url);
+    const pathname = url.pathname;
+    
     try {
-        const clients = await self.clients.matchAll({
-            type: 'window',
-            includeUncontrolled: true
-        });
+        // Determina strategia di cache
+        let strategy = CACHE_STRATEGIES.pages; // Default
         
-        console.log(`Service Worker: Trovati ${clients.length} client da notificare`);
+        if (CORE_FILES.some(file => pathname.endsWith(file.replace('/', '')))) {
+            strategy = CACHE_STRATEGIES.core;
+        } else if (pathname.includes('games.json')) {
+            strategy = CACHE_STRATEGIES.api;
+        } else if (pathname.match(/\.(png|jpg|jpeg|gif|svg|ico|woff|woff2)$/)) {
+            strategy = CACHE_STRATEGIES.assets;
+        }
         
-        clients.forEach(client => {
-            console.log('Service Worker: Invio messaggio REFRESH al client');
-            client.postMessage({
-                type: 'REFRESH',
-                version: 'v10',
-                message: 'Nuova versione attivata, ricaricamento in corso...'
-            });
-        });
-        
-        // Forza il claim per prendere controllo immediatamente
-        await self.clients.claim();
-        console.log('✅ Service Worker ha preso controllo di tutti i client');
+        // Applica strategia
+        return await applyStrategy(request, strategy);
         
     } catch (error) {
-        console.error('❌ Errore nel notificare i client:', error);
+        console.error(`❌ Errore gestione richiesta ${pathname}:`, error);
+        return await fallbackResponse(request);
     }
 }
 
-// Funzione helper per decidere cosa cachare
-function shouldCache(request) {
-    const url = request.url;
+// Applica strategia di cache specifica
+async function applyStrategy(request, strategy) {
+    const cache = await caches.open(CACHE_NAME);
     
-    // Cacha sempre i file HTML, CSS, JS principali
-    if (url.includes('.html') || url.includes('.css') || url.includes('.js')) {
-        return true;
+    switch (strategy) {
+        case 'cache-first':
+            return await cacheFirst(request, cache);
+            
+        case 'network-first':
+            return await networkFirst(request, cache);
+            
+        case 'stale-while-revalidate':
+            return await staleWhileRevalidate(request, cache);
+            
+        default:
+            return await cacheFirst(request, cache);
     }
-    
-    // Cacha sempre games.json
-    if (url.includes('games.json')) {
-        return true;
-    }
-    
-    // Cacha manifest e icone PWA
-    if (url.includes('manifest') || url.includes('icon') || url.includes('.png')) {
-        return true;
-    }
-    
-    // Non cachare API esterne o file troppo grandi
-    if (url.includes('api.') || url.includes('analytics') || url.includes('.mp4') || url.includes('.zip')) {
-        return false;
-    }
-    
-    return false;
 }
 
-// Funzione per aggiornare forzatamente la cache
-async function updateCache() {
+// Cache First - per file core dell'app
+async function cacheFirst(request, cache) {
+    const cachedResponse = await cache.match(request);
+    
+    if (cachedResponse) {
+        console.log(`📂 Cache hit: ${request.url}`);
+        return cachedResponse;
+    }
+    
     try {
+        const networkResponse = await fetch(request);
+        if (networkResponse.ok) {
+            cache.put(request, networkResponse.clone());
+            console.log(`🌐 Network + cache: ${request.url}`);
+        }
+        return networkResponse;
+    } catch (error) {
+        console.log(`❌ Network fail: ${request.url}`);
+        throw error;
+    }
+}
+
+// Network First - per dati dinamici come games.json
+async function networkFirst(request, cache) {
+    try {
+        const networkResponse = await fetch(request);
+        if (networkResponse.ok) {
+            cache.put(request, networkResponse.clone());
+            console.log(`🌐 Network fresh: ${request.url}`);
+            return networkResponse;
+        }
+        throw new Error('Network response not ok');
+    } catch (error) {
+        const cachedResponse = await cache.match(request);
+        if (cachedResponse) {
+            console.log(`📂 Network fail, cache fallback: ${request.url}`);
+            return cachedResponse;
+        }
+        throw error;
+    }
+}
+
+// Stale While Revalidate - per pagine HTML
+async function staleWhileRevalidate(request, cache) {
+    const cachedResponse = await cache.match(request);
+    
+    // Aggiorna cache in background
+    const networkResponsePromise = fetch(request).then(response => {
+        if (response.ok) {
+            cache.put(request, response.clone());
+            console.log(`🔄 Background update: ${request.url}`);
+        }
+        return response;
+    }).catch(error => {
+        console.log(`❌ Background update failed: ${request.url}`);
+    });
+    
+    // Restituisci cache immediato se disponibile
+    if (cachedResponse) {
+        console.log(`📂 Stale cache: ${request.url}`);
+        return cachedResponse;
+    }
+    
+    // Altrimenti aspetta network
+    try {
+        const networkResponse = await networkResponsePromise;
+        console.log(`🌐 Fresh network: ${request.url}`);
+        return networkResponse;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// Risposta di fallback per errori
+async function fallbackResponse(request) {
+    const url = new URL(request.url);
+    
+    // Per pagine HTML, restituisci index.html
+    if (request.destination === 'document' || 
+        url.pathname.endsWith('.html') ||
+        url.pathname === '/') {
+        
         const cache = await caches.open(CACHE_NAME);
-        console.log('Service Worker: Aggiornamento forzato cache v10...');
-        
-        await Promise.all(
-            urlsToCache.map(async (url) => {
-                await cache.delete(url);
-                const response = await fetch(url);
-                if (response.ok) {
-                    await cache.put(url, response);
-                    console.log('Service Worker: Aggiornato v10:', url);
-                }
-            })
-        );
-        
-        console.log('Service Worker: Cache v10 aggiornata completamente');
-        console.log('🎉 Sistema PWA con Aggiornamenti Automatici v10 completo pronto!');
-        
-        // Notifica all'app che l'aggiornamento è completato
-        const clients = await self.clients.matchAll();
-        clients.forEach(client => {
-            client.postMessage({
-                type: 'CACHE_UPDATED',
-                version: 'v10',
-                message: 'Sistema PWA con Aggiornamenti Automatici aggiornato alla versione v10!',
-                unifiedSystemFeatures: {
-                    giochiDisponibili: 2,
-                    inSviluppo: 1,
-                    matematicaIntegrata: true,
-                    sistemaUnificato: true,
-                    duplicazioniRimosse: true,
-                    localStorageSincronizzato: true,
-                    aggiornamentoPWAAttivo: true,
-                    features: [
-                        'Matematica v4.0.2 completamente integrata',
-                        'Sistema PWA unificato senza duplicazioni',
-                        'localStorage sincronizzato tra componenti',
-                        'Navigazione fluida e unificata',
-                        'Cache strategy ottimizzata',
-                        'Controlli installazione centralizzati',
-                        'Gestione aggiornamenti PWA automatici',
-                        'Banner di aggiornamento user-friendly',
-                        'Skip waiting controllato dall\'utente'
-                    ]
-                }
-            });
-        });
-        
-    } catch (error) {
-        console.error('Service Worker: Errore durante aggiornamento cache v10:', error);
+        const fallback = await cache.match('/index.html');
+        if (fallback) {
+            console.log(`🏠 Fallback a index.html per: ${request.url}`);
+            return fallback;
+        }
     }
+    
+    // Risposta di errore generica
+    return new Response(
+        JSON.stringify({
+            error: 'Risorsa non disponibile offline',
+            url: request.url,
+            timestamp: new Date().toISOString()
+        }), {
+            status: 503,
+            statusText: 'Service Unavailable',
+            headers: { 'Content-Type': 'application/json' }
+        }
+    );
 }
 
-// Gestisce sync in background
-self.addEventListener('sync', event => {
-    if (event.tag === 'background-sync') {
-        console.log('Service Worker: Background sync triggered per v10');
-        event.waitUntil(updateCache());
+// === GESTIONE MESSAGGI ===
+self.addEventListener('message', event => {
+    const { data } = event;
+    console.log(`💬 SW v8.1 messaggio ricevuto:`, data);
+    
+    if (data && data.action === 'skipWaiting') {
+        console.log(`⏭️ Skip waiting richiesto dal client`);
+        self.skipWaiting();
+        
+        // Notifica tutti i client del refresh
+        self.clients.matchAll().then(clients => {
+            clients.forEach(client => {
+                client.postMessage({ type: 'REFRESH' });
+            });
+        });
+    }
+    
+    if (data && data.action === 'getVersion') {
+        event.ports[0].postMessage({
+            version: CACHE_VERSION,
+            cacheSize: CACHE_RESOURCES.length,
+            timestamp: new Date().toISOString()
+        });
     }
 });
 
-// Gestione notifiche push per aggiornamenti
+// === NOTIFICHE PUSH (placeholder per future implementazioni) ===
 self.addEventListener('push', event => {
-    if (event.data) {
-        const data = event.data.json();
-        console.log('Service Worker: Push notification ricevuta:', data);
-        
-        if (data.type === 'installation_complete') {
-            event.waitUntil(
-                self.registration.showNotification('🎉 Installazione Completata!', {
-                    body: 'Giochi Educativi è ora installato con sistema PWA unificato e aggiornamenti automatici!',
-                    icon: '/icon-192.png',
-                    badge: '/icon-192.png',
-                    tag: 'installation-complete',
-                    actions: [
-                        {
-                            action: 'open',
-                            title: '🚀 Apri App'
-                        },
-                        {
-                            action: 'matematica',
-                            title: '🧮 Matematica'
-                        }
-                    ]
-                })
-            );
-        }
-        
-        if (data.type === 'matematica_integrated') {
-            event.waitUntil(
-                self.registration.showNotification('🧮 Matematica Integrata!', {
-                    body: 'Matematica sul Divano v4.0.2 è completamente integrata nel sistema PWA con aggiornamenti automatici!',
-                    icon: '/icon-192.png',
-                    badge: '/icon-192.png',
-                    tag: 'matematica-integrated',
-                    actions: [
-                        {
-                            action: 'play-matematica',
-                            title: '🚀 Gioca Ora'
-                        }
-                    ]
-                })
-            );
-        }
-        
-        if (data.type === 'update_available') {
-            event.waitUntil(
-                self.registration.showNotification('🚀 Aggiornamento Disponibile!', {
-                    body: 'È disponibile una nuova versione dei Giochi Educativi!',
-                    icon: '/icon-192.png',
-                    badge: '/icon-192.png',
-                    tag: 'update-available',
-                    actions: [
-                        {
-                            action: 'update',
-                            title: '🔄 Aggiorna Ora'
-                        }
-                    ]
-                })
-            );
-        }
-        
-        if (data.type === 'new_game') {
-            event.waitUntil(
-                self.registration.showNotification('🎮 Nuovo Gioco Disponibile!', {
-                    body: data.message || 'È stato aggiunto un nuovo gioco educativo al sistema unificato!',
-                    icon: '/icon-192.png',
-                    badge: '/icon-192.png',
-                    tag: 'new-game',
-                    actions: [
-                        {
-                            action: 'play',
-                            title: '🚀 Gioca Ora'
-                        }
-                    ]
-                })
-            );
-        }
-    }
+    console.log(`🔔 Push notification ricevuta`);
+    // Implementazione futura per notifiche di aggiornamenti giochi
 });
 
-// Gestione click notifiche
-self.addEventListener('notificationclick', event => {
-    console.log('Service Worker: Notification click ricevuto:', event);
-    
-    event.notification.close();
-    
-    if (event.action === 'open' || event.action === 'play') {
-        event.waitUntil(
-            clients.openWindow('./index.html')
-        );
-    } else if (event.action === 'matematica' || event.action === 'play-matematica') {
-        event.waitUntil(
-            clients.openWindow('./matematica.html')
-        );
-    } else if (event.action === 'update') {
-        // Gestione click su aggiornamento
-        event.waitUntil(
-            clients.openWindow('./index.html').then(() => {
-                // Il banner di aggiornamento apparirà automaticamente
-                notifyClientsToRefresh();
-            })
-        );
-    } else {
-        // Click generale sulla notifica
-        event.waitUntil(
-            clients.openWindow('./index.html')
-        );
-    }
+// === BACKGROUND SYNC (placeholder per future implementazioni) ===
+self.addEventListener('sync', event => {
+    console.log(`🔄 Background sync evento:`, event.tag);
+    // Implementazione futura per sincronizzazione offline
 });
 
-// Notifica quando il service worker v10 è pronto
-console.log('🚀 Service Worker v10 caricato - Sistema PWA con Aggiornamenti Automatici!');
-console.log('🎮 Piattaforma Giochi Educativi - Maestro Alberto');
-console.log('📊 Sistema completamente unificato con aggiornamenti PWA:');
-console.log('  ✅ Matematica v4.0.2 integrata (6 operazioni, 33 livelli)');
-console.log('  ✅ Tabelline sincronizzate (timer 60s, 3 livelli)');
-console.log('  ✅ Games.json v1.7.1 con metadati integrazione');
-console.log('  ✅ localStorage unificato per stato installazione');
-console.log('  ✅ Navigazione fluida tra componenti');
-console.log('  ✅ Cache strategy ottimizzata per performance');
-console.log('  ✅ Gestione aggiornamenti PWA automatici');
-console.log('  ✅ Banner di aggiornamento user-friendly');
-console.log('  ✅ Skip waiting controllato dall\'utente');
-console.log('  ✅ Nessuna duplicazione PWA/Service Worker');
-console.log('🎯 Sistema con aggiornamenti automatici pronto per utilizzo ottimale!');
+// === GESTIONE ERRORI GLOBALI ===
+self.addEventListener('error', event => {
+    console.error(`❌ SW v8.1 errore globale:`, event.error);
+});
+
+self.addEventListener('unhandledrejection', event => {
+    console.error(`❌ SW v8.1 promise rejection:`, event.reason);
+});
+
+// === LOGS DI DEBUG ===
+console.log(`✅ Service Worker v8.1 caricato completamente`);
+console.log(`📊 Cache: ${CACHE_NAME}`);
+console.log(`📁 Risorse core: ${CORE_FILES.length}`);
+console.log(`🎮 Sistema: v1.8.0 con Matematica v4.1.0 e Tabelline v2.2.0`);
+
+// Esporta informazioni per debug (non visibili in produzione)
+if (self.location.hostname === 'localhost') {
+    self.SW_DEBUG_INFO = {
+        version: CACHE_VERSION,
+        cacheResources: CACHE_RESOURCES,
+        strategies: CACHE_STRATEGIES,
+        timestamp: new Date().toISOString()
+    };
+}

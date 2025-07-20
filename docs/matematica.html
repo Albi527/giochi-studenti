@@ -47,17 +47,30 @@
             flex-shrink: 0;
         }
 
-        .header::before {
-            content: '🏠';
+        /* Bottone Home funzionante */
+        .home-button {
             position: absolute;
             left: min(2vw, 15px);
-            font-size: min(3.5vw, 1.5em);
+            top: 50%;
+            transform: translateY(-50%);
+            width: clamp(35px, 6vw, 45px);
+            height: clamp(35px, 6vw, 45px);
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .header::before:hover {
-            transform: scale(1.2);
+        .home-button:hover {
+            transform: translateY(-50%) translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         .header::after {
@@ -437,22 +450,27 @@
 
         .sound-toggle {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255,255,255,0.9);
+            top: 50%;
+            right: min(2vw, 15px);
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #f39c12, #e67e22);
             border: none;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 1.2em;
+            width: clamp(35px, 6vw, 45px);
+            height: clamp(35px, 6vw, 45px);
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
             cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .sound-toggle:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transform: translateY(-50%) translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
         .emoji-decoration {
@@ -521,17 +539,19 @@
                 grid-template-columns: 1fr 1fr;
                 gap: 10px;
             }
+            
+            .home-button,
+            .sound-toggle {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
         }
 
         @media (max-width: 300px) {
             .menu-btn {
                 font-size: 0.9em;
                 padding: 10px;
-            }
-
-            .header::before,
-            .header::after {
-                display: none;
             }
 
             .answer-input {
@@ -561,6 +581,7 @@
 
 <div class="container">
 <div class="header">
+<button class="home-button" onclick="goToMainApp()" title="Torna alla Home">🏠</button>
 <button class="sound-toggle" id="sound-toggle" onclick="toggleSound()" title="Attiva/Disattiva Suoni">🔊</button>
 <h1>Matematica sul Divano</h1>
 <div class="subtitle">by Maestro Alberto</div>
@@ -704,6 +725,7 @@
 
         // Gestione navigazione - torna all'index quando si clicca su home
         function goToMainApp() {
+            playClickSound();
             window.location.href = './index.html';
         }
 
@@ -846,6 +868,67 @@
         }
 
         // ========================================
+        // SISTEMA ANTI-RIPETIZIONE MIGLIORATO PER TABELLINE
+        // ========================================
+        
+        let tabellineQuestions = [];
+        let tabellineCurrentIndex = 0;
+        
+        // Funzione per mescolare un array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        
+        // Inizializza le tabelline con sistema anti-ripetizione avanzato
+        function initializeTabellineQuestions() {
+            tabellineQuestions = [];
+            
+            // Genera TUTTE le possibili tabelline 0-10 (inclusi 3×5 e 5×3)
+            for (let a = 0; a <= 10; a++) {
+                for (let b = 0; b <= 10; b++) {
+                    tabellineQuestions.push({
+                        a: a,
+                        b: b,
+                        result: a * b,
+                        operation: '×',
+                        key: `${a}x${b}`
+                    });
+                }
+            }
+            
+            // Mischia le domande
+            shuffleArray(tabellineQuestions);
+            tabellineCurrentIndex = 0;
+            
+            console.log(`🎯 Tabelline: ${tabellineQuestions.length} domande totali preparate e mescolate`);
+        }
+        
+        // Genera tabelline senza ripetizioni immediate
+        function generateMultiplicationAdvanced() {
+            // Se abbiamo finito tutte le domande, rimescola e ricomincia
+            if (tabellineCurrentIndex >= tabellineQuestions.length) {
+                console.log('🔄 Tabelline: rimescolamento automatico dopo aver completato tutte le domande');
+                shuffleArray(tabellineQuestions);
+                tabellineCurrentIndex = 0;
+            }
+            
+            const question = tabellineQuestions[tabellineCurrentIndex];
+            tabellineCurrentIndex++;
+            
+            console.log(`🎯 Tabellina ${tabellineCurrentIndex}/${tabellineQuestions.length}: ${question.a} × ${question.b} = ${question.result}`);
+            
+            return {
+                a: question.a,
+                b: question.b,
+                result: question.result,
+                operation: '×'
+            };
+        }
+
+        // ========================================
         // LOGICA DI GIOCO COMPLETA
         // ========================================
         
@@ -979,20 +1062,29 @@
                             b = 20 - a;
                         }
                         break;
-                    case 3: // Tappa alla decina successiva (max 100)
-                        const base = Math.floor(Math.random() * 8) + 1;
-                        const tens = Math.floor(Math.random() * 7) + 1; // Limitato per non superare 100
-                        a = tens * 10 + Math.floor(Math.random() * 9) + 1;
+                    case 3: // Tappa alla decina successiva - CORRETTO
+                        // Il primo numero deve avere unità (non decine piene)
+                        a = Math.floor(Math.random() * 80) + 11; // Da 11 a 90
+                        // Assicura che a non finisca per 0
+                        if (a % 10 === 0) {
+                            a = a - Math.floor(Math.random() * 9) - 1; // Sottrai 1-9
+                        }
                         
                         const unitsOfA = a % 10;
-                        const minBForTapping = 11 - unitsOfA;
-                        // Limita b per non superare 100
-                        const maxBForTapping = Math.min(9, 100 - a);
+                        // b deve essere compreso tra 1 e 9 (EVITA +10)
+                        // e deve superare le unità di a per fare tappa
+                        const minB = Math.max(1, 11 - unitsOfA); // Almeno per arrivare alla decina
+                        const maxB = Math.min(9, 100 - a); // Massimo 9 e non superare 100
                         
-                        if (maxBForTapping >= minBForTapping) {
-                            b = Math.floor(Math.random() * (maxBForTapping - minBForTapping + 1)) + minBForTapping;
+                        if (maxB >= minB) {
+                            b = Math.floor(Math.random() * (maxB - minB + 1)) + minB;
                         } else {
-                            b = minBForTapping;
+                            continue; // Riprova
+                        }
+                        
+                        // Verifica finale: deve fare tappa e b deve essere 1-9
+                        if (b < 1 || b > 9 || (unitsOfA + (b % 10)) <= 10) {
+                            continue;
                         }
                         break;
                     case 4: // Numeri oltre le decine SENZA riporto (max 100)
@@ -1046,37 +1138,31 @@
                         a = (Math.floor(Math.random() * 9) + 1) * 10;
                         b = Math.floor(Math.random() * 9) + 1;
                         break;
-                    case 4: { // Tappa alla decina precedente (con prestito) - CORRETTO
+                    case 4: { // Tappa alla decina precedente - CORRETTO
                         // Genera numeri che richiedano SEMPRE la tappa alla decina precedente
                         a = Math.floor(Math.random() * 80) + 20; // Da 20 a 99
                         
-                        // Le unità di a DEVONO essere minori di quelle di b per richiedere prestito
+                        // Le unità di a DEVONO essere minori del sottraendo per richiedere prestito
                         const unitaA4 = a % 10;
                         
-                        // b deve avere unità maggiori di quelle di a
-                        const minUnitaB4 = unitaA4 + 1; // Almeno 1 in più delle unità di a
-                        const maxUnitaB4 = 9; // Massimo 9
+                        // b deve essere compreso tra 1 e 9 (CORRETTO)
+                        // e deve avere unità maggiori di quelle di a per fare tappa
+                        const minUnitaB4 = Math.max(1, unitaA4 + 1); // Almeno 1 e maggiore delle unità di a
+                        const maxUnitaB4 = 9; // Massimo 9 (sottraendo 1-9)
                         
                         if (minUnitaB4 <= maxUnitaB4) {
-                            const unitaB4 = Math.floor(Math.random() * (maxUnitaB4 - minUnitaB4 + 1)) + minUnitaB4;
-                            
-                            // Assegna delle decine a b (facoltativo, può essere 0)
-                            const maxDecineB4 = Math.min(Math.floor(a / 10) - 1, 3); // Massimo 3 decine, deve essere < decine di a
-                            const decineB4 = maxDecineB4 > 0 ? Math.floor(Math.random() * (maxDecineB4 + 1)) : 0;
-                            
-                            b = decineB4 * 10 + unitaB4;
+                            b = Math.floor(Math.random() * (maxUnitaB4 - minUnitaB4 + 1)) + minUnitaB4;
                         } else {
                             // Se le unità di a sono già 9, modifica a
                             const decineA4 = Math.floor(a / 10);
-                            const nuoveUnitaA4 = Math.floor(Math.random() * 8); // 0-7 (così b può avere unità 1-9)
+                            const nuoveUnitaA4 = Math.floor(Math.random() * 8); // 0-7 (così b può avere unità 1-8)
                             a = decineA4 * 10 + nuoveUnitaA4;
                             
-                            const unitaB4 = Math.floor(Math.random() * (9 - nuoveUnitaA4)) + nuoveUnitaA4 + 1;
-                            b = unitaB4; // Solo unità per semplicità
+                            b = Math.floor(Math.random() * (9 - nuoveUnitaA4)) + nuoveUnitaA4 + 1;
                         }
                         
-                        // Verifica finale: deve richiedere prestito
-                        if ((a % 10) >= (b % 10) || a <= b) {
+                        // Verifica finale: deve richiedere prestito e b è 1-9
+                        if (b < 1 || b > 9 || (a % 10) >= (b % 10) || a <= b) {
                             continue; // Riprova
                         }
                         break;
@@ -1119,29 +1205,8 @@
         }
 
         function generateMultiplication(level) {
-            let a, b, attempts = 0;
-            const maxAttempts = 100;
-            
-            do {
-                a = Math.floor(Math.random() * 11);
-                b = Math.floor(Math.random() * 11);
-                
-                // Controllo speciale per 1 x qualsiasi numero
-                if ((a === 1 || b === 1) && onesTableUsed) {
-                    continue; // Salta se 1 x qualsiasi è già stato usato
-                }
-                
-                attempts++;
-            } while (gameUsedQuestions.has(`${a}×${b}`) && attempts < maxAttempts);
-            
-            // Segna che 1 x qualsiasi è stato usato
-            if (a === 1 || b === 1) {
-                onesTableUsed = true;
-            }
-            
-            const questionKey = `${a}×${b}`;
-            gameUsedQuestions.add(questionKey);
-            return { a, b, result: a * b, operation: '×' };
+            // Usa il sistema anti-ripetizione avanzato per le tabelline
+            return generateMultiplicationAdvanced();
         }
 
         // NUOVA FUNZIONE: Genera divisioni
@@ -1347,6 +1412,11 @@
             // Reset completo domande utilizzate per nuovo gioco
             gameUsedQuestions.clear();
             onesTableUsed = false;
+            
+            // Inizializza le tabelline se necessario
+            if (gameType === 'tabelline') {
+                initializeTabellineQuestions();
+            }
             
             questionsPerLevel = gameConfigs[gameType].questionsPerLevel;
 
@@ -1583,7 +1653,8 @@
             correctAnswers = 0;
             totalErrors = 0;
             
-            // NON resetto gameUsedQuestions e onesTableUsed per evitare ripetizioni tra livelli
+            // NON resetto gameUsedQuestions per evitare ripetizioni tra livelli
+            // Per le tabelline mantiene il sistema avanzato attivo
 
             document.getElementById('level-complete-screen').classList.add('hidden');
             document.getElementById('game-screen').classList.remove('hidden');
@@ -1625,6 +1696,10 @@
             totalErrors = 0;
             gameUsedQuestions.clear();
             onesTableUsed = false;
+            
+            // Reset tabelline
+            tabellineQuestions = [];
+            tabellineCurrentIndex = 0;
         }
 
         // ========================================
@@ -1665,9 +1740,6 @@
 
         document.getElementById('remainder-input').addEventListener('input', updateConfirmButton);
 
-        // Gestione navigazione con header - RIMOSSO per evitare conflitti
-        // (Il bottone home nell'header rimane decorativo)
-
         // Inizializzazione
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('main-menu').style.display = 'grid';
@@ -1696,10 +1768,10 @@
             });
             
             // Integrazione completa con sistema PWA unificato
-            console.log('🧮 Matematica sul Divano v4.0.2 - Fix Errore Sintassi');
-            console.log('✨ Sincronizzato con Service Worker v8');
-            console.log('🔗 Collegato a games.json v1.7.0');
-            console.log('🔧 Correzioni: Menu Principale, Sottrazioni L4, Divisioni Potenze L2, Suoni');
+            console.log('🧮 Matematica sul Divano v4.1.0 - Sistema Migliorato');
+            console.log('✨ Bottone Home funzionante aggiunto');
+            console.log('🔧 Correzioni: Addizioni L3, Sottrazioni L4, Tabelline Anti-Ripetizione');
+            console.log('🎯 Tabelline: Sistema avanzato con pre-generazione e mescolamento');
         });
 
         window.addEventListener('online', updateOnlineStatus);

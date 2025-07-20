@@ -171,6 +171,29 @@
             opacity: 0.8;
         }
         
+        .version-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        
+        .new-badge {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
         @media (max-width: 768px) {
             .games-grid {
                 grid-template-columns: 1fr;
@@ -378,9 +401,11 @@
             <!-- Matematica sul Divano -->
             <div class="game-card matematica" onclick="window.location.href='matematica.html'">
                 <div class="game-icon">🧮</div>
-                <div class="game-title">Matematica sul Divano</div>
+                <div class="game-title">
+                    Matematica sul Divano
+                </div>
                 <div class="game-description">
-                    Addizioni, sottrazioni, moltiplicazioni e divisioni progressive. Audio interattivo e interfaccia ottimizzata!<br>
+                    6 operazioni complete con correzioni avanzate. Sistema anti-ripetizione perfezionato e navigazione ottimizzata.<br>
                     <strong>LEGGI SEMPRE LE CONSEGNE</strong>
                 </div>
                 <a href="matematica.html" class="play-button">🚀 Gioca Ora</a>
@@ -389,9 +414,11 @@
             <!-- Sfida Tabelline -->
             <div class="game-card tabelline" onclick="window.location.href='tabelline.html'">
                 <div class="game-icon">🎯</div>
-                <div class="game-title">Sfida Tabelline</div>
+                <div class="game-title">
+                    Sfida Tabelline
+                </div>
                 <div class="game-description">
-                    Timer di 60 secondi, 3 livelli di difficoltà e sistema anti-ripetizione. Perfetto per allenarsi con le tabelline!
+                    Timer di 60 secondi, 3 livelli di difficoltà e sistema anti-ripetizione avanzato.
                 </div>
                 <a href="tabelline.html" class="play-button">⚡ Inizia Sfida</a>
             </div>
@@ -401,7 +428,7 @@
                 <div class="game-icon">🎲</div>
                 <div class="game-title"><strong>Altro in arrivo</strong></div>
                 <div class="game-description">
-                    Nuovi giochi educativi e attività didattiche sono in fase di sviluppo. Resta sintonizzato per le prossime novità!
+                    Nuovi giochi educativi e attività didattiche sono in fase di sviluppo. Saranno automaticamente integrati nel sistema unificato. Resta sintonizzato!
                 </div>
                 <button class="play-button">🔜 Presto</button>
             </div>
@@ -921,7 +948,7 @@
         // ========== INIZIALIZZAZIONE ==========
         
         function initializeApp() {
-            console.log('🚀 Inizializzazione app...');
+            console.log('🚀 Inizializzazione app v1.8.0...');
             
             // 1. Registra il service worker per gestire aggiornamenti
             registerServiceWorker();
@@ -940,7 +967,8 @@
             setTimeout(() => {
                 updateSmartCard();
                 installationCheckComplete = true;
-                console.log('✅ Inizializzazione completata');
+                console.log('✅ Inizializzazione v1.8.0 completata');
+                console.log('🎮 Giochi aggiornati: Matematica v4.1.0, Tabelline v2.2.0');
             }, 500);
         }
 

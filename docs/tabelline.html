@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gioco delle Tabelline</title>
+    <title>Sfida Tabelline</title>
     <style>
         * {
             margin: 0;
@@ -29,60 +29,144 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 2vh;
             position: relative;
+            overflow: hidden;
         }
         
-        .header {
-            position: absolute;
-            top: 2vh;
+        /* Nuova striscia header */
+        .header-strip {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
             width: 100%;
+            padding: 1vh 3vw;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 4vw;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            flex-shrink: 0;
+        }
+        
+        .title-section {
             color: white;
-            font-size: clamp(1.2rem, 3vw, 2rem);
+            text-align: center;
+            flex: 1;
+        }
+        
+        .main-title {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-weight: bold;
+            margin-bottom: 0.2vh;
+        }
+        
+        .subtitle {
+            font-size: clamp(0.8rem, 1.8vw, 1rem);
+            opacity: 0.8;
+            font-style: italic;
+        }
+        
+        .control-button {
+            width: clamp(35px, 6vw, 45px);
+            height: clamp(35px, 6vw, 45px);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .home-button {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+        
+        .sound-button {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+        }
+        
+        .control-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Stats section sotto l'header */
+        .stats-section {
+            background: rgba(255, 255, 255, 0.9);
+            margin: 1vh 3vw 0 3vw;
+            padding: 1vh 2vw;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            gap: 6vw;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+            color: #2c3e50;
+        }
+        
+        .stat-icon {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            margin-bottom: 0.3vh;
+        }
+        
+        .stat-value {
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
             font-weight: bold;
         }
         
-        .score-timer {
-            display: flex;
-            gap: 3vw;
+        .stat-label {
+            font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+            margin-top: 0.2vh;
+            opacity: 0.7;
         }
         
+        /* Contenuto principale */
         .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1vh 3vw;
+            overflow: hidden;
+        }
+        
+        .game-card {
             text-align: center;
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 3vh 6vw;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 2vh 4vw;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             min-width: 50vw;
-            max-width: 80vw;
+            max-width: 90vw;
+            max-height: 70vh;
+            overflow-y: auto;
         }
         
         .question {
-            font-size: clamp(2rem, 8vw, 6rem);
+            font-size: clamp(1.5rem, 6vw, 3.5rem);
             color: #333;
-            margin-bottom: 3vh;
+            margin-bottom: 2vh;
             font-weight: bold;
         }
         
         .input-container {
-            margin: 3vh 0;
+            margin: 2vh 0;
         }
         
         .answer-input {
-            font-size: clamp(1.5rem, 6vw, 4rem);
-            padding: 1vh 2vw;
-            border: 4px solid #667eea;
-            border-radius: 15px;
+            font-size: clamp(1.2rem, 4vw, 2.5rem);
+            padding: 0.8vh 2vw;
+            border: 3px solid #667eea;
+            border-radius: 12px;
             text-align: center;
-            width: 30vw;
-            min-width: 200px;
-            max-width: 400px;
+            width: clamp(150px, 30vw, 300px);
             outline: none;
             transition: all 0.3s ease;
         }
@@ -94,21 +178,22 @@
         
         .buttons {
             display: flex;
-            gap: 2vw;
+            gap: 1.5vw;
             justify-content: center;
-            margin-top: 3vh;
+            margin-top: 2vh;
             flex-wrap: wrap;
         }
         
         .btn {
-            font-size: clamp(1rem, 2.5vw, 1.5rem);
-            padding: 1.5vh 3vw;
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            padding: 1vh 2.5vw;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s ease;
-            min-width: 120px;
+            min-width: 100px;
+            white-space: nowrap;
         }
         
         .btn-primary {
@@ -121,15 +206,20 @@
             color: white;
         }
         
+        .btn-home {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            color: white;
+        }
+        
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         
         .feedback {
-            font-size: clamp(1.2rem, 3vw, 2rem);
-            margin-top: 2vh;
-            min-height: 3rem;
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            margin-top: 1.5vh;
+            min-height: 2rem;
             font-weight: bold;
         }
         
@@ -142,14 +232,16 @@
         }
         
         .level-selector {
-            margin-bottom: 2vh;
+            margin-bottom: 1.5vh;
         }
         
         .level-btn {
-            margin: 0 1vw;
+            margin: 0 0.5vw;
             color: white;
             border: 2px solid rgba(255, 255, 255, 0.3);
             transition: all 0.3s ease;
+            font-size: clamp(0.8rem, 1.8vw, 1rem);
+            padding: 0.8vh 2vw;
         }
         
         .level-btn.easy {
@@ -171,13 +263,13 @@
         
         .progress-bar {
             position: absolute;
-            bottom: 2vh;
+            bottom: 1vh;
             left: 50%;
             transform: translateX(-50%);
-            width: 80vw;
-            height: 1vh;
+            width: 90vw;
+            height: 0.8vh;
             background: rgba(255, 255, 255, 0.3);
-            border-radius: 5px;
+            border-radius: 4px;
             overflow: hidden;
         }
         
@@ -188,69 +280,152 @@
             transition: width 0.3s ease;
         }
         
-        @media (max-height: 600px) {
-            .main-content {
-                padding: 2vh 4vw;
+        @media (max-height: 700px) {
+            .game-card {
+                padding: 1.5vh 3vw;
+                max-height: 60vh;
             }
             .question {
-                margin-bottom: 2vh;
+                margin-bottom: 1.5vh;
+                font-size: clamp(1.3rem, 5vw, 2.5rem);
             }
             .buttons {
-                margin-top: 2vh;
+                margin-top: 1.5vh;
+            }
+            .stats-section {
+                padding: 0.8vh 1.5vw;
+                gap: 4vw;
+            }
+            .feedback {
+                min-height: 1.5rem;
             }
         }
         
         @media (max-width: 768px) {
-            .header {
-                font-size: 1rem;
-                padding: 0 2vw;
+            .header-strip {
+                padding: 0.8vh 2vw;
             }
-            .score-timer {
-                gap: 2vw;
+            .stats-section {
+                margin: 0.8vh 2vw 0 2vw;
+                gap: 4vw;
+                padding: 0.8vh 1.5vw;
+            }
+            .control-button {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
             }
             .answer-input {
-                width: 60vw;
+                width: clamp(120px, 50vw, 250px);
             }
             .buttons {
                 gap: 1vw;
             }
             .btn {
-                min-width: 100px;
+                min-width: 80px;
+                padding: 0.8vh 1.5vw;
+                font-size: clamp(0.8rem, 1.8vw, 1rem);
+            }
+            .level-btn {
+                margin: 0.2vh 0.3vw;
+                padding: 0.6vh 1.5vw;
+                font-size: clamp(0.7rem, 1.6vw, 0.9rem);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .game-card {
                 padding: 1vh 2vw;
+                min-width: 90vw;
+            }
+            .main-content {
+                padding: 0.5vh 1vw;
+            }
+            .stats-section {
+                gap: 3vw;
+                margin: 0.5vh 1vw 0 1vw;
+            }
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 1vh;
+            }
+            .btn {
+                width: 80%;
+                min-width: 150px;
+            }
+            .level-selector {
+                margin-bottom: 1vh;
+            }
+            .level-btn {
+                display: block;
+                margin: 0.3vh auto;
+                width: 90%;
             }
         }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <div class="header">
-            <div class="title">🎯 Tabelline by Maestro Alberto</div>
-            <div class="score-timer">
-                <div>⭐ <span id="score">0</span></div>
-                <div>⏱️ <span id="timer">60</span>s</div>
-                <div style="font-size: 0.8em;">📚 <span id="questionProgress">0</span>/15</div>
-                <div style="font-size: 0.8em; cursor: pointer;" onclick="toggleSound()" id="soundToggle">🔊</div>
+        <!-- Nuova striscia header -->
+        <div class="header-strip">
+            <button class="control-button home-button" onclick="goHome()" title="Torna alla Home">
+                🏠
+            </button>
+            
+            <div class="title-section">
+                <div class="main-title">Sfida Tabelline</div>
+                <div class="subtitle">by Maestro Alberto</div>
+            </div>
+            
+            <button class="control-button sound-button" onclick="toggleSound()" id="soundToggle" title="Audio">
+                🔊
+            </button>
+        </div>
+        
+        <!-- Stats section -->
+        <div class="stats-section">
+            <div class="stat-item">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-value" id="score">0</div>
+                <div class="stat-label">punti</div>
+            </div>
+            
+            <div class="stat-item">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-value" id="timer">60</div>
+                <div class="stat-label">secondi</div>
+            </div>
+            
+            <div class="stat-item">
+                <div class="stat-icon">📚</div>
+                <div class="stat-value"><span id="questionProgress">0</span>/15</div>
+                <div class="stat-label">domande</div>
             </div>
         </div>
         
+        <!-- Contenuto principale -->
         <div class="main-content">
-            <div class="level-selector">
-                <button class="btn level-btn easy" onclick="setLevel(1)">Facile (1-3)</button>
-                <button class="btn level-btn medium" onclick="setLevel(2)">Medio (4-6)</button>
-                <button class="btn level-btn hard" onclick="setLevel(3)">Difficile (7-9)</button>
+            <div class="game-card">
+                <div class="level-selector">
+                    <button class="btn level-btn easy" onclick="setLevel(1)">Facile (1-3)</button>
+                    <button class="btn level-btn medium" onclick="setLevel(2)">Medio (4-6)</button>
+                    <button class="btn level-btn hard" onclick="setLevel(3)">Difficile (7-9)</button>
+                </div>
+                
+                <div class="question" id="question">5 × 7 = ?</div>
+                
+                <div class="input-container">
+                    <input type="number" class="answer-input" id="answerInput" placeholder="?" autocomplete="off">
+                </div>
+                
+                <div class="buttons">
+                    <button class="btn btn-primary" onclick="checkAnswer()">✓ Verifica</button>
+                    <button class="btn btn-home" onclick="backToLevelSelection()">🏠 Torna alla Selezione</button>
+                </div>
+                
+                <div class="feedback" id="feedback"></div>
             </div>
-            
-            <div class="question" id="question">5 × 7 = ?</div>
-            
-            <div class="input-container">
-                <input type="number" class="answer-input" id="answerInput" placeholder="?" autocomplete="off">
-            </div>
-            
-            <div class="buttons">
-                <button class="btn btn-primary" onclick="checkAnswer()">✓ Verifica</button>
-            </div>
-            
-            <div class="feedback" id="feedback"></div>
         </div>
         
         <div class="progress-bar">
@@ -262,9 +437,46 @@
         // Data di scadenza del gioco
         const EXPIRATION_DATE = new Date('2026-01-01');
         
-        // Sistema audio SEMPLIFICATO (come Matematica sul Divano)
+        // Sistema audio SEMPLIFICATO
         let audioContext;
         let soundEnabled = true;
+        
+        // Funzione per tornare alla home
+        function goHome() {
+            playClickSound();
+            // Assumendo che l'index sia nella stessa directory
+            window.location.href = 'index.html';
+        }
+        
+        // Funzione per tornare alla selezione livelli
+        function backToLevelSelection() {
+            playClickSound();
+            
+            // Ferma il gioco corrente
+            gameActive = false;
+            gameStarted = false;
+            stopTimer();
+            
+            // Reset valori
+            score = 0;
+            questionsAnswered = 0;
+            timeLeft = 60;
+            
+            // Reset interfaccia
+            updateDisplay();
+            updateStats();
+            updateProgress();
+            
+            // Rimuovi selezione livello attivo
+            document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Reset input e feedback
+            document.getElementById('answerInput').value = '';
+            document.getElementById('answerInput').disabled = true;
+            document.getElementById('feedback').textContent = '👆 Scegli un livello per iniziare!';
+            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('question').textContent = 'Seleziona un livello';
+        }
         
         // Inizializza il contesto audio
         function initAudio() {
@@ -297,31 +509,27 @@
             oscillator.stop(audioContext.currentTime + duration);
         }
         
-        // Suoni specifici del gioco (semplificati)
+        // Suoni specifici del gioco
         function playCorrectSound() {
             if (!soundEnabled) return;
-            // Accordo maggiore ascendente (Do-Mi-Sol)
-            setTimeout(() => playTone(523.25, 0.3, 0.08), 0);    // Do
-            setTimeout(() => playTone(659.25, 0.3, 0.06), 50);   // Mi
-            setTimeout(() => playTone(783.99, 0.4, 0.05), 100);  // Sol
+            setTimeout(() => playTone(523.25, 0.3, 0.08), 0);
+            setTimeout(() => playTone(659.25, 0.3, 0.06), 50);
+            setTimeout(() => playTone(783.99, 0.4, 0.05), 100);
         }
         
         function playIncorrectSound() {
             if (!soundEnabled) return;
-            // Nota singola soft e comprensiva
             playTone(220, 0.4, 0.06, 'triangle');
         }
         
         function playClickSound() {
             if (!soundEnabled) return;
-            // Click molto soft
             playTone(800, 0.1, 0.03, 'triangle');
         }
         
         function playGameEndSound() {
             if (!soundEnabled) return;
-            // Sequenza melodica allegra ma delicata
-            const notes = [523.25, 587.33, 659.25, 698.46, 783.99]; // Do-Re-Mi-Fa-Sol
+            const notes = [523.25, 587.33, 659.25, 698.46, 783.99];
             notes.forEach((freq, i) => {
                 setTimeout(() => playTone(freq, 0.4, 0.07), i * 150);
             });
@@ -337,7 +545,7 @@
             playTone(523.25, 0.15, 0.1, 'sine');
         }
         
-        // Funzione per attivare/disattivare i suoni (semplificata)
+        // Funzione per attivare/disattivare i suoni
         function toggleSound() {
             soundEnabled = !soundEnabled;
             const toggle = document.getElementById('soundToggle');
@@ -346,27 +554,7 @@
             
             if (soundEnabled) {
                 initAudio();
-                playClickSound(); // Test del suono
-            }
-        }
-        
-        // Funzione per mostrare stato audio (semplificata)
-        function updateAudioStatus() {
-            const toggle = document.getElementById('soundToggle');
-            if (!toggle) return;
-            
-            if (!soundEnabled) {
-                toggle.style.opacity = '0.5';
-                toggle.title = 'Audio disattivato - Clicca per attivare';
-                return;
-            }
-            
-            if (audioContext && audioContext.state === 'running') {
-                toggle.style.opacity = '1';
-                toggle.title = 'Audio attivo - Clicca per disattivare';
-            } else {
-                toggle.style.opacity = '0.7';
-                toggle.title = 'Audio non attivo - Clicca sui bottoni per attivarlo';
+                playClickSound();
             }
         }
         
@@ -378,9 +566,60 @@
         let gameStarted = false;
         let questionsAnswered = 0;
         const totalQuestions = 15;
-        let sessionUsedQuestions = new Set();
-        let allTimeUsedQuestions = new Map();
         let gameTimer = null;
+        
+        // SISTEMA ANTI-RIPETIZIONE MIGLIORATO
+        let levelQuestions = new Map(); // Mappa per ogni livello
+        
+        // Inizializza le domande per ogni livello
+        function initializeLevelQuestions() {
+            for (let level = 1; level <= 3; level++) {
+                const questions = [];
+                const range = getNumberRange(level);
+                
+                // Genera TUTTE le possibili domande per questo livello
+                for (let base of range.baseNumbers) {
+                    for (let multiplier of range.multipliers) {
+                        questions.push({
+                            num1: base,
+                            num2: multiplier,
+                            answer: base * multiplier,
+                            key: `${Math.min(base, multiplier)}x${Math.max(base, multiplier)}`
+                        });
+                    }
+                }
+                
+                // Rimuovi duplicati basati sulla chiave
+                const uniqueQuestions = [];
+                const seenKeys = new Set();
+                
+                for (let q of questions) {
+                    if (!seenKeys.has(q.key)) {
+                        seenKeys.add(q.key);
+                        uniqueQuestions.push(q);
+                    }
+                }
+                
+                // Mischia le domande
+                shuffleArray(uniqueQuestions);
+                
+                levelQuestions.set(level, {
+                    questions: uniqueQuestions,
+                    currentIndex: 0,
+                    totalQuestions: uniqueQuestions.length
+                });
+                
+                console.log(`Livello ${level}: ${uniqueQuestions.length} domande uniche preparate`);
+            }
+        }
+        
+        // Funzione per mescolare un array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
         
         // Funzione per controllare se il gioco è scaduto
         function isGameExpired() {
@@ -406,8 +645,6 @@
             document.getElementById('feedback').textContent = '🚫 Questo gioco non è più disponibile dal 1° Gennaio 2026';
             document.getElementById('feedback').className = 'feedback incorrect';
             document.getElementById('feedback').style.fontSize = '1.5rem';
-            
-            document.querySelector('.title').textContent = '❌ Tabelline - SCADUTO';
         }
         
         function setLevel(level) {
@@ -418,33 +655,29 @@
                 const levelNames = ['Facile (1-3)', 'Medio (4-6)', 'Difficile (7-9)'];
                 const confirm = window.confirm(`Vuoi davvero cambiare al livello ${levelNames[level-1]}?\n\nIl punteggio attuale (${score} punti) andrà perso.`);
                 if (!confirm) {
-                    return; // L'utente ha annullato
+                    return;
                 }
             }
             
-            // Suono di selezione livello
             playLevelSelectSound();
             
-            // Ferma il timer corrente se ce n'è uno
             if (gameActive) {
                 stopTimer();
             }
             
             currentLevel = level;
             
-            // Rimuovi active da tutti i bottoni
-            document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('active'));
+            // Reset dell'indice per questo livello
+            const levelData = levelQuestions.get(level);
+            if (levelData) {
+                levelData.currentIndex = 0;
+                shuffleArray(levelData.questions); // Rimischia quando ricomincia
+            }
             
-            // Aggiungi active al livello selezionato
+            document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('active'));
             const buttons = document.querySelectorAll('.level-btn');
             buttons[level - 1].classList.add('active');
             
-            // Inizializza il set per questo livello se non esiste
-            if (!allTimeUsedQuestions.has(level)) {
-                allTimeUsedQuestions.set(level, new Set());
-            }
-            
-            // SEMPRE avvia una nuova partita per il livello selezionato
             gameStarted = true;
             gameActive = true;
             document.getElementById('answerInput').disabled = false;
@@ -452,7 +685,6 @@
             score = 0;
             timeLeft = 60;
             
-            // Mostra il livello selezionato
             const levelNames = ['Facile (1-3)', 'Medio (4-6)', 'Difficile (7-9)'];
             document.getElementById('feedback').textContent = `🎯 Livello ${levelNames[level-1]} selezionato!`;
             document.getElementById('feedback').className = 'feedback';
@@ -463,91 +695,44 @@
             newQuestion();
         }
         
-        function getAllPossibleQuestions(level) {
-            const range = getNumberRange(level);
-            const questions = new Set();
-            
-            for (let base of range.baseNumbers) {
-                for (let multiplier of range.multipliers) {
-                    questions.add(createQuestionKey(base, multiplier));
-                }
-            }
-            return questions;
-        }
-        
         function updateStats() {
             document.getElementById('questionProgress').textContent = questionsAnswered;
         }
         
-        function createQuestionKey(num1, num2) {
-            const a = Math.min(num1, num2);
-            const b = Math.max(num1, num2);
-            return `${a}x${b}`;
-        }
-        
         function getNumberRange(level) {
             switch(level) {
-                case 1: return { baseNumbers: [1, 2, 3], multipliers: [1, 2, 3, 4, 5, 6, 7] };
-                case 2: return { baseNumbers: [4, 5, 6], multipliers: [1, 2, 3, 4, 5, 6, 7] };
-                case 3: return { baseNumbers: [7, 8, 9], multipliers: [1, 2, 3, 4, 5, 6, 7] };
-                default: return { baseNumbers: [1, 2, 3], multipliers: [1, 2, 3, 4, 5, 6, 7] };
+                case 1: return { baseNumbers: [1, 2, 3], multipliers: [1, 2, 3, 4, 5, 6, 7, 8, 9] };
+                case 2: return { baseNumbers: [4, 5, 6], multipliers: [1, 2, 3, 4, 5, 6, 7, 8, 9] };
+                case 3: return { baseNumbers: [7, 8, 9], multipliers: [1, 2, 3, 4, 5, 6, 7, 8, 9] };
+                default: return { baseNumbers: [1, 2, 3], multipliers: [1, 2, 3, 4, 5, 6, 7, 8, 9] };
             }
         }
         
+        // NUOVA FUNZIONE PER GENERARE DOMANDE SENZA RIPETIZIONI
         function generateRandomQuestion() {
-            const range = getNumberRange(currentLevel);
-            
-            if (!allTimeUsedQuestions.has(currentLevel)) {
-                allTimeUsedQuestions.set(currentLevel, new Set());
+            const levelData = levelQuestions.get(currentLevel);
+            if (!levelData || levelData.questions.length === 0) {
+                console.error(`Nessuna domanda disponibile per il livello ${currentLevel}`);
+                return { num1: 2, num2: 3, answer: 6 }; // Fallback
             }
             
-            const usedQuestions = allTimeUsedQuestions.get(currentLevel);
-            const allPossibleQuestions = getAllPossibleQuestions(currentLevel);
-            
-            if (usedQuestions.size >= allPossibleQuestions.size) {
-                console.log(`Tutte le ${allPossibleQuestions.size} domande del livello ${currentLevel} sono state viste!`);
-                usedQuestions.clear();
-                updateStats();
+            // Se abbiamo completato tutte le domande, ricomincia e rimischia
+            if (levelData.currentIndex >= levelData.questions.length) {
+                console.log(`Completate tutte le ${levelData.questions.length} domande del livello ${currentLevel}, rimescolo...`);
+                shuffleArray(levelData.questions);
+                levelData.currentIndex = 0;
             }
             
-            const maxAttempts = 1000;
-            let attempts = 0;
+            const question = levelData.questions[levelData.currentIndex];
+            levelData.currentIndex++;
             
-            while (attempts < maxAttempts) {
-                const baseNumber = range.baseNumbers[Math.floor(Math.random() * range.baseNumbers.length)];
-                const multiplier = range.multipliers[Math.floor(Math.random() * range.multipliers.length)];
-                const questionKey = createQuestionKey(baseNumber, multiplier);
-                
-                if (!usedQuestions.has(questionKey)) {
-                    usedQuestions.add(questionKey);
-                    updateStats();
-                    return {
-                        num1: baseNumber,
-                        num2: multiplier,
-                        answer: baseNumber * multiplier
-                    };
-                }
-                attempts++;
-            }
+            console.log(`Livello ${currentLevel}, domanda ${levelData.currentIndex}/${levelData.questions.length}: ${question.num1} × ${question.num2}`);
             
-            console.log("Fallback: resetto domande del livello");
-            usedQuestions.clear();
-            updateStats();
-            return generateRandomQuestion();
-        }
-        
-        function resetGame() {
-            stopTimer();
-            score = 0;
-            timeLeft = 60;
-            questionsAnswered = 0;
-            gameActive = true;
-            updateDisplay();
-            updateStats();
-            
-            if (gameActive && gameStarted) {
-                startTimer();
-            }
+            return {
+                num1: question.num1,
+                num2: question.num2,
+                answer: question.answer
+            };
         }
         
         function newQuestion() {
@@ -668,42 +853,23 @@
             feedback.textContent = message;
             feedback.className = 'feedback';
             
-            setTimeout(() => {
-                const playAgain = confirm('Vuoi giocare ancora?');
-                if (playAgain) {
-                    gameStarted = false;
-                    gameActive = false;
-                    score = 0;
-                    questionsAnswered = 0;
-                    timeLeft = 60;
-                    updateDisplay();
-                    updateStats();
-                    
-                    document.getElementById('feedback').textContent = '👆 Clicca su un bottone sopra per iniziare a giocare';
-                    document.getElementById('feedback').className = 'feedback';
-                    document.getElementById('answerInput').disabled = true;
-                    document.getElementById('answerInput').value = '';
-                    
-                    document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('active'));
-                }
-            }, 3000);
+            // Non chiede più se vuole giocare ancora
+            document.getElementById('answerInput').disabled = true;
         }
         
-        // Event listeners SEMPLIFICATI
+        // Event listeners
         document.getElementById('answerInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 checkAnswer();
             }
         });
         
-        // Inizializza l'audio al primo click dell'utente
         document.addEventListener('click', function() {
             initAudio();
         }, { once: true });
         
-        // Aggiungi suono di click ai bottoni
         document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('btn')) {
+            if (e.target.classList.contains('btn') || e.target.classList.contains('control-button')) {
                 playClickSound();
             }
         });
@@ -719,9 +885,7 @@
         }, false);
         
         // Initialize game
-        allTimeUsedQuestions.set(1, new Set());
-        allTimeUsedQuestions.set(2, new Set());
-        allTimeUsedQuestions.set(3, new Set());
+        initializeLevelQuestions(); // Inizializza il sistema anti-ripetizione
         updateStats();
         stopTimer();
         
@@ -731,12 +895,12 @@
             document.getElementById('feedback').textContent = '👆 Scegli un livello per iniziare!';
             document.getElementById('feedback').className = 'feedback';
             document.getElementById('answerInput').disabled = true;
+            document.getElementById('question').textContent = 'Seleziona un livello';
         }
         
         document.getElementById('questionProgress').textContent = '0';
-        updateAudioStatus();
         
-        console.log('🎮 Gioco Tabelline inizializzato!');
+        console.log('🎮 Sfida Tabelline inizializzata con sistema anti-ripetizione avanzato!');
     </script>
 </body>
 </html>

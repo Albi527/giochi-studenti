@@ -3,7 +3,7 @@
     {
       "id": "matematica",
       "title": "Matematica sul Divano",
-      "description": "Addizioni, sottrazioni, moltiplicazioni e divisioni progressive con 6 operazioni complete. Completamente integrata nel sistema PWA unificato con navigazione fluida e localStorage sincronizzato!",
+      "description": "Addizioni, sottrazioni, moltiplicazioni e divisioni progressive con 6 operazioni complete. Sistema migliorato con correzioni e ottimizzazioni per un'esperienza di apprendimento ancora più fluida!",
       "icon": "🧮",
       "file": "matematica.html",
       "category": "matematica",
@@ -11,8 +11,8 @@
       "buttonColor": "matematica",
       "active": true,
       "featured": true,
-      "version": "4.0.2",
-      "lastUpdated": "2025-07-19",
+      "version": "4.1.0",
+      "lastUpdated": "2025-07-20",
       "pwaIntegration": {
         "status": "FULLY_INTEGRATED",
         "unifiedSystem": true,
@@ -25,31 +25,30 @@
       },
       "features": [
         "6 tipi di operazioni matematiche complete",
-        "Addizioni progressive (4 livelli)",
-        "Sottrazioni con e senza prestito (5 livelli)",
-        "Tabelline classiche 0-10 (10 livelli)",
+        "Addizioni progressive con correzioni L3 (4 livelli)",
+        "Sottrazioni corrette con prestito L4 (5 livelli)",
+        "Tabelline con sistema anti-ripetizione avanzato (10 livelli)",
         "Moltiplicazioni per 10, 100, 1000 (5 livelli)",
         "Divisioni classiche con resto (2 livelli)",
         "Divisioni per 10, 100, 1000 con miste (7 livelli)",
-        "Sistema audio Web Audio API integrato",
-        "Interfaccia compatta ottimizzata",
-        "Anti-ripetizione domande intelligente",
-        "Design responsive mobile-first",
+        "Sistema audio Web Audio API ottimizzato",
+        "Bottone Home completamente funzionante",
+        "Anti-ripetizione domande intelligente migliorato",
+        "Design responsive mobile-first perfezionato",
         "Sfondo verde menta rilassante",
         "PWA completamente integrata nel sistema unificato",
         "localStorage sincronizzato con index.html",
         "Navigazione fluida tra componenti",
         "Controlli installazione centralizzati",
         "Cache strategy ottimizzata",
-        "Nessuna duplicazione PWA/Service Worker",
-        "Interfaccia pulita senza elementi invasivi"
+        "Interfaccia pulita e ottimizzata"
       ],
       "educational": {
         "targetAge": "6-12 anni",
         "subject": "Matematica - 6 Operazioni Complete",
         "skills": [
-          "Addizioni e sottrazioni progressive",
-          "Tabelline e moltiplicazioni",
+          "Addizioni e sottrazioni progressive corrette",
+          "Tabelline con sistema avanzato",
           "Divisioni con resto",
           "Divisioni per potenze di 10",
           "Lettura numeri grandi",
@@ -69,7 +68,8 @@
           "centralizedInstallation": true,
           "serviceWorkerVersion": "v8",
           "noDuplications": true,
-          "optimizedCaching": true
+          "optimizedCaching": true,
+          "homeButtonFixed": true
         }
       },
       "stats": {
@@ -78,16 +78,16 @@
         "questionsPerLevel": "10-15",
         "maxOperations": "Fino a 99000÷1000",
         "operationBreakdown": {
-          "addizioni": "4 livelli",
-          "sottrazioni": "5 livelli", 
-          "tabelline": "10 livelli",
+          "addizioni": "4 livelli (L3 corretto)",
+          "sottrazioni": "5 livelli (L4 corretto)", 
+          "tabelline": "10 livelli (anti-ripetizione avanzato)",
           "moltiplicazioni_potenze": "5 livelli",
           "divisioni": "2 livelli",
           "divisioni_potenze": "7 livelli"
         }
       },
       "integration": {
-        "version": "4.0.2",
+        "version": "4.1.0",
         "integrationType": "FULL_UNIFIED_SYSTEM",
         "pwaStatus": "INTEGRATED",
         "serviceWorkerConflicts": "RESOLVED",
@@ -104,7 +104,7 @@
     {
       "id": "tabelline",
       "title": "Sfida Tabelline",
-      "description": "Timer di 60 secondi, 3 livelli di difficoltà e sistema anti-ripetizione. Perfetto per allenarsi con le tabelline! Sincronizzato nel sistema PWA unificato.",
+      "description": "Timer di 60 secondi, 3 livelli di difficoltà e sistema anti-ripetizione avanzato. Sistema migliorato senza scadenza per un'esperienza di gioco continua!",
       "icon": "🎯",
       "file": "tabelline.html",
       "category": "matematica",
@@ -112,8 +112,8 @@
       "buttonColor": "tabelline",
       "active": true,
       "featured": true,
-      "version": "2.1.0",
-      "lastUpdated": "2025-07-19",
+      "version": "2.2.0",
+      "lastUpdated": "2025-07-20",
       "pwaIntegration": {
         "status": "SYNCHRONIZED",
         "unifiedSystem": true,
@@ -121,35 +121,41 @@
         "cacheStrategy": "OPTIMIZED"
       },
       "features": [
-        "Sistema audio Web Audio API",
+        "Sistema audio Web Audio API ottimizzato",
         "3 livelli di difficoltà progressiva", 
         "Timer 60 secondi con avvisi sonori",
-        "Anti-ripetizione domande intelligente",
+        "Sistema anti-ripetizione avanzato (pre-generazione e mescolamento)",
+        "Rimozione sistema di scadenza automatica",
         "Feedback visivo e sonoro immediato",
         "Design responsive mobile-first",
-        "Sistema di scadenza automatica",
+        "Bottone Home funzionante",
+        "Navigazione fluida con index",
         "Sincronizzato nel sistema PWA unificato"
       ],
       "educational": {
         "targetAge": "6-12 anni",
         "subject": "Matematica - Tabelline",
-        "skills": ["Moltiplicazioni", "Calcolo mentale", "Memoria", "Concentrazione"]
+        "skills": ["Moltiplicazioni", "Calcolo mentale", "Memoria", "Concentrazione", "Velocità di calcolo"]
       },
       "technical": {
         "audioSupport": true,
         "offlineCapable": true,
         "mobileOptimized": true,
-        "expirationDate": "2026-01-01",
+        "expirationDate": null,
         "systemIntegration": {
           "unifiedPWA": true,
-          "serviceWorkerVersion": "v8"
+          "serviceWorkerVersion": "v8",
+          "homeButtonFixed": true,
+          "antiRepetitionAdvanced": true
         }
       },
       "stats": {
         "questionsPerGame": 15,
         "maxScore": 150,
         "gameDuration": "60 secondi",
-        "difficultyLevels": 3
+        "difficultyLevels": 3,
+        "totalPossibleQuestions": 121,
+        "antiRepetitionCoverage": "100%"
       }
     },
     {
@@ -164,7 +170,7 @@
       "active": true,
       "featured": false,
       "version": "1.0.0",
-      "lastUpdated": "2025-07-19",
+      "lastUpdated": "2025-07-20",
       "pwaIntegration": {
         "status": "PLANNED",
         "unifiedSystem": true,
@@ -233,8 +239,8 @@
   "settings": {
     "title": "Giochi Educativi",
     "subtitle": "by Maestro Alberto",
-    "version": "1.7.1",
-    "lastUpdated": "2025-07-19",
+    "version": "1.8.0",
+    "lastUpdated": "2025-07-20",
     "systemType": "UNIFIED_PWA",
     "autoDetectGames": true,
     "showInstallButton": true,
@@ -251,6 +257,16 @@
       "performanceOptimized": true
     },
     "newFeatures": {
+      "v1.8.0": [
+        "Matematica v4.1.0: Sistema migliorato con correzioni avanzate",
+        "Addizioni L3 corrette (tappa alla decina successiva)",
+        "Sottrazioni L4 corrette (tappa alla decina precedente)",
+        "Sistema anti-ripetizione tabelline avanzato con pre-generazione",
+        "Sfida Tabelline v2.2.0: Rimossa scadenza automatica",
+        "Bottoni Home completamente funzionanti in entrambi i giochi",
+        "Navigazione fluida e ottimizzata",
+        "Miglioramenti interfaccia e user experience"
+      ],
       "v1.7.1": [
         "Matematica v4.0.2: Correzioni interfaccia e ottimizzazioni minori",
         "Aggiornamenti versioni per sincronizzazione completa",
@@ -266,33 +282,30 @@
         "Sistema PWA unificato senza conflitti",
         "Performance ottimizzate per tutti i componenti"
       ],
-      "v1.6.0": [
-        "Installazione Smart persistente",
-        "Card installazione sparisce permanentemente",
-        "Istruzioni Android corrette (tre trattini)",
-        "Gestione localStorage per persistenza",
-        "Feedback installazione migliorato"
-      ],
       "matematica": [
-        "Versione 4.0.2: Correzioni minori interfaccia e ottimizzazioni",
-        "Versione 4.0.1: Interfaccia ottimizzata, rimosso indicatore PWA invasivo",
-        "Versione 4.0.0: Completamente integrata nel sistema PWA unificato",
-        "Rimosse duplicazioni PWA e Service Worker standalone",
-        "localStorage sincronizzato con sistema principale",
-        "Navigazione unificata con ritorno fluido all'index",
-        "Controlli installazione centralizzati",
-        "Cache strategy ottimizzata nel Service Worker v8",
-        "Sfondo verde menta rilassante mantenuto",
+        "Versione 4.1.0: Sistema migliorato con correzioni importanti",
+        "Addizioni L3: Corretta la logica 'tappa alla decina successiva'",
+        "Sottrazioni L4: Corretta la logica 'tappa alla decina precedente'", 
+        "Sistema anti-ripetizione tabelline completamente rinnovato",
+        "Pre-generazione di tutte le 121 possibili combinazioni 0-10",
+        "Mescolamento intelligente e ricircolo automatico",
+        "Bottone Home completamente funzionante",
+        "Interfaccia ottimizzata e pulita",
         "6 operazioni matematiche complete (33 livelli totali)",
-        "Sistema anti-ripetizione migliorato",
-        "Audio Web Audio API integrato",
-        "Interfaccia pulita senza elementi che coprono il titolo"
+        "Audio Web Audio API ottimizzato",
+        "Integrazione PWA perfetta senza conflitti"
       ],
       "tabelline": [
-        "Sistema audio Web Audio API",
+        "Versione 2.2.0: Miglioramenti importanti",
+        "Rimosso sistema di scadenza automatica del gioco",
+        "Sistema anti-ripetizione avanzato con pre-generazione",
+        "Tutte le 121 combinazioni tabelline 0-10 disponibili",
+        "Mescolamento e ricircolo intelligente",
+        "Bottone Home completamente funzionante",
+        "Sistema audio Web Audio API ottimizzato",
         "Timer 60 secondi con avvisi sonori",
         "3 livelli di difficoltà progressiva",
-        "Sincronizzazione con sistema PWA unificato"
+        "Sincronizzazione perfetta con sistema PWA unificato"
       ]
     }
   },
@@ -307,7 +320,7 @@
     "pwaInstallable": true,
     "offlineCapable": true,
     "audioSupported": true,
-    "lastMajorUpdate": "2025-07-19",
+    "lastMajorUpdate": "2025-07-20",
     "systemUnification": {
       "matematicaIntegrationStatus": "COMPLETED",
       "serviceWorkerVersion": "v8",
@@ -315,7 +328,8 @@
       "navigationIssues": "RESOLVED",
       "pwaConflicts": "RESOLVED",
       "performanceImpact": "IMPROVED",
-      "userExperience": "OPTIMIZED"
+      "userExperience": "OPTIMIZED",
+      "homeButtonIssues": "RESOLVED"
     }
   },
   "compatibility": {
@@ -358,7 +372,7 @@
     }
   },
   "systemIntegration": {
-    "version": "1.7.1",
+    "version": "1.8.0",
     "type": "UNIFIED_PWA_SYSTEM",
     "components": {
       "index": {
@@ -367,7 +381,7 @@
         "role": "MAIN_LANDING_PAGE"
       },
       "matematica": {
-        "version": "4.0.2",
+        "version": "4.1.0",
         "status": "FULLY_INTEGRATED",
         "role": "INTEGRATED_GAME_COMPONENT",
         "integration": {
@@ -376,13 +390,20 @@
           "localStorageStandalone": false,
           "navigationStandalone": false,
           "installationControlsStandalone": false,
-          "uiOptimized": true
+          "uiOptimized": true,
+          "homeButtonFixed": true,
+          "correctionsApplied": true
         }
       },
       "tabelline": {
-        "version": "2.1.0",
+        "version": "2.2.0",
         "status": "SYNCHRONIZED",
-        "role": "GAME_COMPONENT"
+        "role": "GAME_COMPONENT",
+        "improvements": {
+          "expirationRemoved": true,
+          "antiRepetitionAdvanced": true,
+          "homeButtonFixed": true
+        }
       },
       "serviceWorker": {
         "version": "v8",
@@ -398,7 +419,9 @@
       "optimizedCacheStrategy": true,
       "noDuplicatedSystems": true,
       "seamlessUserExperience": true,
-      "improvedPerformance": true
+      "improvedPerformance": true,
+      "homeButtonsFixed": true,
+      "advancedAntiRepetition": true
     },
     "conflicts": {
       "pwaConflicts": "RESOLVED",
@@ -407,36 +430,42 @@
       "navigationConflicts": "RESOLVED",
       "installationConflicts": "RESOLVED",
       "uiConflicts": "RESOLVED",
-      "cacheConflicts": "RESOLVED"
+      "cacheConflicts": "RESOLVED",
+      "homeButtonConflicts": "RESOLVED"
     }
   },
   "metadata": {
     "author": "Maestro Alberto",
-    "description": "Piattaforma di giochi educativi per studenti con sistema PWA completamente unificato. Matematica sul Divano è ora completamente integrata senza duplicazioni o conflitti.",
-    "keywords": ["educativo", "matematica", "tabelline", "PWA", "giochi", "studenti", "sistema unificato", "integrazione completa"],
+    "description": "Piattaforma di giochi educativi per studenti con sistema PWA completamente unificato. Entrambi i giochi sono stati migliorati con correzioni importanti e funzionalità avanzate.",
+    "keywords": ["educativo", "matematica", "tabelline", "PWA", "giochi", "studenti", "sistema unificato", "correzioni", "anti-ripetizione", "migliorato"],
     "language": "it",
     "target_audience": "6-12 anni",
     "educational_subjects": ["Matematica", "Calcolo mentale", "Operazioni aritmetiche"],
     "technical_features": [
-      "PWA Sistema Unificato", 
-      "Audio interattivo", 
-      "Offline", 
-      "Responsive", 
+      "PWA Sistema Unificato v1.8.0", 
+      "Audio interattivo ottimizzato", 
+      "Offline completo", 
+      "Responsive perfetto", 
       "Installazione persistente",
-      "Matematica completamente integrata",
+      "Matematica v4.1.0 con correzioni avanzate",
+      "Tabelline v2.2.0 senza scadenza",
+      "Sistema anti-ripetizione avanzato",
+      "Bottoni Home funzionanti",
       "localStorage sincronizzato",
-      "Navigazione unificata",
+      "Navigazione unificata ottimizzata",
       "Service Worker v8 ottimizzato",
       "Cache strategy per componente",
       "Nessuna duplicazione PWA"
     ],
     "integration_status": {
       "matematica_integration": "COMPLETED",
+      "tabelline_integration": "IMPROVED",
       "system_unification": "COMPLETED",
       "conflicts_resolution": "COMPLETED",
       "ui_optimization": "COMPLETED",
       "performance_optimization": "COMPLETED",
-      "user_experience": "OPTIMIZED"
+      "user_experience": "OPTIMIZED",
+      "corrections_applied": "COMPLETED"
     }
   }
 }

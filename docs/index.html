@@ -309,7 +309,7 @@
             background: #f44336;
         }
 
-        /* Stili per il bottone di aggiornamento PWA */
+        /* 🟢 STILI AGGIORNATI PER IL BOTTONE VERDE DEGLI AGGIORNAMENTI */
         .update-banner {
             position: fixed;
             top: 0;
@@ -322,40 +322,51 @@
             z-index: 10002;
             transform: translateY(-100%);
             transition: transform 0.3s ease;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            border-bottom: 3px solid rgba(255,255,255,0.3);
         }
         
         .update-banner.show {
             transform: translateY(0);
+            animation: greenPulse 2s infinite;
+        }
+        
+        @keyframes greenPulse {
+            0%, 100% { background: linear-gradient(45deg, #4CAF50, #45a049); }
+            50% { background: linear-gradient(45deg, #66BB6A, #66BB6A); }
         }
         
         .update-banner .update-text {
             margin: 0 0 10px 0;
             font-weight: bold;
+            font-size: 1.1rem;
         }
         
         .update-button {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
+            background: rgba(255, 255, 255, 0.9);
+            color: #4CAF50;
             border: 2px solid white;
-            padding: 8px 20px;
-            border-radius: 20px;
+            padding: 10px 25px;
+            border-radius: 25px;
             font-weight: bold;
             cursor: pointer;
             margin: 0 10px;
             transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .update-button:hover {
             background: white;
-            color: #4CAF50;
+            color: #388E3C;
+            transform: scale(1.05);
         }
         
         .dismiss-button {
             background: rgba(255, 255, 255, 0.1);
             color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 8px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 10px 20px;
             border-radius: 20px;
             cursor: pointer;
             margin: 0 10px;
@@ -364,19 +375,37 @@
         
         .dismiss-button:hover {
             background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
         }
 
         /* Adatta il layout quando c'è il banner di aggiornamento */
         body.update-banner-visible {
-            padding-top: 80px;
+            padding-top: 90px;
+        }
+        
+        /* Indicatore di aggiornamento in corso */
+        .updating-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <!-- Banner di aggiornamento PWA -->
+    <!-- 🟢 Banner di aggiornamento PWA migliorato -->
     <div class="update-banner" id="update-banner">
-        <div class="update-text">🚀 Nuova versione disponibile!</div>
-        <button class="update-button" onclick="updateApp()">Aggiorna ora</button>
+        <div class="update-text" id="update-text">🚀 Nuova versione disponibile!</div>
+        <button class="update-button" id="update-button" onclick="updateApp()">✨ Aggiorna ora</button>
         <button class="dismiss-button" onclick="dismissUpdate()">Più tardi</button>
     </div>
 
@@ -469,55 +498,103 @@
         let installationCheckComplete = false;
         let newWorker = null;
         let refreshing = false;
+        let updateDismissed = false;
 
-        // ========== GESTIONE AGGIORNAMENTI PWA ==========
+        // ========== 🟢 GESTIONE AGGIORNAMENTI PWA MIGLIORATA ==========
         
         function registerServiceWorker() {
             if ('serviceWorker' in navigator) {
-                console.log('🔧 Registrazione Service Worker...');
+                console.log('🔧 Registrazione Service Worker v8.2...');
                 
                 navigator.serviceWorker.register('/sw.js')
                     .then(function(registration) {
-                        console.log('✅ Service Worker registrato:', registration.scope);
+                        console.log('✅ Service Worker v8.2 registrato:', registration.scope);
                         
-                        // Controlla aggiornamenti ogni 30 secondi
+                        // 🟢 Controlla aggiornamenti ogni 60 secondi
                         setInterval(() => {
-                            registration.update();
-                        }, 30000);
+                            if (!updateDismissed) {
+                                registration.update();
+                            }
+                        }, 60000);
                         
-                        // Gestisci aggiornamenti in attesa
+                        // 🟢 Gestisci nuovi service worker
                         registration.addEventListener('updatefound', () => {
-                            console.log('🔄 Nuovo Service Worker trovato');
-                            newWorker = registration.installing;
+                            console.log('🔄 Nuovo Service Worker in installazione...');
+                            const installingWorker = registration.installing;
                             
-                            newWorker.addEventListener('statechange', () => {
-                                console.log('📱 State change del nuovo SW:', newWorker.state);
-                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    console.log('🚀 Nuova versione pronta');
-                                    showUpdateBanner();
-                                }
-                            });
+                            if (installingWorker) {
+                                installingWorker.addEventListener('statechange', () => {
+                                    console.log('📱 Nuovo SW state:', installingWorker.state);
+                                    
+                                    if (installingWorker.state === 'installed') {
+                                        if (navigator.serviceWorker.controller) {
+                                            // C'è un SW attivo, nuovo SW è in waiting
+                                            console.log('🟢 Nuovo SW in attesa - mostro banner');
+                                            newWorker = installingWorker;
+                                            if (!updateDismissed) {
+                                                showUpdateBanner();
+                                            }
+                                        } else {
+                                            // Primo SW installato
+                                            console.log('✅ Primo SW installato');
+                                        }
+                                    }
+                                });
+                            }
                         });
+                        
+                        // 🟢 Se c'è già un SW in waiting, mostra subito il banner
+                        if (registration.waiting && !updateDismissed) {
+                            console.log('🟢 SW già in waiting - mostro banner immediatamente');
+                            newWorker = registration.waiting;
+                            showUpdateBanner();
+                        }
+                        
                     })
                     .catch(function(error) {
                         console.log('❌ Errore registrazione Service Worker:', error);
                     });
 
-                // Ascolta messaggi dal Service Worker
+                // 🟢 Ascolta messaggi dal Service Worker
                 navigator.serviceWorker.addEventListener('message', event => {
-                    console.log('💬 Messaggio dal SW:', event.data);
-                    if (event.data && event.data.type === 'REFRESH') {
-                        console.log('🔄 Refresh richiesto dal SW');
-                        if (!refreshing) {
-                            refreshing = true;
-                            window.location.reload();
-                        }
+                    console.log('💬 Messaggio dal SW v8.2:', event.data);
+                    
+                    const { type, version, message } = event.data;
+                    
+                    switch (type) {
+                        case 'UPDATE_AVAILABLE':
+                            console.log('🟢 UPDATE_AVAILABLE ricevuto');
+                            if (!updateDismissed) {
+                                showUpdateBanner(version, message);
+                            }
+                            break;
+                            
+                        case 'UPDATE_COMPLETED':
+                            console.log('✅ UPDATE_COMPLETED ricevuto');
+                            showToast(`✅ ${message}`, 'success');
+                            hideUpdateBanner();
+                            break;
+                            
+                        case 'RELOAD_REQUIRED':
+                            console.log('🔄 RELOAD_REQUIRED ricevuto');
+                            showUpdatingState();
+                            setTimeout(() => {
+                                if (!refreshing) {
+                                    refreshing = true;
+                                    window.location.reload();
+                                }
+                            }, 1500);
+                            break;
+                            
+                        case 'SW_ACTIVATED':
+                            console.log('🚀 SW_ACTIVATED ricevuto');
+                            break;
                     }
                 });
 
-                // Gestisci il ricaricamento quando il SW prende controllo
+                // 🟢 Gestisci il cambio di controller
                 navigator.serviceWorker.addEventListener('controllerchange', () => {
-                    console.log('🔄 Controller cambiato');
+                    console.log('🔄 Controller SW cambiato');
                     if (!refreshing) {
                         refreshing = true;
                         window.location.reload();
@@ -526,39 +603,79 @@
             }
         }
 
-        function showUpdateBanner() {
-            console.log('📢 Mostrando banner di aggiornamento');
+        function showUpdateBanner(version = null, message = null) {
+            console.log('🟢 Mostrando banner di aggiornamento');
             const banner = document.getElementById('update-banner');
+            const updateText = document.getElementById('update-text');
             const body = document.body;
             
-            if (banner) {
+            if (banner && updateText) {
+                // Personalizza il messaggio se fornito
+                if (message) {
+                    updateText.textContent = message;
+                } else if (version) {
+                    updateText.textContent = `🚀 Versione ${version} disponibile!`;
+                } else {
+                    updateText.textContent = '🚀 Nuova versione disponibile!';
+                }
+                
                 banner.classList.add('show');
                 body.classList.add('update-banner-visible');
+                updateDismissed = false;
                 
-                // Auto-dismiss dopo 10 secondi se l'utente non agisce
+                // 🟢 Auto-dismiss dopo 15 secondi se l'utente non agisce
                 setTimeout(() => {
-                    if (banner.classList.contains('show')) {
+                    if (banner.classList.contains('show') && !updateDismissed) {
+                        console.log('⏰ Auto-dismiss banner dopo 15 secondi');
                         dismissUpdate();
                     }
-                }, 10000);
+                }, 15000);
+                
+                console.log('✅ Banner mostrato con successo');
             }
         }
 
-        function updateApp() {
-            console.log('🚀 Aggiornamento app richiesto dall\'utente');
+        function hideUpdateBanner() {
+            console.log('🟢 Nascondendo banner di aggiornamento');
             const banner = document.getElementById('update-banner');
             
             if (banner) {
                 banner.classList.remove('show');
                 document.body.classList.remove('update-banner-visible');
+                updateDismissed = false; // Reset per prossimi aggiornamenti
             }
+        }
+
+        function showUpdatingState() {
+            console.log('🔄 Mostrando stato di aggiornamento');
+            const updateText = document.getElementById('update-text');
+            const updateButton = document.getElementById('update-button');
+            
+            if (updateText && updateButton) {
+                updateText.innerHTML = '<span class="updating-spinner"></span>Aggiornamento in corso...';
+                updateButton.disabled = true;
+                updateButton.textContent = 'Attendere...';
+                updateButton.style.opacity = '0.6';
+            }
+        }
+
+        function updateApp() {
+            console.log('🟢 Aggiornamento app richiesto dall\'utente');
+            
+            // Mostra stato di aggiornamento
+            showUpdatingState();
             
             if (newWorker) {
-                console.log('📤 Invio messaggio SKIP_WAITING al nuovo SW');
+                console.log('📤 Invio messaggio skipWaiting al nuovo SW');
                 newWorker.postMessage({ action: 'skipWaiting' });
             } else {
                 console.log('🔄 Ricarico la pagina direttamente');
-                window.location.reload();
+                setTimeout(() => {
+                    if (!refreshing) {
+                        refreshing = true;
+                        window.location.reload();
+                    }
+                }, 1000);
             }
             
             showToast('🔄 Aggiornamento in corso...', 'success');
@@ -571,6 +688,13 @@
             if (banner) {
                 banner.classList.remove('show');
                 document.body.classList.remove('update-banner-visible');
+                updateDismissed = true;
+                
+                // Reset dismiss dopo 5 minuti per permettere futuri aggiornamenti
+                setTimeout(() => {
+                    console.log('🔄 Reset dismiss status dopo 5 minuti');
+                    updateDismissed = false;
+                }, 300000);
             }
         }
 
@@ -891,9 +1015,11 @@
             setTimeout(() => {
                 toast.style.animation = 'slideOut 0.3s ease';
                 setTimeout(() => {
-                    document.body.removeChild(toast);
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
                 }, 300);
-            }, 3000);
+            }, 4000);
         }
 
         // ========== EVENT LISTENERS ==========
@@ -948,7 +1074,7 @@
         // ========== INIZIALIZZAZIONE ==========
         
         function initializeApp() {
-            console.log('🚀 Inizializzazione app v1.8.0...');
+            console.log('🚀 Inizializzazione app v1.8.1 con SW v8.2...');
             
             // 1. Registra il service worker per gestire aggiornamenti
             registerServiceWorker();
@@ -967,8 +1093,9 @@
             setTimeout(() => {
                 updateSmartCard();
                 installationCheckComplete = true;
-                console.log('✅ Inizializzazione v1.8.0 completata');
+                console.log('✅ Inizializzazione v1.8.1 completata con SW v8.2');
                 console.log('🎮 Giochi aggiornati: Matematica v4.1.0, Tabelline v2.2.0');
+                console.log('🟢 Sistema bottone verde aggiornamenti: ATTIVO');
             }, 500);
         }
 
@@ -1001,8 +1128,15 @@
             }
         }
 
-        // Esponi la funzione di reset per debug (rimuovi in produzione)
+        // Debug: funzione per forzare la visualizzazione del banner di aggiornamento
+        function showUpdateBannerTest() {
+            console.log('🧪 Test: Forzo la visualizzazione del banner');
+            showUpdateBanner('v8.2.0-test', '🧪 Test: Banner di aggiornamento');
+        }
+
+        // Esponi le funzioni di debug per test (rimuovi in produzione se necessario)
         window.resetInstallationStatus = resetInstallationStatus;
+        window.showUpdateBannerTest = showUpdateBannerTest;
         
     </script>
 </body>

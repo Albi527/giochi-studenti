@@ -1,8 +1,8 @@
-// Service Worker v8.2 - Sistema unificato v1.8.1
-// Aggiornato per: Matematica v4.1.0, Tabelline v2.2.0
+// Service Worker v8.2.1 - Sistema unificato v1.8.1
+// Aggiornato per: Matematica sul Divano 3ª v4.1.0, Tabelline v2.2.0
 // NUOVO: Gestione bottone verde aggiornamenti
 
-const CACHE_VERSION = 'v8.2.0';
+const CACHE_VERSION = 'v8.2.1';
 const CACHE_NAME = `giochi-educativi-${CACHE_VERSION}`;
 
 // File essenziali del sistema unificato
@@ -31,13 +31,13 @@ const CACHE_STRATEGIES = {
     pages: 'stale-while-revalidate' // Pagine HTML
 };
 
-console.log(`🔧 Service Worker v8.2 inizializzazione - Sistema v1.8.1`);
-console.log(`📱 Supporto giochi: Matematica v4.1.0, Tabelline v2.2.0`);
+console.log(`🔧 Service Worker v8.2.1 inizializzazione - Sistema v1.8.1`);
+console.log(`📱 Supporto giochi: Matematica sul Divano 3ª v4.1.0, Tabelline v2.2.0`);
 console.log(`🟢 NUOVO: Gestione bottone verde aggiornamenti attivata`);
 
 // === INSTALLAZIONE ===
 self.addEventListener('install', event => {
-    console.log(`📦 SW v8.2: Installazione iniziata`);
+    console.log(`📦 SW v8.2.1: Installazione iniziata`);
     
     event.waitUntil(
         (async () => {
@@ -52,7 +52,7 @@ self.addEventListener('install', event => {
                 
                 // 🟢 IMPORTANTE: NON fare skipWaiting automatico
                 // Il nuovo SW aspetta che l'utente clicchi il bottone verde
-                console.log(`🟢 SW v8.2 installato, in attesa di attivazione manuale`);
+                console.log(`🟢 SW v8.2.1 installato, in attesa di attivazione manuale`);
                 
                 // Notifica i client che c'è un aggiornamento disponibile
                 const clients = await self.clients.matchAll();
@@ -60,12 +60,12 @@ self.addEventListener('install', event => {
                     client.postMessage({
                         type: 'UPDATE_AVAILABLE',
                         version: CACHE_VERSION,
-                        message: 'Nuovo aggiornamento disponibile! Clicca il bottone verde per aggiornare.'
+                        message: '🎮 Aggiornamento disponibile: Matematica sul Divano 3ª!'
                     });
                 });
                 
             } catch (error) {
-                console.error(`❌ Errore installazione SW v8.2:`, error);
+                console.error(`❌ Errore installazione SW v8.2.1:`, error);
             }
         })()
     );
@@ -73,7 +73,7 @@ self.addEventListener('install', event => {
 
 // === ATTIVAZIONE ===
 self.addEventListener('activate', event => {
-    console.log(`🔄 SW v8.2: Attivazione iniziata`);
+    console.log(`🔄 SW v8.2.1: Attivazione iniziata`);
     
     event.waitUntil(
         (async () => {
@@ -93,7 +93,7 @@ self.addEventListener('activate', event => {
                 
                 // Prendi controllo di tutti i client
                 await self.clients.claim();
-                console.log(`✅ SW v8.2: Attivazione completata, controllo client acquisito`);
+                console.log(`✅ SW v8.2.1: Attivazione completata, controllo client acquisito`);
                 
                 // Notifica i client dell'aggiornamento completato
                 const clients = await self.clients.matchAll();
@@ -101,12 +101,12 @@ self.addEventListener('activate', event => {
                     client.postMessage({
                         type: 'UPDATE_COMPLETED',
                         version: CACHE_VERSION,
-                        message: 'App aggiornata alla versione ' + CACHE_VERSION
+                        message: 'App aggiornata alla versione ' + CACHE_VERSION + ' - Matematica sul Divano 3ª!'
                     });
                 });
                 
             } catch (error) {
-                console.error(`❌ Errore attivazione SW v8.2:`, error);
+                console.error(`❌ Errore attivazione SW v8.2.1:`, error);
             }
         })()
     );
@@ -277,7 +277,7 @@ async function fallbackResponse(request) {
 // === 🟢 GESTIONE MESSAGGI PER BOTTONE VERDE ===
 self.addEventListener('message', event => {
     const { data } = event;
-    console.log(`💬 SW v8.2 messaggio ricevuto:`, data);
+    console.log(`💬 SW v8.2.1 messaggio ricevuto:`, data);
     
     // 🟢 Quando l'utente clicca il bottone verde
     if (data && data.action === 'skipWaiting') {
@@ -332,18 +332,18 @@ self.addEventListener('sync', event => {
 
 // === GESTIONE ERRORI GLOBALI ===
 self.addEventListener('error', event => {
-    console.error(`❌ SW v8.2 errore globale:`, event.error);
+    console.error(`❌ SW v8.2.1 errore globale:`, event.error);
 });
 
 self.addEventListener('unhandledrejection', event => {
-    console.error(`❌ SW v8.2 promise rejection:`, event.reason);
+    console.error(`❌ SW v8.2.1 promise rejection:`, event.reason);
 });
 
 // === LOGS DI DEBUG ===
-console.log(`✅ Service Worker v8.2 caricato completamente`);
+console.log(`✅ Service Worker v8.2.1 caricato completamente`);
 console.log(`📊 Cache: ${CACHE_NAME}`);
 console.log(`📁 Risorse core: ${CORE_FILES.length}`);
-console.log(`🎮 Sistema: v1.8.1 con Matematica v4.1.0 e Tabelline v2.2.0`);
+console.log(`🎮 Sistema: v1.8.1 con Matematica sul Divano 3ª v4.1.0 e Tabelline v2.2.0`);
 console.log(`🟢 Sistema bottone verde: ATTIVO`);
 
 // Esporta informazioni per debug (non visibili in produzione)

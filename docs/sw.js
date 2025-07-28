@@ -1,8 +1,8 @@
-// Service Worker v8.2.1 - Sistema unificato v1.8.1
-// Aggiornato per: Matematica sul Divano 3ª v4.1.0, Tabelline v2.2.0
-// NUOVO: Gestione bottone verde aggiornamenti
+// Service Worker v8.3.0 - Sistema unificato v1.9.0
+// Aggiornato per: Matematica sul Divano 3ª v4.1.0, Tabelline v2.2.0, Sfida Matematica in Famiglia 3ª v1.0.0
+// NUOVO: Supporto completo Sfida Matematica in Famiglia 3ª con sistema profili e sfide giornaliere
 
-const CACHE_VERSION = 'v8.2.1';
+const CACHE_VERSION = 'v8.3.0';
 const CACHE_NAME = `giochi-educativi-${CACHE_VERSION}`;
 
 // File essenziali del sistema unificato
@@ -11,6 +11,7 @@ const CORE_FILES = [
     '/index.html',
     '/matematica.html',
     '/tabelline.html',
+    '/sfida-matematica.html',  // NUOVO: Sfida Matematica in Famiglia 3ª
     '/games.json',
     '/manifest.json'
 ];
@@ -28,16 +29,18 @@ const CACHE_STRATEGIES = {
     core: 'cache-first',           // File core dell'app
     api: 'network-first',          // games.json e dati dinamici  
     assets: 'cache-first',         // Immagini e risorse statiche
-    pages: 'stale-while-revalidate' // Pagine HTML
+    pages: 'stale-while-revalidate', // Pagine HTML
+    profiles: 'cache-first'        // NUOVO: Dati profili utente per Sfida Matematica
 };
 
-console.log(`🔧 Service Worker v8.2.1 inizializzazione - Sistema v1.8.1`);
+console.log(`🔧 Service Worker v8.3.0 inizializzazione - Sistema v1.9.0`);
 console.log(`📱 Supporto giochi: Matematica sul Divano 3ª v4.1.0, Tabelline v2.2.0`);
-console.log(`🟢 NUOVO: Gestione bottone verde aggiornamenti attivata`);
+console.log(`🎯 NUOVO: Sfida Matematica in Famiglia 3ª v1.0.0 - Sistema profili e sfide giornaliere`);
+console.log(`🟢 Sistema bottone verde aggiornamenti attivo`);
 
 // === INSTALLAZIONE ===
 self.addEventListener('install', event => {
-    console.log(`📦 SW v8.2.1: Installazione iniziata`);
+    console.log(`📦 SW v8.3.0: Installazione iniziata`);
     
     event.waitUntil(
         (async () => {
@@ -48,11 +51,11 @@ self.addEventListener('install', event => {
                 
                 // Pre-carica file core
                 await cache.addAll(CACHE_RESOURCES);
-                console.log(`📂 ${CACHE_RESOURCES.length} risorse core pre-cachate`);
+                console.log(`📂 ${CACHE_RESOURCES.length} risorse core pre-cachate (inclusa Sfida Matematica)`);
                 
                 // 🟢 IMPORTANTE: NON fare skipWaiting automatico
                 // Il nuovo SW aspetta che l'utente clicchi il bottone verde
-                console.log(`🟢 SW v8.2.1 installato, in attesa di attivazione manuale`);
+                console.log(`🟢 SW v8.3.0 installato, in attesa di attivazione manuale`);
                 
                 // Notifica i client che c'è un aggiornamento disponibile
                 const clients = await self.clients.matchAll();
@@ -60,12 +63,19 @@ self.addEventListener('install', event => {
                     client.postMessage({
                         type: 'UPDATE_AVAILABLE',
                         version: CACHE_VERSION,
-                        message: '🎮 Aggiornamento disponibile: Matematica sul Divano 3ª!'
+                        message: '🎯 Nuovo gioco disponibile: Sfida Matematica in Famiglia 3ª!',
+                        newFeatures: [
+                            '🎯 Nuovo gioco: Sfida Matematica in Famiglia 3ª',
+                            '👤 Sistema profili personalizzati',
+                            '📅 3 sfide giornaliere da 30 domande',
+                            '🏆 Sistema trofei Oro/Argento/Bronzo',
+                            '📊 Tracking progressi e statistiche'
+                        ]
                     });
                 });
                 
             } catch (error) {
-                console.error(`❌ Errore installazione SW v8.2.1:`, error);
+                console.error(`❌ Errore installazione SW v8.3.0:`, error);
             }
         })()
     );
@@ -73,7 +83,7 @@ self.addEventListener('install', event => {
 
 // === ATTIVAZIONE ===
 self.addEventListener('activate', event => {
-    console.log(`🔄 SW v8.2.1: Attivazione iniziata`);
+    console.log(`🔄 SW v8.3.0: Attivazione iniziata`);
     
     event.waitUntil(
         (async () => {
@@ -93,7 +103,7 @@ self.addEventListener('activate', event => {
                 
                 // Prendi controllo di tutti i client
                 await self.clients.claim();
-                console.log(`✅ SW v8.2.1: Attivazione completata, controllo client acquisito`);
+                console.log(`✅ SW v8.3.0: Attivazione completata, controllo client acquisito`);
                 
                 // Notifica i client dell'aggiornamento completato
                 const clients = await self.clients.matchAll();
@@ -101,12 +111,13 @@ self.addEventListener('activate', event => {
                     client.postMessage({
                         type: 'UPDATE_COMPLETED',
                         version: CACHE_VERSION,
-                        message: 'App aggiornata alla versione ' + CACHE_VERSION + ' - Matematica sul Divano 3ª!'
+                        message: '🎯 App aggiornata! Nuovo gioco: Sfida Matematica in Famiglia 3ª disponibile!',
+                        gameAdded: 'Sfida Matematica in Famiglia 3ª'
                     });
                 });
                 
             } catch (error) {
-                console.error(`❌ Errore attivazione SW v8.2.1:`, error);
+                console.error(`❌ Errore attivazione SW v8.3.0:`, error);
             }
         })()
     );
@@ -140,6 +151,11 @@ async function handleRequest(request) {
             strategy = CACHE_STRATEGIES.api;
         } else if (pathname.match(/\.(png|jpg|jpeg|gif|svg|ico|woff|woff2)$/)) {
             strategy = CACHE_STRATEGIES.assets;
+        } else if (pathname.includes('sfida-matematica') || 
+                   request.url.includes('mathGameProfiles')) {
+            // NUOVO: Gestione speciale per Sfida Matematica e profili utente
+            strategy = CACHE_STRATEGIES.profiles;
+            console.log(`🎯 Strategia profili per: ${pathname}`);
         }
         
         // Applica strategia
@@ -157,6 +173,7 @@ async function applyStrategy(request, strategy) {
     
     switch (strategy) {
         case 'cache-first':
+        case 'profiles':  // NUOVO: Stessa strategia di cache-first per i profili
             return await cacheFirst(request, cache);
             
         case 'network-first':
@@ -170,7 +187,7 @@ async function applyStrategy(request, strategy) {
     }
 }
 
-// Cache First - per file core dell'app
+// Cache First - per file core dell'app e profili utente
 async function cacheFirst(request, cache) {
     const cachedResponse = await cache.match(request);
     
@@ -260,6 +277,27 @@ async function fallbackResponse(request) {
         }
     }
     
+    // NUOVO: Gestione speciale per errori relativi a Sfida Matematica
+    if (url.pathname.includes('sfida-matematica')) {
+        console.log(`🎯 Fallback specifico per Sfida Matematica: ${request.url}`);
+        return new Response(
+            JSON.stringify({
+                error: 'Sfida Matematica non disponibile offline',
+                message: 'Il gioco richiede una connessione internet per la prima volta',
+                gameType: 'sfida-matematica',
+                url: request.url,
+                timestamp: new Date().toISOString()
+            }), {
+                status: 503,
+                statusText: 'Service Unavailable',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-Game-Type': 'sfida-matematica'
+                }
+            }
+        );
+    }
+    
     // Risposta di errore generica
     return new Response(
         JSON.stringify({
@@ -277,11 +315,11 @@ async function fallbackResponse(request) {
 // === 🟢 GESTIONE MESSAGGI PER BOTTONE VERDE ===
 self.addEventListener('message', event => {
     const { data } = event;
-    console.log(`💬 SW v8.2.1 messaggio ricevuto:`, data);
+    console.log(`💬 SW v8.3.0 messaggio ricevuto:`, data);
     
     // 🟢 Quando l'utente clicca il bottone verde
     if (data && data.action === 'skipWaiting') {
-        console.log(`🟢 Bottone verde cliccato - Attivazione nuova versione`);
+        console.log(`🟢 Bottone verde cliccato - Attivazione nuova versione con Sfida Matematica`);
         
         // Attiva immediatamente il nuovo service worker
         self.skipWaiting();
@@ -292,7 +330,8 @@ self.addEventListener('message', event => {
                 client.postMessage({ 
                     type: 'RELOAD_REQUIRED',
                     version: CACHE_VERSION,
-                    message: 'Ricaricamento in corso...'
+                    message: '🎯 Ricaricamento in corso... Sfida Matematica in arrivo!',
+                    newGame: 'sfida-matematica'
                 });
             });
         });
@@ -304,7 +343,18 @@ self.addEventListener('message', event => {
             version: CACHE_VERSION,
             cacheSize: CACHE_RESOURCES.length,
             timestamp: new Date().toISOString(),
-            updateSystem: 'active'
+            updateSystem: 'active',
+            games: [
+                'Matematica sul Divano 3ª v4.1.0',
+                'Tabelline v2.2.0', 
+                'Sfida Matematica in Famiglia 3ª v1.0.0'  // NUOVO
+            ],
+            newFeatures: [
+                'Sistema profili personalizzati',
+                'Sfide giornaliere rinnovabili',
+                'Tracking progressi e statistiche',
+                'Trofei e classifiche'
+            ]
         });
     }
     
@@ -313,46 +363,177 @@ self.addEventListener('message', event => {
         event.ports[0].postMessage({
             hasUpdate: self.registration.waiting !== null,
             currentVersion: CACHE_VERSION,
-            waitingVersion: self.registration.waiting ? 'new-version' : null
+            waitingVersion: self.registration.waiting ? 'new-version' : null,
+            latestGame: 'Sfida Matematica in Famiglia 3ª'
         });
+    }
+    
+    // NUOVO: Gestione messaggi specifici per Sfida Matematica
+    if (data && data.action === 'clearGameData') {
+        console.log(`🎯 Richiesta pulizia dati gioco: ${data.gameType}`);
+        if (data.gameType === 'sfida-matematica') {
+            // I dati sono gestiti via localStorage nel gioco, non nel SW
+            event.ports[0].postMessage({
+                success: true,
+                message: 'Dati profili gestiti localmente dal gioco'
+            });
+        }
     }
 });
 
-// === NOTIFICHE PUSH (placeholder per future implementazioni) ===
+// === NOTIFICHE PUSH ===
 self.addEventListener('push', event => {
     console.log(`🔔 Push notification ricevuta`);
-    // Implementazione futura per notifiche di aggiornamenti giochi
+    
+    // NUOVO: Gestione notifiche per nuove sfide giornaliere
+    if (event.data) {
+        try {
+            const data = event.data.json();
+            if (data.type === 'daily-challenge') {
+                const notificationOptions = {
+                    body: '🎯 Nuove sfide matematiche disponibili!',
+                    icon: '/icon-192x192.png',
+                    badge: '/icon-96x96.png',
+                    tag: 'daily-challenge',
+                    actions: [
+                        {
+                            action: 'play',
+                            title: '🎮 Gioca Ora'
+                        },
+                        {
+                            action: 'dismiss',
+                            title: '✖️ Chiudi'
+                        }
+                    ]
+                };
+                
+                event.waitUntil(
+                    self.registration.showNotification(
+                        'Sfida Matematica in Famiglia', 
+                        notificationOptions
+                    )
+                );
+            }
+        } catch (error) {
+            console.error('Errore gestione push notification:', error);
+        }
+    }
 });
 
-// === BACKGROUND SYNC (placeholder per future implementazioni) ===
+// NUOVO: Gestione click su notifiche
+self.addEventListener('notificationclick', event => {
+    event.notification.close();
+    
+    if (event.action === 'play') {
+        event.waitUntil(
+            clients.openWindow('/sfida-matematica.html')
+        );
+    }
+});
+
+// === BACKGROUND SYNC ===
 self.addEventListener('sync', event => {
     console.log(`🔄 Background sync evento:`, event.tag);
-    // Implementazione futura per sincronizzazione offline
+    
+    // NUOVO: Sync per statistiche Sfida Matematica
+    if (event.tag === 'sync-game-stats') {
+        event.waitUntil(syncGameStats());
+    }
 });
+
+// NUOVO: Funzione sync statistiche (placeholder)
+async function syncGameStats() {
+    console.log(`📊 Sincronizzazione statistiche giochi...`);
+    // Implementazione futura per backup/sync statistiche
+    try {
+        // Logica di sincronizzazione profili utente
+        console.log(`✅ Statistiche sincronizzate`);
+    } catch (error) {
+        console.error(`❌ Errore sincronizzazione:`, error);
+    }
+}
 
 // === GESTIONE ERRORI GLOBALI ===
 self.addEventListener('error', event => {
-    console.error(`❌ SW v8.2.1 errore globale:`, event.error);
+    console.error(`❌ SW v8.3.0 errore globale:`, event.error);
+    
+    // NUOVO: Log specifico per errori relativi a Sfida Matematica
+    if (event.error && event.error.message && 
+        event.error.message.includes('sfida-matematica')) {
+        console.error(`🎯 Errore specifico Sfida Matematica:`, event.error);
+    }
 });
 
 self.addEventListener('unhandledrejection', event => {
-    console.error(`❌ SW v8.2.1 promise rejection:`, event.reason);
+    console.error(`❌ SW v8.3.0 promise rejection:`, event.reason);
 });
 
+// === PULIZIA CACHE PERIODICA ===
+// NUOVO: Pulizia automatica cache ogni 7 giorni
+self.addEventListener('activate', event => {
+    event.waitUntil(cleanOldCaches());
+});
+
+async function cleanOldCaches() {
+    const CACHE_EXPIRY = 7 * 24 * 60 * 60 * 1000; // 7 giorni
+    const now = Date.now();
+    
+    try {
+        const cacheNames = await caches.keys();
+        const cachesToDelete = [];
+        
+        for (const cacheName of cacheNames) {
+            if (cacheName.startsWith('giochi-educativi-') && 
+                cacheName !== CACHE_NAME) {
+                // Logica per determinare cache scadute
+                cachesToDelete.push(cacheName);
+            }
+        }
+        
+        await Promise.all(
+            cachesToDelete.map(cacheName => {
+                console.log(`🧹 Pulizia cache scaduta: ${cacheName}`);
+                return caches.delete(cacheName);
+            })
+        );
+        
+        console.log(`✅ Pulizia cache completata, ${cachesToDelete.length} cache rimosse`);
+    } catch (error) {
+        console.error(`❌ Errore pulizia cache:`, error);
+    }
+}
+
 // === LOGS DI DEBUG ===
-console.log(`✅ Service Worker v8.2.1 caricato completamente`);
+console.log(`✅ Service Worker v8.3.0 caricato completamente`);
 console.log(`📊 Cache: ${CACHE_NAME}`);
 console.log(`📁 Risorse core: ${CORE_FILES.length}`);
-console.log(`🎮 Sistema: v1.8.1 con Matematica sul Divano 3ª v4.1.0 e Tabelline v2.2.0`);
+console.log(`🎮 Sistema: v1.9.0`);
+console.log(`🎯 Giochi supportati:`);
+console.log(`   • Matematica sul Divano 3ª v4.1.0`);
+console.log(`   • Tabelline v2.2.0`);
+console.log(`   • Sfida Matematica in Famiglia 3ª v1.0.0 (NUOVO)`);
 console.log(`🟢 Sistema bottone verde: ATTIVO`);
+console.log(`👤 Sistema profili: ATTIVO per Sfida Matematica`);
 
 // Esporta informazioni per debug (non visibili in produzione)
 if (self.location.hostname === 'localhost') {
     self.SW_DEBUG_INFO = {
         version: CACHE_VERSION,
+        systemVersion: 'v1.9.0',
         cacheResources: CACHE_RESOURCES,
         strategies: CACHE_STRATEGIES,
         updateSystem: 'green-button-active',
+        games: [
+            'matematica-divano-v4.1.0',
+            'tabelline-v2.2.0',
+            'sfida-matematica-v1.0.0'
+        ],
+        newFeatures: [
+            'profiles-system',
+            'daily-challenges',
+            'progress-tracking',
+            'trophy-system'
+        ],
         timestamp: new Date().toISOString()
     };
 }

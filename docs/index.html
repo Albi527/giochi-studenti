@@ -102,12 +102,77 @@
             border: 2px solid white;
         }
         
+        /* NUOVO: Stili per Matematica sul Divano 3ª */
+        .matematica {
+            background: linear-gradient(135deg, #2196F3 0%, #4CAF50 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .matematica .game-description {
+            color: rgba(255, 255, 255, 0.95);
+        }
+        
         .matematica .play-button {
-            background: linear-gradient(45deg, #2196F3, #0D47A1);
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+        
+        /* NUOVO: Stili per Sfida Tabelline */
+        .tabelline {
+            background: linear-gradient(135deg, #9C27B0 0%, #E91E63 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tabelline .game-description {
+            color: rgba(255, 255, 255, 0.95);
         }
         
         .tabelline .play-button {
-            background: linear-gradient(45deg, #9C27B0, #673AB7);
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3);
+        }
+        
+        /* NUOVO: Stili per Sfida Matematica in Famiglia */
+        .sfida-matematica {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sfida-matematica .game-description {
+            color: rgba(255, 255, 255, 0.95);
+        }
+        
+        .sfida-matematica .play-button {
+            background: linear-gradient(45deg, #ff6b6b, #ffa500);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+        
+        .sfida-matematica::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
         
         .coming-soon {
@@ -452,6 +517,24 @@
                 <a href="tabelline.html" class="play-button">⚡ Inizia Sfida</a>
             </div>
 
+            <!-- 🎯 NUOVO: Sfida Matematica in Famiglia 3ª -->
+            <div class="game-card sfida-matematica" onclick="window.location.href='sfida-matematica.html'">
+                <div class="game-icon">🏆</div>
+                <div class="game-title">
+                    Sfida Matematica in Famiglia 3ª
+                    <span class="version-badge new-badge">NUOVO!</span>
+                </div>
+                <div class="game-description">
+                    🎯 <strong>Sistema completo di sfide giornaliere!</strong><br>
+                    • 👤 Profili personalizzati con avatar<br>
+                    • 📅 3 sfide da 30 domande al giorno<br>
+                    • 🏆 Trofei Oro/Argento/Bronzo<br>
+                    • 📊 Statistiche e progressi salvati<br>
+                    <small><em>Perfetto per tutta la famiglia!</em></small>
+                </div>
+                <a href="sfida-matematica.html" class="play-button">🎯 Inizia le Sfide</a>
+            </div>
+
             <!-- Altro in arrivo -->
             <div class="game-card coming-soon">
                 <div class="game-icon">🎲</div>
@@ -467,7 +550,7 @@
     <div class="footer">
         <div class="stats">
             <div class="stat-item">
-                <div class="stat-number">2</div>
+                <div class="stat-number">3</div>
                 <div class="stat-label">Giochi Disponibili</div>
             </div>
             <div class="stat-item">
@@ -504,11 +587,11 @@
         
         function registerServiceWorker() {
             if ('serviceWorker' in navigator) {
-                console.log('🔧 Registrazione Service Worker v8.2...');
+                console.log('🔧 Registrazione Service Worker...');
                 
                 navigator.serviceWorker.register('/sw.js')
                     .then(function(registration) {
-                        console.log('✅ Service Worker v8.2 registrato:', registration.scope);
+                        console.log('✅ Service Worker registrato:', registration.scope);
                         
                         // 🟢 Controlla aggiornamenti ogni 60 secondi
                         setInterval(() => {
@@ -557,21 +640,37 @@
 
                 // 🟢 Ascolta messaggi dal Service Worker
                 navigator.serviceWorker.addEventListener('message', event => {
-                    console.log('💬 Messaggio dal SW v8.2:', event.data);
+                    console.log('💬 Messaggio dal SW:', event.data);
                     
-                    const { type, version, message } = event.data;
+                    const { type, version, message, newFeatures, gameAdded } = event.data;
                     
                     switch (type) {
                         case 'UPDATE_AVAILABLE':
                             console.log('🟢 UPDATE_AVAILABLE ricevuto');
+                            let updateMessage = message;
+                            
+                            // 🎯 NUOVO: Messaggio speciale per Sfida Matematica
+                            if (newFeatures && newFeatures.length > 0) {
+                                updateMessage = '🎯 Nuovo gioco: Sfida Matematica in Famiglia 3ª!';
+                            }
+                            
                             if (!updateDismissed) {
-                                showUpdateBanner(version, message);
+                                showUpdateBanner(version, updateMessage);
                             }
                             break;
                             
                         case 'UPDATE_COMPLETED':
                             console.log('✅ UPDATE_COMPLETED ricevuto');
-                            showToast(`✅ ${message}`, 'success');
+                            let completeMessage = message;
+                            
+                            // 🎯 NUOVO: Messaggio speciale se è stato aggiunto un gioco
+                            if (gameAdded) {
+                                completeMessage = `🎯 ${gameAdded} ora disponibile!`;
+                                // Evidenzia la nuova card del gioco
+                                highlightNewGame();
+                            }
+                            
+                            showToast(`✅ ${completeMessage}`, 'success');
                             hideUpdateBanner();
                             break;
                             
@@ -600,6 +699,32 @@
                         window.location.reload();
                     }
                 });
+            }
+        }
+
+        // 🎯 NUOVO: Funzione per evidenziare il nuovo gioco
+        function highlightNewGame() {
+            const sfidaCard = document.querySelector('.sfida-matematica');
+            if (sfidaCard) {
+                console.log('🎯 Evidenziazione nuovo gioco');
+                
+                // Aggiungi un effetto speciale
+                sfidaCard.style.animation = 'pulse 2s ease-in-out 3';
+                sfidaCard.style.boxShadow = '0 0 30px rgba(255, 107, 107, 0.6)';
+                
+                // Scroll verso il nuovo gioco
+                setTimeout(() => {
+                    sfidaCard.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                }, 1000);
+                
+                // Rimuovi l'effetto dopo 6 secondi
+                setTimeout(() => {
+                    sfidaCard.style.animation = '';
+                    sfidaCard.style.boxShadow = '';
+                }, 6000);
             }
         }
 
@@ -1074,7 +1199,7 @@
         // ========== INIZIALIZZAZIONE ==========
         
         function initializeApp() {
-            console.log('🚀 Inizializzazione app v1.8.1 con SW v8.2...');
+            console.log('🚀 Inizializzazione app...');
             
             // 1. Registra il service worker per gestire aggiornamenti
             registerServiceWorker();
@@ -1093,9 +1218,9 @@
             setTimeout(() => {
                 updateSmartCard();
                 installationCheckComplete = true;
-                console.log('✅ Inizializzazione v1.8.1 completata con SW v8.2');
-                console.log('🎮 Giochi aggiornati: Matematica v4.1.0, Tabelline v2.2.0');
-                console.log('🟢 Sistema bottone verde aggiornamenti: ATTIVO');
+                console.log('✅ Inizializzazione completata');
+                console.log('🎮 Giochi: Matematica sul Divano 3ª, Tabelline, Sfida Matematica in Famiglia 3ª');
+                console.log('🟢 Sistema aggiornamenti: ATTIVO');
             }, 500);
         }
 
@@ -1116,6 +1241,15 @@
             }
         });
 
+        // 🎯 NUOVO: Funzione per navigare direttamente al nuovo gioco
+        function goToSfidaMatematica() {
+            console.log('🎯 Navigazione a Sfida Matematica');
+            showToast('🎯 Caricamento Sfida Matematica in Famiglia 3ª...', 'success');
+            setTimeout(() => {
+                window.location.href = 'sfida-matematica.html';
+            }, 500);
+        }
+
         // Debug: funzione per resettare lo stato di installazione (solo per test)
         function resetInstallationStatus() {
             try {
@@ -1131,12 +1265,20 @@
         // Debug: funzione per forzare la visualizzazione del banner di aggiornamento
         function showUpdateBannerTest() {
             console.log('🧪 Test: Forzo la visualizzazione del banner');
-            showUpdateBanner('v8.2.0-test', '🧪 Test: Banner di aggiornamento');
+            showUpdateBanner('v8.3.0-test', '🎯 Test: Nuovo gioco Sfida Matematica!');
+        }
+
+        // 🎯 NUOVO: Debug per evidenziare il nuovo gioco
+        function testHighlightNewGame() {
+            console.log('🧪 Test: Evidenziazione nuovo gioco');
+            highlightNewGame();
         }
 
         // Esponi le funzioni di debug per test (rimuovi in produzione se necessario)
         window.resetInstallationStatus = resetInstallationStatus;
         window.showUpdateBannerTest = showUpdateBannerTest;
+        window.testHighlightNewGame = testHighlightNewGame;
+        window.goToSfidaMatematica = goToSfidaMatematica;
         
     </script>
 </body>

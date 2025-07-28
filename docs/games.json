@@ -19,7 +19,7 @@
         "standaloneMode": false,
         "localStorage": "SYNCHRONIZED",
         "navigation": "UNIFIED",
-        "serviceWorker": "v8.2.0",
+        "serviceWorker": "v8.3.0",
         "duplicationsRemoved": true,
         "installationControls": "CENTRALIZED",
         "updateSystem": "GREEN_BUTTON_ACTIVE"
@@ -68,7 +68,7 @@
           "localStorageSync": true,
           "unifiedNavigation": true,
           "centralizedInstallation": true,
-          "serviceWorkerVersion": "v8.2.0",
+          "serviceWorkerVersion": "v8.3.0",
           "noDuplications": true,
           "optimizedCaching": true,
           "homeButtonFixed": true,
@@ -121,7 +121,7 @@
       "pwaIntegration": {
         "status": "SYNCHRONIZED",
         "unifiedSystem": true,
-        "serviceWorker": "v8.2.0",
+        "serviceWorker": "v8.3.0",
         "cacheStrategy": "OPTIMIZED",
         "updateSystem": "GREEN_BUTTON_ACTIVE"
       },
@@ -150,7 +150,7 @@
         "expirationDate": null,
         "systemIntegration": {
           "unifiedPWA": true,
-          "serviceWorkerVersion": "v8.2.0",
+          "serviceWorkerVersion": "v8.3.0",
           "homeButtonFixed": true,
           "antiRepetitionAdvanced": true,
           "updateSystemIntegrated": true
@@ -163,6 +163,166 @@
         "difficultyLevels": 3,
         "totalPossibleQuestions": 121,
         "antiRepetitionCoverage": "100%"
+      }
+    },
+    {
+      "id": "sfida-matematica",
+      "title": "Sfida Matematica in Famiglia 3ª",
+      "description": "Sistema completo di sfide giornaliere con profili personalizzati! 3 sfide da 30 domande al giorno, trofei Oro/Argento/Bronzo, statistiche avanzate e progressi salvati. Perfetto per tutta la famiglia!",
+      "icon": "🏆",
+      "file": "sfida-matematica.html",
+      "category": "matematica",
+      "buttonText": "🎯 Inizia le Sfide",
+      "buttonColor": "sfida-matematica",
+      "active": true,
+      "featured": true,
+      "version": "1.0.0",
+      "lastUpdated": "2025-07-28",
+      "isNew": true,
+      "pwaIntegration": {
+        "status": "FULLY_INTEGRATED",
+        "unifiedSystem": true,
+        "standaloneMode": false,
+        "localStorage": "PROFILES_MANAGED",
+        "navigation": "UNIFIED",
+        "serviceWorker": "v8.3.0",
+        "profileSystem": true,
+        "dailyChallenges": true,
+        "updateSystem": "GREEN_BUTTON_ACTIVE"
+      },
+      "features": [
+        "Sistema profili personalizzati con 10 avatar",
+        "3 sfide giornaliere rinnovabili a mezzanotte",
+        "30 domande per sfida (90 domande totali al giorno)",
+        "4 tipologie di domande: Calcolo, Logica, Problemi, Geometria",
+        "Sistema trofei: 🏆 Oro (90%+), 🥈 Argento (70-89%), 🥉 Bronzo (<70%)",
+        "Statistiche complete: punteggio, tempo, precisione",
+        "Progressi salvati permanentemente per ogni profilo",
+        "Sistema seeded random per consistenza giornaliera",
+        "Generazione domande uniche senza ripetizioni",
+        "Audio system con feedback sonori",
+        "Timer integrato con cronometraggio accurato",
+        "Design responsive Comic Sans family-friendly",
+        "Sistema anti-ripetizione avanzato per domande",
+        "Gradiente dinamico viola-blu accattivante",
+        "Compatibilità multi-dispositivo perfetta",
+        "PWA completamente integrata nel sistema unificato"
+      ],
+      "educational": {
+        "targetAge": "6-12 anni",
+        "subject": "Matematica Completa - Sistema Sfide Giornaliere",
+        "skills": [
+          "Operazioni matematiche base (addizioni, sottrazioni, moltiplicazioni, divisioni)",
+          "Logica e sequenze numeriche",
+          "Risoluzione problemi della vita reale",
+          "Geometria di base (triangoli, angoli, linee, poligoni)",
+          "Calcolo mentale avanzato",
+          "Concentrazione e perseveranza",
+          "Gestione del tempo",
+          "Competizione sana in famiglia"
+        ]
+      },
+      "technical": {
+        "audioSupport": true,
+        "offlineCapable": true,
+        "mobileOptimized": true,
+        "pwaIntegrated": true,
+        "backgroundTheme": "gradiente viola-blu dinamico",
+        "profileManagement": true,
+        "dailyReset": "mezzanotte automatica",
+        "seededRandom": true,
+        "systemIntegration": {
+          "unifiedPWA": true,
+          "localStorageProfiles": true,
+          "unifiedNavigation": true,
+          "centralizedInstallation": true,
+          "serviceWorkerVersion": "v8.3.0",
+          "optimizedCaching": true,
+          "homeButtonIntegrated": true,
+          "updateSystem": "green_button_active",
+          "profilePersistence": true,
+          "challengeConsistency": true
+        }
+      },
+      "gameSystem": {
+        "profileSystem": {
+          "maxProfiles": "illimitati",
+          "avatars": 10,
+          "statsTracking": true,
+          "bestScoreTracking": true,
+          "totalGamesTracking": true,
+          "deleteProfileSupport": true
+        },
+        "dailyChallenges": {
+          "challengesPerDay": 3,
+          "questionsPerChallenge": 30,
+          "totalDailyQuestions": 90,
+          "resetTime": "00:00 (mezzanotte)",
+          "playLimitPerChallenge": 1,
+          "completionTracking": true
+        },
+        "questionTypes": {
+          "calculation": {
+            "percentage": "35%",
+            "count": 11,
+            "types": ["addition", "subtraction", "multiplication", "division", "double", "half"],
+            "difficulty": "3ª elementare appropriato"
+          },
+          "logic": {
+            "percentage": "25%", 
+            "count": 7,
+            "types": ["sequence", "comparison", "pattern", "advanced_sequence", "letters", "colors"],
+            "difficulty": "progressivo"
+          },
+          "problems": {
+            "percentage": "25%",
+            "count": 7,
+            "types": ["real_life_scenarios", "word_problems", "practical_math"],
+            "difficulty": "situazioni familiari"
+          },
+          "geometry": {
+            "percentage": "15%",
+            "count": 5,
+            "types": ["triangles", "angles", "lines", "polygons", "shapes"],
+            "difficulty": "base appropriata"
+          }
+        },
+        "scoring": {
+          "pointsPerCorrect": 10,
+          "maxScorePerChallenge": 300,
+          "maxDailyScore": 900,
+          "trophyThresholds": {
+            "gold": "90% o più (270+ punti)",
+            "silver": "70-89% (210-269 punti)", 
+            "bronze": "meno del 70% (<210 punti)"
+          }
+        }
+      },
+      "stats": {
+        "questionTypes": 4,
+        "questionsPerChallenge": 30,
+        "challengesPerDay": 3,
+        "totalDailyQuestions": 90,
+        "maxDailyScore": 900,
+        "trophyLevels": 3,
+        "avatarChoices": 10,
+        "difficultyLevels": "Adattivo per età",
+        "questionPool": "Generazione infinita senza ripetizioni",
+        "profileSupport": "Illimitati profili famiglia"
+      },
+      "integration": {
+        "version": "1.0.0",
+        "integrationType": "FULL_UNIFIED_SYSTEM_NEW",
+        "pwaStatus": "NEWLY_INTEGRATED",
+        "serviceWorkerSupport": "COMPLETE",
+        "localStorageStrategy": "PROFILE_BASED",
+        "navigationIntegration": "SEAMLESS",
+        "installationSupport": "UNIFIED",
+        "cacheStrategy": "OPTIMIZED_FOR_PROFILES",
+        "performanceImpact": "OPTIMIZED",
+        "userExperience": "FAMILY_FRIENDLY",
+        "updateManagement": "GREEN_BUTTON_SYSTEM",
+        "systemCompatibility": "PERFECT"
       }
     },
     {
@@ -209,7 +369,8 @@
     "localStorage": {
       "synchronized": true,
       "conflictResolution": "RESOLVED",
-      "unifiedManagement": true
+      "unifiedManagement": true,
+      "profileSupport": true
     },
     "instructions": {
       "chrome_desktop": {
@@ -247,8 +408,8 @@
   "settings": {
     "title": "Giochi Educativi",
     "subtitle": "by Maestro Alberto",
-    "version": "1.8.1",
-    "lastUpdated": "2025-07-21",
+    "version": "1.9.0",
+    "lastUpdated": "2025-07-28",
     "systemType": "UNIFIED_PWA",
     "autoDetectGames": true,
     "showInstallButton": true,
@@ -259,7 +420,7 @@
     "updateSystem": {
       "enabled": true,
       "type": "GREEN_BUTTON",
-      "serviceWorkerVersion": "v8.2.0",
+      "serviceWorkerVersion": "v8.3.0",
       "autoCheck": true,
       "userControlled": true,
       "bannerAnimation": true,
@@ -268,14 +429,33 @@
     },
     "unifiedIntegration": {
       "matematicaIntegrated": true,
-      "serviceWorkerVersion": "v8.2.0",
+      "tabellineIntegrated": true,
+      "sfidaMatematicaIntegrated": true,
+      "serviceWorkerVersion": "v8.3.0",
       "localStorageSynchronized": true,
       "navigationUnified": true,
       "duplicationsRemoved": true,
       "performanceOptimized": true,
-      "updateSystemActive": true
+      "updateSystemActive": true,
+      "profileSystemSupported": true
     },
     "newFeatures": {
+      "v1.9.0": [
+        "🎯 NUOVO: Sfida Matematica in Famiglia 3ª v1.0.0",
+        "Sistema profili personalizzati con 10 avatar",
+        "3 sfide giornaliere da 30 domande (90 totali al giorno)",
+        "4 tipologie domande: Calcolo, Logica, Problemi, Geometria",
+        "Sistema trofei Oro/Argento/Bronzo con soglie precise",
+        "Statistiche complete e progressi salvati permanentemente",
+        "Reset automatico giornaliero a mezzanotte",
+        "Sistema seeded random per consistenza giornaliera",
+        "Generazione domande uniche senza ripetizioni nella sessione",
+        "Design family-friendly con Comic Sans e gradienti",
+        "Audio system con feedback appropriati per bambini",
+        "Service Worker v8.3.0 con supporto nuovo gioco",
+        "Cache strategy ottimizzata per gestione profili",
+        "Integrazione perfetta nel sistema PWA unificato"
+      ],
       "v1.8.1": [
         "🟢 NUOVO: Sistema bottone verde per aggiornamenti PWA",
         "Service Worker v8.2.0: Gestione intelligente aggiornamenti",
@@ -300,66 +480,47 @@
         "Navigazione fluida e ottimizzata",
         "Miglioramenti interfaccia e user experience"
       ],
-      "v1.7.1": [
-        "Matematica v4.0.2: Correzioni interfaccia e ottimizzazioni minori",
-        "Aggiornamenti versioni per sincronizzazione completa",
-        "Perfezionamenti sistema PWA unificato"
-      ],
-      "v1.7.0": [
-        "Matematica v4.0.0 completamente integrata nel sistema PWA unificato",
-        "Service Worker v8 con cache strategy ottimizzata",
-        "localStorage sincronizzato tra tutti i componenti",
-        "Navigazione fluida e unificata tra index e matematica",
-        "Rimozione completa duplicazioni PWA/Service Worker",
-        "Controlli installazione centralizzati",
-        "Sistema PWA unificato senza conflitti",
-        "Performance ottimizzate per tutti i componenti"
-      ],
-      "matematica": [
-        "Versione 4.1.0: Sistema migliorato con correzioni importanti",
-        "Addizioni L3: Corretta la logica 'tappa alla decina successiva'",
-        "Sottrazioni L4: Corretta la logica 'tappa alla decina precedente'", 
-        "Sistema anti-ripetizione tabelline completamente rinnovato",
-        "Pre-generazione di tutte le 121 possibili combinazioni 0-10",
-        "Mescolamento intelligente e ricircolo automatico",
-        "Bottone Home completamente funzionante",
-        "Interfaccia ottimizzata e pulita",
-        "6 operazioni matematiche complete (33 livelli totali)",
-        "Audio Web Audio API ottimizzato",
-        "Integrazione PWA perfetta senza conflitti",
-        "Supporto aggiornamenti automatici con bottone verde"
-      ],
-      "tabelline": [
-        "Versione 2.2.0: Miglioramenti importanti",
-        "Rimosso sistema di scadenza automatica del gioco",
-        "Sistema anti-ripetizione avanzato con pre-generazione",
-        "Tutte le 121 combinazioni tabelline 0-10 disponibili",
-        "Mescolamento e ricircolo intelligente",
-        "Bottone Home completamente funzionante",
-        "Sistema audio Web Audio API ottimizzato",
-        "Timer 60 secondi con avvisi sonori",
-        "3 livelli di difficoltà progressiva",
-        "Sincronizzazione perfetta con sistema PWA unificato",
-        "Integrazione completa sistema aggiornamenti"
+      "sfida-matematica": [
+        "Versione 1.0.0: Nuovo gioco completo per famiglie",
+        "Sistema profili con avatar personalizzabili",
+        "3 sfide giornaliere rinnovabili automaticamente",
+        "30 domande per sfida con 4 tipologie diverse",
+        "Calcolo: operazioni base appropriate per 3ª elementare",
+        "Logica: sequenze, pattern, confronti e puzzle",
+        "Problemi: situazioni reali e word problems",
+        "Geometria: forme base, angoli, linee e poligoni",
+        "Sistema trofei con soglie: Oro 90%+, Argento 70-89%, Bronzo <70%",
+        "Statistiche complete: punteggio, tempo, precisione, storico",
+        "Generazione domande seeded per consistenza giornaliera",
+        "Audio feedback appropriato per ambiente familiare",
+        "Design responsive ottimizzato per tutti i dispositivi",
+        "Integrazione perfetta con sistema PWA unificato",
+        "Supporto aggiornamenti automatici tramite bottone verde",
+        "Gestione profili famiglia con eliminazione sicura"
       ]
     }
   },
   "stats": {
-    "totalGames": 3,
-    "availableGames": 2,
+    "totalGames": 4,
+    "availableGames": 3,
     "inDevelopment": 1,
     "totalLevels": 36,
     "mathematicaLevels": 33,
     "tabellineLevels": 3,
+    "sfidaMatematicaChallenges": 3,
+    "sfidaMatematicaDailyQuestions": 90,
     "supportedDevices": 3,
     "pwaInstallable": true,
     "offlineCapable": true,
     "audioSupported": true,
-    "lastMajorUpdate": "2025-07-21",
+    "profileSystemSupported": true,
+    "lastMajorUpdate": "2025-07-28",
     "updateSystemActive": true,
     "systemUnification": {
       "matematicaIntegrationStatus": "COMPLETED",
-      "serviceWorkerVersion": "v8.2.0",
+      "tabellineIntegrationStatus": "COMPLETED", 
+      "sfidaMatematicaIntegrationStatus": "NEWLY_COMPLETED",
+      "serviceWorkerVersion": "v8.3.0",
       "localStorageConflicts": "RESOLVED",
       "navigationIssues": "RESOLVED",
       "pwaConflicts": "RESOLVED",
@@ -367,7 +528,8 @@
       "userExperience": "OPTIMIZED",
       "homeButtonIssues": "RESOLVED",
       "updateSystemStatus": "ACTIVE",
-      "greenButtonSystem": "IMPLEMENTED"
+      "greenButtonSystem": "IMPLEMENTED",
+      "profileSystemIntegration": "ACTIVE"
     }
   },
   "compatibility": {
@@ -378,7 +540,8 @@
         "pwaSupport": true,
         "installInstructions": "chrome_desktop",
         "unifiedSystemSupport": true,
-        "updateSystemSupport": true
+        "updateSystemSupport": true,
+        "profileSystemSupport": true
       },
       "edge": {
         "desktop": true,
@@ -386,7 +549,8 @@
         "pwaSupport": true,
         "installInstructions": "edge_desktop",
         "unifiedSystemSupport": true,
-        "updateSystemSupport": true
+        "updateSystemSupport": true,
+        "profileSystemSupport": true
       },
       "firefox": {
         "desktop": true,
@@ -394,7 +558,8 @@
         "pwaSupport": "limited",
         "installInstructions": null,
         "unifiedSystemSupport": "partial",
-        "updateSystemSupport": "partial"
+        "updateSystemSupport": "partial",
+        "profileSystemSupport": "limited"
       },
       "safari": {
         "desktop": false,
@@ -402,7 +567,8 @@
         "pwaSupport": "ios_only",
         "installInstructions": "safari_ios",
         "unifiedSystemSupport": "mobile_only",
-        "updateSystemSupport": "limited"
+        "updateSystemSupport": "limited",
+        "profileSystemSupport": "limited"
       }
     },
     "platforms": {
@@ -414,11 +580,11 @@
     }
   },
   "systemIntegration": {
-    "version": "1.8.1",
+    "version": "1.9.0",
     "type": "UNIFIED_PWA_SYSTEM",
     "updateManagement": {
       "type": "USER_CONTROLLED_GREEN_BUTTON",
-      "serviceWorkerVersion": "v8.2.0",
+      "serviceWorkerVersion": "v8.3.0",
       "skipWaitingControlled": true,
       "bannerSystem": true,
       "autoCheck": true,
@@ -429,10 +595,11 @@
     },
     "components": {
       "index": {
-        "version": "1.8.1",
+        "version": "1.9.0",
         "status": "ACTIVE",
         "role": "MAIN_LANDING_PAGE",
-        "updateSystemIntegration": true
+        "updateSystemIntegration": true,
+        "newGameSupport": true
       },
       "matematica": {
         "version": "4.1.0",
@@ -461,17 +628,37 @@
           "updateSystemAware": true
         }
       },
+      "sfida-matematica": {
+        "version": "1.0.0",
+        "status": "NEWLY_INTEGRATED",
+        "role": "FAMILY_GAME_COMPONENT",
+        "features": {
+          "profileSystemComplete": true,
+          "dailyChallengesActive": true,
+          "trophySystemImplemented": true,
+          "statisticsTracking": true,
+          "seededRandomSystem": true,
+          "questionGenerationUnique": true,
+          "audioSystemOptimized": true,
+          "responsiveDesignPerfect": true,
+          "homeButtonIntegrated": true,
+          "updateSystemAware": true,
+          "pwaFullyIntegrated": true
+        }
+      },
       "serviceWorker": {
-        "version": "v8.2.0",
+        "version": "v8.3.0",
         "status": "UNIFIED",
-        "manages": ["index.html", "matematica.html", "tabelline.html", "games.json"],
+        "manages": ["index.html", "matematica.html", "tabelline.html", "sfida-matematica.html", "games.json"],
         "duplications": false,
         "features": {
           "updateSystem": "GREEN_BUTTON_CONTROLLED",
           "skipWaitingManaged": true,
           "userMessages": true,
           "stateManagement": "ADVANCED",
-          "waitingState": "CONTROLLED"
+          "waitingState": "CONTROLLED",
+          "profileSystemSupport": true,
+          "dailyChallengeSupport": true
         }
       }
     },
@@ -489,7 +676,10 @@
       "greenButtonSystem": true,
       "animatedUpdateBanner": true,
       "intelligentDismiss": true,
-      "updateStatusFeedback": true
+      "updateStatusFeedback": true,
+      "profileSystemIntegrated": true,
+      "dailyChallengesSupported": true,
+      "familyFriendlyDesign": true
     },
     "conflicts": {
       "pwaConflicts": "RESOLVED",
@@ -500,43 +690,55 @@
       "uiConflicts": "RESOLVED",
       "cacheConflicts": "RESOLVED",
       "homeButtonConflicts": "RESOLVED",
-      "updateSystemConflicts": "RESOLVED"
+      "updateSystemConflicts": "RESOLVED",
+      "profileSystemConflicts": "RESOLVED"
     }
   },
   "metadata": {
     "author": "Maestro Alberto",
-    "description": "Piattaforma di giochi educativi per studenti con sistema PWA completamente unificato e aggiornamenti intelligenti. Sistema con bottone verde per controllo utente degli aggiornamenti.",
-    "keywords": ["educativo", "matematica", "tabelline", "PWA", "giochi", "studenti", "sistema unificato", "correzioni", "anti-ripetizione", "migliorato", "aggiornamenti automatici", "bottone verde", "user experience"],
+    "description": "Piattaforma di giochi educativi per studenti con sistema PWA completamente unificato e aggiornamenti intelligenti. Ora include sistema di sfide giornaliere per famiglie con profili personalizzati e trofei.",
+    "keywords": ["educativo", "matematica", "tabelline", "sfide giornaliere", "profili famiglia", "trofei", "PWA", "giochi", "studenti", "sistema unificato", "correzioni", "anti-ripetizione", "migliorato", "aggiornamenti automatici", "bottone verde", "user experience", "family-friendly"],
     "language": "it",
-    "target_audience": "6-12 anni",
-    "educational_subjects": ["Matematica", "Calcolo mentale", "Operazioni aritmetiche"],
+    "target_audience": "6-12 anni + famiglie",
+    "educational_subjects": ["Matematica", "Calcolo mentale", "Operazioni aritmetiche", "Logica", "Problemi", "Geometria"],
     "technical_features": [
-      "PWA Sistema Unificato v1.8.1", 
-      "Service Worker v8.2.0 con sistema aggiornamenti",
+      "PWA Sistema Unificato v1.9.0", 
+      "Service Worker v8.3.0 con supporto profili",
+      "🎯 NUOVO: Sfida Matematica in Famiglia 3ª v1.0.0",
+      "Sistema profili personalizzati con gestione famiglia",
+      "3 sfide giornaliere rinnovabili automaticamente",
+      "90 domande totali al giorno (30 per sfida)",
+      "4 tipologie domande: Calcolo, Logica, Problemi, Geometria",
+      "Sistema trofei Oro/Argento/Bronzo con soglie precise",
+      "Statistiche complete e tracking progressi permanente",
+      "Generazione domande seeded per consistenza giornaliera",
+      "Sistema anti-ripetizione avanzato senza duplicati",
+      "Audio system ottimizzato per ambiente familiare",
       "🟢 Bottone verde per aggiornamenti controllati dall'utente",
       "Banner animato con pulse verde per nuove versioni",
       "Sistema skipWaiting controllato e non automatico",
       "Auto-dismiss intelligente con reset temporizzato",
       "Spinner di caricamento e feedback di stato",
       "Audio interattivo ottimizzato", 
-      "Offline completo", 
-      "Responsive perfetto", 
+      "Offline completo con supporto profili", 
+      "Responsive perfetto per tutti i dispositivi", 
       "Installazione persistente",
       "Matematica v4.1.0 con correzioni avanzate",
       "Tabelline v2.2.0 senza scadenza",
       "Sistema anti-ripetizione avanzato",
-      "Bottoni Home funzionanti",
-      "localStorage sincronizzato",
+      "Bottoni Home funzionanti in tutti i giochi",
+      "localStorage sincronizzato e gestione profili",
       "Navigazione unificata ottimizzata",
-      "Cache strategy per componente",
+      "Cache strategy per componente con supporto profili",
       "Nessuna duplicazione PWA",
       "Gestione stati SW (waiting, installing, activated)",
       "Controllo utente completo su aggiornamenti",
-      "User experience ottimizzata per aggiornamenti PWA"
+      "User experience ottimizzata per famiglie e aggiornamenti PWA"
     ],
     "integration_status": {
       "matematica_integration": "COMPLETED",
       "tabelline_integration": "IMPROVED",
+      "sfida_matematica_integration": "NEWLY_COMPLETED",
       "system_unification": "COMPLETED",
       "conflicts_resolution": "COMPLETED",
       "ui_optimization": "COMPLETED",
@@ -544,7 +746,9 @@
       "user_experience": "OPTIMIZED",
       "corrections_applied": "COMPLETED",
       "update_system_integration": "COMPLETED",
-      "green_button_system": "ACTIVE"
+      "green_button_system": "ACTIVE",
+      "profile_system_integration": "COMPLETED",
+      "family_features_integration": "COMPLETED"
     }
   }
 }

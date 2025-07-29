@@ -140,7 +140,7 @@
             box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3);
         }
         
-        /* NUOVO: Stili per Sfida Matematica in Famiglia */
+        /* AGGIORNATO: Stili per Sfida Matematica in Famiglia */
         .sfida-matematica {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -464,6 +464,15 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* NUOVO: Stili per feature highlight */
+        .feature-highlight {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 15px;
+            margin: 5px 0;
+            border-left: 3px solid rgba(255, 255, 255, 0.5);
+        }
     </style>
 </head>
 <body>
@@ -517,22 +526,21 @@
                 <a href="tabelline.html" class="play-button">⚡ Inizia Sfida</a>
             </div>
 
-            <!-- 🎯 NUOVO: Sfida Matematica in Famiglia 3ª -->
-            <div class="game-card sfida-matematica" onclick="window.location.href='sfida-matematica.html'">
+            <!-- 🎯 AGGIORNATO: Sfida Matematica in Famiglia 3ª -->
+            <div class="game-card sfida-matematica" onclick="window.location.href='math_game_updated.html'">
                 <div class="game-icon">🏆</div>
                 <div class="game-title">
                     Sfida Matematica in Famiglia 3ª
-                    <span class="version-badge new-badge">NUOVO!</span>
                 </div>
                 <div class="game-description">
                     🎯 <strong>Sistema completo di sfide giornaliere!</strong><br>
-                    • 👤 Profili personalizzati con avatar<br>
-                    • 📅 3 sfide da 30 domande al giorno<br>
-                    • 🏆 Trofei Oro/Argento/Bronzo<br>
-                    • 📊 Statistiche e progressi salvati<br>
-                    <small><em>Perfetto per tutta la famiglia!</em></small>
+                    <div class="feature-highlight">👤 Profili personalizzati con avatar</div>
+                    <div class="feature-highlight">📅 3 sfide da 30 domande al giorno</div>
+                    <div class="feature-highlight">🧮 4 tipologie: Calcolo, Logica, Problemi, Geometria</div>
+                    <div class="feature-highlight">📱 Ottimizzato per iOS e tutti i dispositivi</div>
+                    <small><em>Perfetto per tutta la famiglia! Sfide che si rinnovano ogni giorno!</em></small>
                 </div>
-                <a href="sfida-matematica.html" class="play-button">🎯 Inizia le Sfide</a>
+                <a href="math_game_updated.html" class="play-button">🎯 Inizia le Sfide</a>
             </div>
 
             <!-- Altro in arrivo -->
@@ -562,7 +570,7 @@
                 <div class="stat-label">Divertimento</div>
             </div>
         </div>
-        <p>© 2025 Maestro Alberto Fogliata - Docente Scuola Primaria I.C. Verolanuova</p>
+        <p>© 2025 Maestro Alberto Fogliata - Docente Scuola Primaria I.C. Verolanuova (Bs)</p>
     </div>
 
     <!-- Modal di installazione -->
@@ -735,6 +743,9 @@
             const body = document.body;
             
             if (banner && updateText) {
+                // Reset eventuali stati precedenti
+                updateDismissed = false;
+                
                 // Personalizza il messaggio se fornito
                 if (message) {
                     updateText.textContent = message;
@@ -744,9 +755,15 @@
                     updateText.textContent = '🚀 Nuova versione disponibile!';
                 }
                 
-                banner.classList.add('show');
-                body.classList.add('update-banner-visible');
-                updateDismissed = false;
+                // Forza la rimozione e riaggiunta della classe per riattivare l'animazione
+                banner.classList.remove('show');
+                body.classList.remove('update-banner-visible');
+                
+                // Usa setTimeout per garantire che il DOM sia aggiornato
+                setTimeout(() => {
+                    banner.classList.add('show');
+                    body.classList.add('update-banner-visible');
+                }, 100);
                 
                 // 🟢 Auto-dismiss dopo 15 secondi se l'utente non agisce
                 setTimeout(() => {
@@ -757,6 +774,8 @@
                 }, 15000);
                 
                 console.log('✅ Banner mostrato con successo');
+            } else {
+                console.log('❌ Elementi banner non trovati nel DOM');
             }
         }
 
@@ -1246,7 +1265,7 @@
             console.log('🎯 Navigazione a Sfida Matematica');
             showToast('🎯 Caricamento Sfida Matematica in Famiglia 3ª...', 'success');
             setTimeout(() => {
-                window.location.href = 'sfida-matematica.html';
+                window.location.href = 'math_game_updated.html';
             }, 500);
         }
 
@@ -1265,7 +1284,29 @@
         // Debug: funzione per forzare la visualizzazione del banner di aggiornamento
         function showUpdateBannerTest() {
             console.log('🧪 Test: Forzo la visualizzazione del banner');
-            showUpdateBanner('v8.3.0-test', '🎯 Test: Nuovo gioco Sfida Matematica!');
+            // Reset completo dello stato per il test
+            updateDismissed = false;
+            const banner = document.getElementById('update-banner');
+            if (banner) {
+                banner.classList.remove('show');
+                document.body.classList.remove('update-banner-visible');
+            }
+            
+            setTimeout(() => {
+                showUpdateBanner('v8.3.0-test', '🎯 Test: Aggiornamento disponibile!');
+            }, 200);
+        }
+
+        // NUOVO: Funzione per forzare il check degli aggiornamenti
+        function forceUpdateCheck() {
+            console.log('🔄 Forzo controllo aggiornamenti...');
+            if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                navigator.serviceWorker.controller.postMessage({ action: 'checkForUpdates' });
+                showToast('🔄 Controllo aggiornamenti in corso...', 'success');
+            } else {
+                console.log('❌ Service Worker non disponibile');
+                showToast('⚠️ Service Worker non disponibile', 'error');
+            }
         }
 
         // 🎯 NUOVO: Debug per evidenziare il nuovo gioco
@@ -1277,6 +1318,7 @@
         // Esponi le funzioni di debug per test (rimuovi in produzione se necessario)
         window.resetInstallationStatus = resetInstallationStatus;
         window.showUpdateBannerTest = showUpdateBannerTest;
+        window.forceUpdateCheck = forceUpdateCheck;
         window.testHighlightNewGame = testHighlightNewGame;
         window.goToSfidaMatematica = goToSfidaMatematica;
         

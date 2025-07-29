@@ -1,560 +1,733 @@
-// Service Worker v8.3.1 - Sistema unificato v1.9.0
-// Aggiornato per: Matematica sul Divano 3ª v4.1.0, Tabelline v2.2.0, Sfida Matematica in Famiglia 3ª v1.0.0
-// AGGIORNATO: Supporto completo math_game_updated.html con sistema profili e sfide giornaliere
-
-const CACHE_VERSION = 'v8.3.1';
-const CACHE_NAME = `giochi-educativi-${CACHE_VERSION}`;
-
-// File essenziali del sistema unificato
-const CORE_FILES = [
-    '/',
-    '/index.html',
-    '/matematica.html',
-    '/tabelline.html',
-    '/math_game_updated.html',  // AGGIORNATO: Percorso corretto per Sfida Matematica in Famiglia 3ª
-    '/games.json',
-    '/manifest.json'
-];
-
-// File statici da pre-cachare
-const STATIC_RESOURCES = [
-    // Nessun file statico esterno per mantenere l'app completamente standalone
-];
-
-// Tutte le risorse da cachare
-const CACHE_RESOURCES = [...CORE_FILES, ...STATIC_RESOURCES];
-
-// Strategia di cache per tipo di risorsa
-const CACHE_STRATEGIES = {
-    core: 'cache-first',           // File core dell'app
-    api: 'network-first',          // games.json e dati dinamici  
-    assets: 'cache-first',         // Immagini e risorse statiche
-    pages: 'stale-while-revalidate', // Pagine HTML
-    profiles: 'cache-first'        // Dati profili utente per Sfida Matematica
-};
-
-console.log(`🔧 Service Worker v8.3.1 inizializzazione - Sistema v1.9.0`);
-console.log(`📱 Supporto giochi: Matematica sul Divano 3ª v4.1.0, Tabelline v2.2.0`);
-console.log(`🎯 AGGIORNATO: Sfida Matematica in Famiglia 3ª v1.0.0 - Sistema profili e sfide giornaliere`);
-console.log(`🟢 Sistema bottone verde aggiornamenti attivo`);
-
-// === INSTALLAZIONE ===
-self.addEventListener('install', event => {
-    console.log(`📦 SW v8.3.1: Installazione iniziata`);
-    
-    event.waitUntil(
-        (async () => {
-            try {
-                // Apri cache
-                const cache = await caches.open(CACHE_NAME);
-                console.log(`✅ Cache aperta: ${CACHE_NAME}`);
-                
-                // Pre-carica file core
-                await cache.addAll(CACHE_RESOURCES);
-                console.log(`📂 ${CACHE_RESOURCES.length} risorse core pre-cachate (inclusa Sfida Matematica)`);
-                
-                // 🟢 IMPORTANTE: NON fare skipWaiting automatico
-                // Il nuovo SW aspetta che l'utente clicchi il bottone verde
-                console.log(`🟢 SW v8.3.1 installato, in attesa di attivazione manuale`);
-                
-                // Notifica i client che c'è un aggiornamento disponibile
-                const clients = await self.clients.matchAll();
-                clients.forEach(client => {
-                    client.postMessage({
-                        type: 'UPDATE_AVAILABLE',
-                        version: CACHE_VERSION,
-                        message: '🔄 Aggiornamento disponibile per Sfida Matematica in Famiglia 3ª!',
-                        updateType: 'game-fix',
-                        gameUpdated: 'Sfida Matematica in Famiglia 3ª'
-                    });
-                });
-                
-            } catch (error) {
-                console.error(`❌ Errore installazione SW v8.3.1:`, error);
-            }
-        })()
-    );
-});
-
-// === ATTIVAZIONE ===
-self.addEventListener('activate', event => {
-    console.log(`🔄 SW v8.3.1: Attivazione iniziata`);
-    
-    event.waitUntil(
-        (async () => {
-            try {
-                // Pulisci cache vecchie
-                const cacheNames = await caches.keys();
-                const oldCaches = cacheNames.filter(name => 
-                    name.startsWith('giochi-educativi-') && name !== CACHE_NAME
-                );
-                
-                await Promise.all(
-                    oldCaches.map(cacheName => {
-                        console.log(`🗑️ Eliminazione cache obsoleta: ${cacheName}`);
-                        return caches.delete(cacheName);
-                    })
-                );
-                
-                // Prendi controllo di tutti i client
-                await self.clients.claim();
-                console.log(`✅ SW v8.3.1: Attivazione completata, controllo client acquisito`);
-                
-                // Notifica i client dell'aggiornamento completato
-                const clients = await self.clients.matchAll();
-                clients.forEach(client => {
-                    client.postMessage({
-                        type: 'UPDATE_COMPLETED',
-                        version: CACHE_VERSION,
-                        message: '🔄 Aggiornamento completato! Sfida Matematica in Famiglia 3ª ottimizzata!',
-                        gameUpdated: 'Sfida Matematica in Famiglia 3ª'
-                    });
-                });
-                
-            } catch (error) {
-                console.error(`❌ Errore attivazione SW v8.3.1:`, error);
-            }
-        })()
-    );
-});
-
-// === GESTIONE RICHIESTE ===
-self.addEventListener('fetch', event => {
-    const { request } = event;
-    const url = new URL(request.url);
-    
-    // Ignora richieste non-GET e richieste esterne (eccetto manifest)
-    if (request.method !== 'GET') return;
-    if (!url.origin.includes(self.location.origin) && 
-        !request.url.includes('manifest.json')) return;
-    
-    event.respondWith(handleRequest(request));
-});
-
-// Gestore principale delle richieste
-async function handleRequest(request) {
-    const url = new URL(request.url);
-    const pathname = url.pathname;
-    
-    try {
-        // Determina strategia di cache
-        let strategy = CACHE_STRATEGIES.pages; // Default
-        
-        if (CORE_FILES.some(file => pathname.endsWith(file.replace('/', '')))) {
-            strategy = CACHE_STRATEGIES.core;
-        } else if (pathname.includes('games.json')) {
-            strategy = CACHE_STRATEGIES.api;
-        } else if (pathname.match(/\.(png|jpg|jpeg|gif|svg|ico|woff|woff2)$/)) {
-            strategy = CACHE_STRATEGIES.assets;
-        } else if (pathname.includes('math_game_updated') || 
-                   pathname.includes('sfida-matematica') ||
-                   request.url.includes('mathGameProfiles')) {
-            // AGGIORNATO: Gestione speciale per Sfida Matematica e profili utente
-            strategy = CACHE_STRATEGIES.profiles;
-            console.log(`🎯 Strategia profili per: ${pathname}`);
+{
+  "games": [
+    {
+      "id": "matematica",
+      "title": "Matematica sul Divano 3ª",
+      "description": "Addizioni, sottrazioni, moltiplicazioni e divisioni progressive con 6 operazioni complete. Sistema migliorato con correzioni e ottimizzazioni per un'esperienza di apprendimento ancora più fluida!",
+      "icon": "🧮",
+      "file": "matematica.html",
+      "category": "matematica",
+      "buttonText": "🚀 Gioca Ora",
+      "buttonColor": "matematica",
+      "active": true,
+      "featured": true,
+      "version": "4.1.0",
+      "lastUpdated": "2025-07-21",
+      "pwaIntegration": {
+        "status": "FULLY_INTEGRATED",
+        "unifiedSystem": true,
+        "standaloneMode": false,
+        "localStorage": "SYNCHRONIZED",
+        "navigation": "UNIFIED",
+        "serviceWorker": "v8.3.2",
+        "duplicationsRemoved": true,
+        "installationControls": "CENTRALIZED",
+        "updateSystem": "GREEN_BUTTON_ACTIVE"
+      },
+      "features": [
+        "6 tipi di operazioni matematiche complete",
+        "Addizioni progressive con correzioni L3 (4 livelli)",
+        "Sottrazioni corrette con prestito L4 (5 livelli)",
+        "Tabelline con sistema anti-ripetizione avanzato (10 livelli)",
+        "Moltiplicazioni per 10, 100, 1000 (5 livelli)",
+        "Divisioni classiche con resto (2 livelli)",
+        "Divisioni per 10, 100, 1000 con miste (7 livelli)",
+        "Sistema audio Web Audio API ottimizzato",
+        "Bottone Home completamente funzionante",
+        "Anti-ripetizione domande intelligente migliorato",
+        "Design responsive mobile-first perfezionato",
+        "Sfondo verde menta rilassante",
+        "PWA completamente integrata nel sistema unificato",
+        "localStorage sincronizzato con index.html",
+        "Navigazione fluida tra componenti",
+        "Controlli installazione centralizzati",
+        "Cache strategy ottimizzata",
+        "Interfaccia pulita e ottimizzata",
+        "Sistema aggiornamenti automatici con bottone verde"
+      ],
+      "educational": {
+        "targetAge": "6-12 anni",
+        "subject": "Matematica - 6 Operazioni Complete",
+        "skills": [
+          "Addizioni e sottrazioni progressive corrette",
+          "Tabelline con sistema avanzato",
+          "Divisioni con resto",
+          "Divisioni per potenze di 10",
+          "Lettura numeri grandi",
+          "Calcolo mentale avanzato"
+        ]
+      },
+      "technical": {
+        "audioSupport": true,
+        "offlineCapable": true,
+        "mobileOptimized": true,
+        "pwaIntegrated": true,
+        "backgroundTheme": "verde menta fresco",
+        "systemIntegration": {
+          "unifiedPWA": true,
+          "localStorageSync": true,
+          "unifiedNavigation": true,
+          "centralizedInstallation": true,
+          "serviceWorkerVersion": "v8.3.2",
+          "noDuplications": true,
+          "optimizedCaching": true,
+          "homeButtonFixed": true,
+          "updateSystem": "green_button_active"
         }
-        
-        // Applica strategia
-        return await applyStrategy(request, strategy);
-        
-    } catch (error) {
-        console.error(`❌ Errore gestione richiesta ${pathname}:`, error);
-        return await fallbackResponse(request);
-    }
-}
-
-// Applica strategia di cache specifica
-async function applyStrategy(request, strategy) {
-    const cache = await caches.open(CACHE_NAME);
-    
-    switch (strategy) {
-        case 'cache-first':
-        case 'profiles':  // Stessa strategia di cache-first per i profili
-            return await cacheFirst(request, cache);
-            
-        case 'network-first':
-            return await networkFirst(request, cache);
-            
-        case 'stale-while-revalidate':
-            return await staleWhileRevalidate(request, cache);
-            
-        default:
-            return await cacheFirst(request, cache);
-    }
-}
-
-// Cache First - per file core dell'app e profili utente
-async function cacheFirst(request, cache) {
-    const cachedResponse = await cache.match(request);
-    
-    if (cachedResponse) {
-        console.log(`📂 Cache hit: ${request.url}`);
-        return cachedResponse;
-    }
-    
-    try {
-        const networkResponse = await fetch(request);
-        if (networkResponse.ok) {
-            cache.put(request, networkResponse.clone());
-            console.log(`🌐 Network + cache: ${request.url}`);
+      },
+      "stats": {
+        "gameTypes": 6,
+        "totalLevels": 33,
+        "questionsPerLevel": "10-15",
+        "maxOperations": "Fino a 99000÷1000",
+        "operationBreakdown": {
+          "addizioni": "4 livelli (L3 corretto)",
+          "sottrazioni": "5 livelli (L4 corretto)", 
+          "tabelline": "10 livelli (anti-ripetizione avanzato)",
+          "moltiplicazioni_potenze": "5 livelli",
+          "divisioni": "2 livelli",
+          "divisioni_potenze": "7 livelli"
         }
-        return networkResponse;
-    } catch (error) {
-        console.log(`❌ Network fail: ${request.url}`);
-        throw error;
-    }
-}
-
-// Network First - per dati dinamici come games.json
-async function networkFirst(request, cache) {
-    try {
-        const networkResponse = await fetch(request);
-        if (networkResponse.ok) {
-            cache.put(request, networkResponse.clone());
-            console.log(`🌐 Network fresh: ${request.url}`);
-            return networkResponse;
+      },
+      "integration": {
+        "version": "4.1.0",
+        "integrationType": "FULL_UNIFIED_SYSTEM",
+        "pwaStatus": "INTEGRATED",
+        "serviceWorkerConflicts": "RESOLVED",
+        "localStorageConflicts": "RESOLVED",
+        "navigationConflicts": "RESOLVED",
+        "installationConflicts": "RESOLVED",
+        "uiConflicts": "RESOLVED",
+        "cacheStrategy": "OPTIMIZED",
+        "performanceImpact": "POSITIVE",
+        "userExperience": "SEAMLESS",
+        "interfaceOptimization": "COMPLETED",
+        "updateManagement": "GREEN_BUTTON_SYSTEM"
+      }
+    },
+    {
+      "id": "tabelline",
+      "title": "Sfida Tabelline",
+      "description": "Timer di 60 secondi, 3 livelli di difficoltà e sistema anti-ripetizione avanzato. Sistema migliorato senza scadenza per un'esperienza di gioco continua!",
+      "icon": "🎯",
+      "file": "tabelline.html",
+      "category": "matematica",
+      "buttonText": "⚡ Inizia Sfida",
+      "buttonColor": "tabelline",
+      "active": true,
+      "featured": true,
+      "version": "2.2.0",
+      "lastUpdated": "2025-07-21",
+      "pwaIntegration": {
+        "status": "SYNCHRONIZED",
+        "unifiedSystem": true,
+        "serviceWorker": "v8.3.2",
+        "cacheStrategy": "OPTIMIZED",
+        "updateSystem": "GREEN_BUTTON_ACTIVE"
+      },
+      "features": [
+        "Sistema audio Web Audio API ottimizzato",
+        "3 livelli di difficoltà progressiva", 
+        "Timer 60 secondi con avvisi sonori",
+        "Sistema anti-ripetizione avanzato (pre-generazione e mescolamento)",
+        "Rimozione sistema di scadenza automatica",
+        "Feedback visivo e sonoro immediato",
+        "Design responsive mobile-first",
+        "Bottone Home funzionante",
+        "Navigazione fluida con index",
+        "Sincronizzato nel sistema PWA unificato",
+        "Aggiornamenti automatici con bottone verde"
+      ],
+      "educational": {
+        "targetAge": "6-12 anni",
+        "subject": "Matematica - Tabelline",
+        "skills": ["Moltiplicazioni", "Calcolo mentale", "Memoria", "Concentrazione", "Velocità di calcolo"]
+      },
+      "technical": {
+        "audioSupport": true,
+        "offlineCapable": true,
+        "mobileOptimized": true,
+        "expirationDate": null,
+        "systemIntegration": {
+          "unifiedPWA": true,
+          "serviceWorkerVersion": "v8.3.2",
+          "homeButtonFixed": true,
+          "antiRepetitionAdvanced": true,
+          "updateSystemIntegrated": true
         }
-        throw new Error('Network response not ok');
-    } catch (error) {
-        const cachedResponse = await cache.match(request);
-        if (cachedResponse) {
-            console.log(`📂 Network fail, cache fallback: ${request.url}`);
-            return cachedResponse;
+      },
+      "stats": {
+        "questionsPerGame": 15,
+        "maxScore": 150,
+        "gameDuration": "60 secondi",
+        "difficultyLevels": 3,
+        "totalPossibleQuestions": 121,
+        "antiRepetitionCoverage": "100%"
+      }
+    },
+    {
+      "id": "sfida-matematica",
+      "title": "Sfida Matematica in Famiglia 3ª",
+      "description": "Sistema completo di sfide giornaliere con profili personalizzati! 3 sfide da 30 domande al giorno con 4 tipologie diverse: Calcolo, Logica, Problemi e Geometria. Ottimizzato per iOS e tutti i dispositivi. Perfetto per tutta la famiglia!",
+      "icon": "🏆",
+      "file": "sfida-matematica.html",
+      "category": "matematica",
+      "buttonText": "🎯 Inizia le Sfide",
+      "buttonColor": "sfida-matematica",
+      "active": true,
+      "featured": true,
+      "version": "1.0.0",
+      "lastUpdated": "2025-07-29",
+      "pwaIntegration": {
+        "status": "FULLY_INTEGRATED",
+        "unifiedSystem": true,
+        "standaloneMode": false,
+        "localStorage": "PROFILES_MANAGED",
+        "navigation": "UNIFIED",
+        "serviceWorker": "v8.3.2",
+        "profileSystem": true,
+        "dailyChallenges": true,
+        "updateSystem": "GREEN_BUTTON_ACTIVE"
+      },
+      "features": [
+        "Sistema profili personalizzati con 10 avatar",
+        "3 sfide giornaliere rinnovabili a mezzanotte",
+        "30 domande per sfida (90 domande totali al giorno)",
+        "4 tipologie di domande: Calcolo, Logica, Problemi, Geometria",
+        "Generazione domande uniche senza ripetizioni",
+        "Audio system con feedback sonori",
+        "Timer integrato con cronometraggio accurato",
+        "Design responsive Comic Sans family-friendly",
+        "Gradiente dinamico viola-blu accattivante",
+        "Compatibilità multi-dispositivo perfetta",
+        "Ottimizzazione specifica per iOS",
+        "PWA completamente integrata nel sistema unificato"
+      ],
+      "educational": {
+        "targetAge": "6-12 anni",
+        "subject": "Matematica Completa - Sistema Sfide Giornaliere",
+        "skills": [
+          "Operazioni matematiche base (addizioni, sottrazioni, moltiplicazioni, divisioni)",
+          "Logica e sequenze numeriche",
+          "Risoluzione problemi della vita reale",
+          "Geometria di base (triangoli, angoli, linee, poligoni)",
+          "Calcolo mentale avanzato",
+          "Concentrazione e perseveranza",
+          "Gestione del tempo",
+          "Competizione sana in famiglia"
+        ]
+      },
+      "technical": {
+        "audioSupport": true,
+        "offlineCapable": true,
+        "mobileOptimized": true,
+        "pwaIntegrated": true,
+        "backgroundTheme": "gradiente viola-blu dinamico",
+        "profileManagement": true,
+        "dailyReset": "mezzanotte automatica",
+        "seededRandom": true,
+        "systemIntegration": {
+          "unifiedPWA": true,
+          "localStorageProfiles": true,
+          "unifiedNavigation": true,
+          "centralizedInstallation": true,
+          "serviceWorkerVersion": "v8.3.2",
+          "optimizedCaching": true,
+          "homeButtonIntegrated": true,
+          "updateSystem": "green_button_active",
+          "profilePersistence": true,
+          "challengeConsistency": true
         }
-        throw error;
-    }
-}
-
-// Stale While Revalidate - per pagine HTML
-async function staleWhileRevalidate(request, cache) {
-    const cachedResponse = await cache.match(request);
-    
-    // Aggiorna cache in background
-    const networkResponsePromise = fetch(request).then(response => {
-        if (response.ok) {
-            cache.put(request, response.clone());
-            console.log(`🔄 Background update: ${request.url}`);
+      },
+      "gameSystem": {
+        "profileSystem": {
+          "maxProfiles": "illimitati",
+          "avatars": 10,
+          "statsTracking": true,
+          "bestScoreTracking": true,
+          "totalGamesTracking": true,
+          "deleteProfileSupport": true
+        },
+        "dailyChallenges": {
+          "challengesPerDay": 3,
+          "questionsPerChallenge": 30,
+          "totalDailyQuestions": 90,
+          "resetTime": "00:00 (mezzanotte)",
+          "playLimitPerChallenge": 1,
+          "completionTracking": true
+        },
+        "questionTypes": {
+          "calculation": {
+            "percentage": "35%",
+            "count": 11,
+            "types": ["addition", "subtraction", "multiplication", "division", "double", "half"],
+            "difficulty": "3ª elementare appropriato"
+          },
+          "logic": {
+            "percentage": "25%", 
+            "count": 7,
+            "types": ["sequence", "comparison", "pattern", "advanced_sequence", "letters", "colors"],
+            "difficulty": "progressivo"
+          },
+          "problems": {
+            "percentage": "25%",
+            "count": 7,
+            "types": ["real_life_scenarios", "word_problems", "practical_math"],
+            "difficulty": "situazioni familiari"
+          },
+          "geometry": {
+            "percentage": "15%",
+            "count": 5,
+            "types": ["triangles", "angles", "lines", "polygons", "shapes"],
+            "difficulty": "base appropriata"
+          }
+        },
+        "scoring": {
+          "pointsPerCorrect": 10,
+          "maxScorePerChallenge": 300,
+          "maxDailyScore": 900,
+          "trophyThresholds": {
+            "gold": "90% o più (270+ punti)",
+            "silver": "70-89% (210-269 punti)", 
+            "bronze": "meno del 70% (<210 punti)"
+          }
         }
-        return response;
-    }).catch(error => {
-        console.log(`❌ Background update failed: ${request.url}`);
-    });
-    
-    // Restituisci cache immediato se disponibile
-    if (cachedResponse) {
-        console.log(`📂 Stale cache: ${request.url}`);
-        return cachedResponse;
+      },
+      "stats": {
+        "questionTypes": 4,
+        "questionsPerChallenge": 30,
+        "challengesPerDay": 3,
+        "totalDailyQuestions": 90,
+        "maxDailyScore": 900,
+        "trophyLevels": 3,
+        "avatarChoices": 10,
+        "difficultyLevels": "Adattivo per età",
+        "questionPool": "Generazione infinita senza ripetizioni",
+        "profileSupport": "Illimitati profili famiglia"
+      },
+      "integration": {
+        "version": "1.0.0",
+        "integrationType": "FULL_UNIFIED_SYSTEM_NEW",
+        "pwaStatus": "NEWLY_INTEGRATED",
+        "serviceWorkerSupport": "COMPLETE",
+        "localStorageStrategy": "PROFILE_BASED",
+        "navigationIntegration": "SEAMLESS",
+        "installationSupport": "UNIFIED",
+        "cacheStrategy": "OPTIMIZED_FOR_PROFILES",
+        "performanceImpact": "OPTIMIZED",
+        "userExperience": "FAMILY_FRIENDLY",
+        "updateManagement": "GREEN_BUTTON_SYSTEM",
+        "systemCompatibility": "PERFECT"
+      }
+    },
+    {
+      "id": "coming-soon-1",
+      "title": "Altro in arrivo",
+      "description": "Nuovi giochi educativi e attività didattiche sono in fase di sviluppo. Saranno automaticamente integrati nel sistema PWA unificato con aggiornamenti automatici. Resta sintonizzato per le prossime novità!",
+      "icon": "🎲",
+      "file": null,
+      "category": "futuro",
+      "buttonText": "🔜 Presto",
+      "buttonColor": "coming-soon",
+      "active": true,
+      "featured": false,
+      "version": "1.0.0",
+      "lastUpdated": "2025-07-21",
+      "pwaIntegration": {
+        "status": "PLANNED",
+        "unifiedSystem": true,
+        "willBeIntegrated": true,
+        "updateSystemReady": true
+      }
     }
-    
-    // Altrimenti aspetta network
-    try {
-        const networkResponse = await networkResponsePromise;
-        console.log(`🌐 Fresh network: ${request.url}`);
-        return networkResponse;
-    } catch (error) {
-        throw error;
+  ],
+  "categories": [
+    {
+      "id": "matematica",
+      "name": "Matematica",
+      "icon": "🔢",
+      "color": "#4CAF50"
+    },
+    {
+      "id": "futuro",
+      "name": "In Sviluppo",
+      "icon": "🚀",
+      "color": "#9C27B0"
     }
-}
-
-// Risposta di fallback per errori
-async function fallbackResponse(request) {
-    const url = new URL(request.url);
-    
-    // Per pagine HTML, restituisci index.html
-    if (request.destination === 'document' || 
-        url.pathname.endsWith('.html') ||
-        url.pathname === '/') {
-        
-        const cache = await caches.open(CACHE_NAME);
-        const fallback = await cache.match('/index.html');
-        if (fallback) {
-            console.log(`🏠 Fallback a index.html per: ${request.url}`);
-            return fallback;
+  ],
+  "installation": {
+    "smartInstallation": true,
+    "persistentHiding": true,
+    "unifiedSystem": true,
+    "centralizedControls": true,
+    "supportedPlatforms": ["Desktop", "Android", "iOS"],
+    "localStorage": {
+      "synchronized": true,
+      "conflictResolution": "RESOLVED",
+      "unifiedManagement": true,
+      "profileSupport": true
+    },
+    "instructions": {
+      "chrome_desktop": {
+        "steps": [
+          "Clicca sui tre puntini (⋮) in alto a destra",
+          "Scorri giù fino a \"Trasmetti, salva e condividi\"",
+          "Clicca su \"Installa come app\"",
+          "Conferma \"Installa\""
+        ]
+      },
+      "chrome_android": {
+        "steps": [
+          "Clicca sui tre trattini (≡) in basso a destra",
+          "Clicca su \"Aggiungi al telefono\"",
+          "Clicca \"Aggiungi\""
+        ]
+      },
+      "edge_desktop": {
+        "steps": [
+          "Clicca sui tre puntini (...) in alto a destra",
+          "Vai su \"App\" → \"Installa questo sito come app\"",
+          "Clicca su \"Installa\""
+        ]
+      },
+      "safari_ios": {
+        "steps": [
+          "Apri questo sito in Safari",
+          "Tocca il pulsante \"Condividi\" 📤",
+          "Scorri e trova \"Aggiungi alla schermata Home\"",
+          "Tocca \"Aggiungi\" in alto a destra"
+        ]
+      }
+    }
+  },
+  "settings": {
+    "title": "Giochi Educativi",
+    "subtitle": "by Maestro Alberto",
+    "version": "1.9.0",
+    "lastUpdated": "2025-07-29",
+    "systemType": "UNIFIED_PWA",
+    "autoDetectGames": true,
+    "showInstallButton": true,
+    "showOfflineIndicator": true,
+    "audioSupported": true,
+    "installationPersistent": true,
+    "cardHidesPermanently": true,
+    "updateSystem": {
+      "enabled": true,
+      "type": "GREEN_BUTTON",
+      "serviceWorkerVersion": "v8.3.2",
+      "autoCheck": true,
+      "userControlled": true,
+      "bannerAnimation": true,
+      "dismissable": true,
+      "resetAfterDismiss": true
+    },
+    "unifiedIntegration": {
+      "matematicaIntegrated": true,
+      "tabellineIntegrated": true,
+      "sfidaMatematicaIntegrated": true,
+      "serviceWorkerVersion": "v8.3.2",
+      "localStorageSynchronized": true,
+      "navigationUnified": true,
+      "duplicationsRemoved": true,
+      "performanceOptimized": true,
+      "updateSystemActive": true,
+      "profileSystemSupported": true
+    },
+    "newFeatures": {
+      "v1.9.0": [
+        "🎯 Sfida Matematica in Famiglia 3ª v1.0.0 - Integrazione Completata",
+        "Sistema profili personalizzati con 10 avatar",
+        "3 sfide giornaliere da 30 domande (90 totali al giorno)",
+        "4 tipologie domande: Calcolo, Logica, Problemi, Geometria",
+        "Reset automatico giornaliero a mezzanotte",
+        "Sistema seeded random per consistenza giornaliera",
+        "Generazione domande uniche senza ripetizioni nella sessione",
+        "Design family-friendly con Comic Sans e gradienti",
+        "Audio system con feedback appropriati per bambini",
+        "Ottimizzazioni specifiche per iOS e compatibilità multi-dispositivo",
+        "Service Worker v8.3.2 con supporto nuovo gioco",
+        "Cache strategy ottimizzata per gestione profili",
+        "Integrazione perfetta nel sistema PWA unificato"
+      ],
+      "v1.8.1": [
+        "🟢 Sistema bottone verde per aggiornamenti PWA migliorato",
+        "Service Worker v8.2.0: Gestione intelligente aggiornamenti",
+        "Banner animato con pulse verde per nuove versioni",
+        "Controllo utente su aggiornamenti (non più automatici)",
+        "Auto-dismiss intelligente con reset temporizzato",
+        "Spinner di caricamento durante aggiornamento",
+        "Messaggi di stato migliorati per l'utente",
+        "Sistema skipWaiting controllato dall'utente",
+        "Coordinazione perfetta SW-Index per aggiornamenti",
+        "Gestione stati 'waiting', 'installing', 'activated'",
+        "Rilevamento automatico nuove versioni disponibili",
+        "User experience ottimizzata per aggiornamenti PWA"
+      ],
+      "v1.8.0": [
+        "Matematica v4.1.0: Sistema migliorato con correzioni avanzate",
+        "Addizioni L3 corrette (tappa alla decina successiva)",
+        "Sottrazioni L4 corrette (tappa alla decina precedente)",
+        "Sistema anti-ripetizione tabelline avanzato con pre-generazione",
+        "Sfida Tabelline v2.2.0: Rimossa scadenza automatica",
+        "Bottoni Home completamente funzionanti in entrambi i giochi",
+        "Navigazione fluida e ottimizzata",
+        "Miglioramenti interfaccia e user experience"
+      ]
+    }
+  },
+  "stats": {
+    "totalGames": 4,
+    "availableGames": 3,
+    "inDevelopment": 1,
+    "totalLevels": 36,
+    "mathematicaLevels": 33,
+    "tabellineLevels": 3,
+    "sfidaMatematicaChallenges": 3,
+    "sfidaMatematicaDailyQuestions": 90,
+    "supportedDevices": 3,
+    "pwaInstallable": true,
+    "offlineCapable": true,
+    "audioSupported": true,
+    "profileSystemSupported": true,
+    "lastMajorUpdate": "2025-07-29",
+    "updateSystemActive": true,
+    "systemUnification": {
+      "matematicaIntegrationStatus": "COMPLETED",
+      "tabellineIntegrationStatus": "COMPLETED", 
+      "sfidaMatematicaIntegrationStatus": "COMPLETED",
+      "serviceWorkerVersion": "v8.3.2",
+      "localStorageConflicts": "RESOLVED",
+      "navigationIssues": "RESOLVED",
+      "pwaConflicts": "RESOLVED",
+      "performanceImpact": "IMPROVED",
+      "userExperience": "OPTIMIZED",
+      "homeButtonIssues": "RESOLVED",
+      "updateSystemStatus": "ACTIVE",
+      "greenButtonSystem": "IMPLEMENTED",
+      "profileSystemIntegration": "ACTIVE"
+    }
+  },
+  "compatibility": {
+    "browsers": {
+      "chrome": {
+        "desktop": true,
+        "mobile": true,
+        "pwaSupport": true,
+        "installInstructions": "chrome_desktop",
+        "unifiedSystemSupport": true,
+        "updateSystemSupport": true,
+        "profileSystemSupport": true
+      },
+      "edge": {
+        "desktop": true,
+        "mobile": true,
+        "pwaSupport": true,
+        "installInstructions": "edge_desktop",
+        "unifiedSystemSupport": true,
+        "updateSystemSupport": true,
+        "profileSystemSupport": true
+      },
+      "firefox": {
+        "desktop": true,
+        "mobile": true,
+        "pwaSupport": "limited",
+        "installInstructions": null,
+        "unifiedSystemSupport": "partial",
+        "updateSystemSupport": "partial",
+        "profileSystemSupport": "limited"
+      },
+      "safari": {
+        "desktop": false,
+        "mobile": true,
+        "pwaSupport": "ios_only",
+        "installInstructions": "safari_ios",
+        "unifiedSystemSupport": "mobile_only",
+        "updateSystemSupport": "limited",
+        "profileSystemSupport": "limited"
+      }
+    },
+    "platforms": {
+      "windows": true,
+      "mac": true,
+      "linux": true,
+      "android": true,
+      "ios": true
+    }
+  },
+  "systemIntegration": {
+    "version": "1.9.0",
+    "type": "UNIFIED_PWA_SYSTEM",
+    "updateManagement": {
+      "type": "USER_CONTROLLED_GREEN_BUTTON",
+      "serviceWorkerVersion": "v8.3.2",
+      "skipWaitingControlled": true,
+      "bannerSystem": true,
+      "autoCheck": true,
+      "userFriendly": true,
+      "dismissable": true,
+      "animations": true,
+      "statusIndicators": true
+    },
+    "components": {
+      "index": {
+        "version": "1.9.0",
+        "status": "ACTIVE",
+        "role": "MAIN_LANDING_PAGE",
+        "updateSystemIntegration": true,
+        "newGameSupport": true
+      },
+      "matematica": {
+        "version": "4.1.0",
+        "status": "FULLY_INTEGRATED",
+        "role": "INTEGRATED_GAME_COMPONENT",
+        "integration": {
+          "pwaStandalone": false,
+          "serviceWorkerStandalone": false,
+          "localStorageStandalone": false,
+          "navigationStandalone": false,
+          "installationControlsStandalone": false,
+          "uiOptimized": true,
+          "homeButtonFixed": true,
+          "correctionsApplied": true,
+          "updateSystemAware": true
         }
-    }
-    
-    // AGGIORNATO: Gestione speciale per errori relativi a Sfida Matematica
-    if (url.pathname.includes('math_game_updated') || 
-        url.pathname.includes('sfida-matematica')) {
-        console.log(`🎯 Fallback specifico per Sfida Matematica: ${request.url}`);
-        return new Response(
-            JSON.stringify({
-                error: 'Sfida Matematica non disponibile offline',
-                message: 'Il gioco richiede una connessione internet per la prima volta',
-                gameType: 'sfida-matematica',
-                fileName: 'math_game_updated.html',
-                url: request.url,
-                timestamp: new Date().toISOString()
-            }), {
-                status: 503,
-                statusText: 'Service Unavailable',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'X-Game-Type': 'sfida-matematica'
-                }
-            }
-        );
-    }
-    
-    // Risposta di errore generica
-    return new Response(
-        JSON.stringify({
-            error: 'Risorsa non disponibile offline',
-            url: request.url,
-            timestamp: new Date().toISOString()
-        }), {
-            status: 503,
-            statusText: 'Service Unavailable',
-            headers: { 'Content-Type': 'application/json' }
+      },
+      "tabelline": {
+        "version": "2.2.0",
+        "status": "SYNCHRONIZED",
+        "role": "GAME_COMPONENT",
+        "improvements": {
+          "expirationRemoved": true,
+          "antiRepetitionAdvanced": true,
+          "homeButtonFixed": true,
+          "updateSystemAware": true
         }
-    );
-}
-
-// === 🟢 GESTIONE MESSAGGI PER BOTTONE VERDE ===
-self.addEventListener('message', event => {
-    const { data } = event;
-    console.log(`💬 SW v8.3.1 messaggio ricevuto:`, data);
-    
-    // 🟢 Quando l'utente clicca il bottone verde
-    if (data && data.action === 'skipWaiting') {
-        console.log(`🟢 Bottone verde cliccato - Attivazione aggiornamento Sfida Matematica`);
-        
-        // Attiva immediatamente il nuovo service worker
-        self.skipWaiting();
-        
-        // Notifica tutti i client di ricaricare
-        self.clients.matchAll().then(clients => {
-            clients.forEach(client => {
-                client.postMessage({ 
-                    type: 'RELOAD_REQUIRED',
-                    version: CACHE_VERSION,
-                    message: '🔄 Ricaricamento in corso... Aggiornamento Sfida Matematica!',
-                    gameUpdated: 'math_game_updated'
-                });
-            });
-        });
-    }
-    
-    // Controllo versione per debugging
-    if (data && data.action === 'getVersion') {
-        event.ports[0].postMessage({
-            version: CACHE_VERSION,
-            cacheSize: CACHE_RESOURCES.length,
-            timestamp: new Date().toISOString(),
-            updateSystem: 'active',
-            games: [
-                'Matematica sul Divano 3ª v4.1.0',
-                'Tabelline v2.2.0', 
-                'Sfida Matematica in Famiglia 3ª v1.0.0'
-            ],
-            gameFiles: [
-                'matematica.html',
-                'tabelline.html',
-                'math_game_updated.html'  // AGGIORNATO
-            ]
-        });
-    }
-    
-    // 🟢 Controllo stato aggiornamenti
-    if (data && data.action === 'checkUpdates') {
-        event.ports[0].postMessage({
-            hasUpdate: self.registration.waiting !== null,
-            currentVersion: CACHE_VERSION,
-            waitingVersion: self.registration.waiting ? 'new-version' : null,
-            latestGame: 'Sfida Matematica in Famiglia 3ª',
-            latestGameFile: 'math_game_updated.html'
-        });
-    }
-    
-    // Gestione messaggi specifici per Sfida Matematica
-    if (data && data.action === 'clearGameData') {
-        console.log(`🎯 Richiesta pulizia dati gioco: ${data.gameType}`);
-        if (data.gameType === 'sfida-matematica' || data.gameType === 'math_game_updated') {
-            // I dati sono gestiti via localStorage nel gioco, non nel SW
-            event.ports[0].postMessage({
-                success: true,
-                message: 'Dati profili gestiti localmente dal gioco',
-                gameFile: 'math_game_updated.html'
-            });
+      },
+      "sfida-matematica": {
+        "version": "1.0.0",
+        "status": "FULLY_INTEGRATED",
+        "role": "FAMILY_GAME_COMPONENT",
+        "fileName": "sfida-matematica.html",
+        "features": {
+          "profileSystemComplete": true,
+          "dailyChallengesActive": true,
+          "trophySystemImplemented": true,
+          "statisticsTracking": true,
+          "seededRandomSystem": true,
+          "questionGenerationUnique": true,
+          "audioSystemOptimized": true,
+          "responsiveDesignPerfect": true,
+          "homeButtonIntegrated": true,
+          "updateSystemAware": true,
+          "pwaFullyIntegrated": true,
+          "iOSOptimized": true
         }
-    }
-    
-    // NUOVO: Controllo forzato aggiornamenti
-    if (data && data.action === 'checkForUpdates') {
-        console.log(`🔄 Controllo aggiornamenti forzato richiesto`);
-        // Simula controllo aggiornamenti
-        self.clients.matchAll().then(clients => {
-            clients.forEach(client => {
-                client.postMessage({
-                    type: 'UPDATE_CHECK_COMPLETED',
-                    version: CACHE_VERSION,
-                    hasUpdates: false,
-                    message: '✅ Sistema aggiornato alla versione più recente'
-                });
-            });
-        });
-    }
-});
-
-// === NOTIFICHE PUSH ===
-self.addEventListener('push', event => {
-    console.log(`🔔 Push notification ricevuta`);
-    
-    // Gestione notifiche per nuove sfide giornaliere
-    if (event.data) {
-        try {
-            const data = event.data.json();
-            if (data.type === 'daily-challenge') {
-                const notificationOptions = {
-                    body: '🎯 Nuove sfide matematiche disponibili!',
-                    icon: '/icon-192x192.png',
-                    badge: '/icon-96x96.png',
-                    tag: 'daily-challenge',
-                    actions: [
-                        {
-                            action: 'play',
-                            title: '🎮 Gioca Ora'
-                        },
-                        {
-                            action: 'dismiss',
-                            title: '✖️ Chiudi'
-                        }
-                    ]
-                };
-                
-                event.waitUntil(
-                    self.registration.showNotification(
-                        'Sfida Matematica in Famiglia', 
-                        notificationOptions
-                    )
-                );
-            }
-        } catch (error) {
-            console.error('Errore gestione push notification:', error);
+      },
+      "serviceWorker": {
+        "version": "v8.3.2",
+        "status": "UNIFIED",
+        "manages": ["index.html", "matematica.html", "tabelline.html", "sfida-matematica.html", "games.json"],
+        "duplications": false,
+        "features": {
+          "updateSystem": "GREEN_BUTTON_CONTROLLED",
+          "skipWaitingManaged": true,
+          "userMessages": true,
+          "stateManagement": "ADVANCED",
+          "waitingState": "CONTROLLED",
+          "profileSystemSupport": true,
+          "dailyChallengeSupport": true
         }
+      }
+    },
+    "features": {
+      "unifiedNavigation": true,
+      "synchronizedLocalStorage": true,
+      "centralizedInstallationControls": true,
+      "optimizedCacheStrategy": true,
+      "noDuplicatedSystems": true,
+      "seamlessUserExperience": true,
+      "improvedPerformance": true,
+      "homeButtonsFixed": true,
+      "advancedAntiRepetition": true,
+      "userControlledUpdates": true,
+      "greenButtonSystem": true,
+      "animatedUpdateBanner": true,
+      "intelligentDismiss": true,
+      "updateStatusFeedback": true,
+      "profileSystemIntegrated": true,
+      "dailyChallengesSupported": true,
+      "familyFriendlyDesign": true
+    },
+    "conflicts": {
+      "pwaConflicts": "RESOLVED",
+      "serviceWorkerConflicts": "RESOLVED",
+      "localStorageConflicts": "RESOLVED",
+      "navigationConflicts": "RESOLVED",
+      "installationConflicts": "RESOLVED",
+      "uiConflicts": "RESOLVED",
+      "cacheConflicts": "RESOLVED",
+      "homeButtonConflicts": "RESOLVED",
+      "updateSystemConflicts": "RESOLVED",
+      "profileSystemConflicts": "RESOLVED"
     }
-});
-
-// AGGIORNATO: Gestione click su notifiche
-self.addEventListener('notificationclick', event => {
-    event.notification.close();
-    
-    if (event.action === 'play') {
-        event.waitUntil(
-            clients.openWindow('/math_game_updated.html')  // AGGIORNATO: Percorso corretto
-        );
+  },
+  "metadata": {
+    "author": "Maestro Alberto Fogliata (Bs)",
+    "description": "Piattaforma di giochi educativi per studenti con sistema PWA completamente unificato e aggiornamenti intelligenti. Include sistema di sfide giornaliere per famiglie con profili personalizzati, ottimizzato per tutti i dispositivi incluso iOS.",
+    "keywords": ["educativo", "matematica", "tabelline", "sfide giornaliere", "profili famiglia", "PWA", "giochi", "studenti", "sistema unificato", "correzioni", "anti-ripetizione", "migliorato", "aggiornamenti automatici", "bottone verde", "user experience", "family-friendly", "iOS ottimizzato"],
+    "language": "it",
+    "target_audience": "6-12 anni + famiglie",
+    "educational_subjects": ["Matematica", "Calcolo mentale", "Operazioni aritmetiche", "Logica", "Problemi", "Geometria"],
+    "technical_features": [
+      "PWA Sistema Unificato v1.9.0", 
+      "Service Worker v8.3.2 con supporto profili",
+      "🎯 Sfida Matematica in Famiglia 3ª v1.0.0 - Completamente Integrata",
+      "Sistema profili personalizzati con gestione famiglia",
+      "3 sfide giornaliere rinnovabili automaticamente",
+      "90 domande totali al giorno (30 per sfida)",
+      "4 tipologie domande: Calcolo, Logica, Problemi, Geometria",
+      "Reset automatico giornaliero a mezzanotte",
+      "Sistema seeded random per consistenza giornaliera",
+      "Generazione domande uniche senza ripetizioni nella sessione",
+      "Audio system ottimizzato per ambiente familiare",
+      "Ottimizzazioni specifiche per iOS Safari",
+      "Compatibilità perfetta multi-dispositivo",
+      "🟢 Bottone verde per aggiornamenti controllati dall'utente",
+      "Banner animato con pulse verde per nuove versioni",
+      "Sistema skipWaiting controllato e non automatico",
+      "Auto-dismiss intelligente con reset temporizzato",
+      "Spinner di caricamento e feedback di stato",
+      "Audio interattivo ottimizzato", 
+      "Offline completo con supporto profili", 
+      "Responsive perfetto per tutti i dispositivi", 
+      "Installazione persistente",
+      "Matematica v4.1.0 con correzioni avanzate",
+      "Tabelline v2.2.0 senza scadenza",
+      "Sistema anti-ripetizione avanzato",
+      "Bottoni Home funzionanti in tutti i giochi",
+      "localStorage sincronizzato e gestione profili",
+      "Navigazione unificata ottimizzata",
+      "Cache strategy per componente con supporto profili",
+      "Nessuna duplicazione PWA",
+      "Gestione stati SW (waiting, installing, activated)",
+      "Controllo utente completo su aggiornamenti",
+      "User experience ottimizzata per famiglie e aggiornamenti PWA"
+    ],
+    "integration_status": {
+      "matematica_integration": "COMPLETED",
+      "tabelline_integration": "IMPROVED",
+      "sfida_matematica_integration": "COMPLETED",
+      "system_unification": "COMPLETED",
+      "conflicts_resolution": "COMPLETED",
+      "ui_optimization": "COMPLETED",
+      "performance_optimization": "COMPLETED",
+      "user_experience": "OPTIMIZED",
+      "corrections_applied": "COMPLETED",
+      "update_system_integration": "COMPLETED",
+      "green_button_system": "ACTIVE",
+      "profile_system_integration": "COMPLETED",
+      "family_features_integration": "COMPLETED"
     }
-});
-
-// === BACKGROUND SYNC ===
-self.addEventListener('sync', event => {
-    console.log(`🔄 Background sync evento:`, event.tag);
-    
-    // Sync per statistiche Sfida Matematica
-    if (event.tag === 'sync-game-stats') {
-        event.waitUntil(syncGameStats());
-    }
-});
-
-// Funzione sync statistiche (placeholder)
-async function syncGameStats() {
-    console.log(`📊 Sincronizzazione statistiche giochi...`);
-    // Implementazione futura per backup/sync statistiche
-    try {
-        // Logica di sincronizzazione profili utente
-        console.log(`✅ Statistiche sincronizzate per math_game_updated.html`);
-    } catch (error) {
-        console.error(`❌ Errore sincronizzazione:`, error);
-    }
-}
-
-// === GESTIONE ERRORI GLOBALI ===
-self.addEventListener('error', event => {
-    console.error(`❌ SW v8.3.1 errore globale:`, event.error);
-    
-    // Log specifico per errori relativi a Sfida Matematica
-    if (event.error && event.error.message && 
-        (event.error.message.includes('sfida-matematica') ||
-         event.error.message.includes('math_game_updated'))) {
-        console.error(`🎯 Errore specifico Sfida Matematica:`, event.error);
-    }
-});
-
-self.addEventListener('unhandledrejection', event => {
-    console.error(`❌ SW v8.3.1 promise rejection:`, event.reason);
-});
-
-// === PULIZIA CACHE PERIODICA ===
-// Pulizia automatica cache ogni 7 giorni
-self.addEventListener('activate', event => {
-    event.waitUntil(cleanOldCaches());
-});
-
-async function cleanOldCaches() {
-    const CACHE_EXPIRY = 7 * 24 * 60 * 60 * 1000; // 7 giorni
-    const now = Date.now();
-    
-    try {
-        const cacheNames = await caches.keys();
-        const cachesToDelete = [];
-        
-        for (const cacheName of cacheNames) {
-            if (cacheName.startsWith('giochi-educativi-') && 
-                cacheName !== CACHE_NAME) {
-                // Logica per determinare cache scadute
-                cachesToDelete.push(cacheName);
-            }
-        }
-        
-        await Promise.all(
-            cachesToDelete.map(cacheName => {
-                console.log(`🧹 Pulizia cache scaduta: ${cacheName}`);
-                return caches.delete(cacheName);
-            })
-        );
-        
-        console.log(`✅ Pulizia cache completata, ${cachesToDelete.length} cache rimosse`);
-    } catch (error) {
-        console.error(`❌ Errore pulizia cache:`, error);
-    }
-}
-
-// === LOGS DI DEBUG ===
-console.log(`✅ Service Worker v8.3.1 caricato completamente`);
-console.log(`📊 Cache: ${CACHE_NAME}`);
-console.log(`📁 Risorse core: ${CORE_FILES.length}`);
-console.log(`🎮 Sistema: v1.9.0`);
-console.log(`🎯 Giochi supportati:`);
-console.log(`   • Matematica sul Divano 3ª v4.1.0`);
-console.log(`   • Tabelline v2.2.0`);
-console.log(`   • Sfida Matematica in Famiglia 3ª v1.0.0 → math_game_updated.html`);
-console.log(`🟢 Sistema bottone verde: ATTIVO`);
-console.log(`👤 Sistema profili: ATTIVO per Sfida Matematica`);
-
-// Esporta informazioni per debug (non visibili in produzione)
-if (self.location.hostname === 'localhost') {
-    self.SW_DEBUG_INFO = {
-        version: CACHE_VERSION,
-        systemVersion: 'v1.9.0',
-        cacheResources: CACHE_RESOURCES,
-        strategies: CACHE_STRATEGIES,
-        updateSystem: 'green-button-active',
-        games: [
-            'matematica-divano-v4.1.0',
-            'tabelline-v2.2.0',
-            'math-game-updated-v1.0.0'  // AGGIORNATO
-        ],
-        gameFiles: [
-            'matematica.html',
-            'tabelline.html',
-            'math_game_updated.html'  // AGGIORNATO
-        ],
-        newFeatures: [
-            'profiles-system',
-            'daily-challenges',
-            'progress-tracking',
-            'file-path-corrected'  // NUOVO
-        ],
-        timestamp: new Date().toISOString()
-    };
+  }
 }

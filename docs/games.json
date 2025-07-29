@@ -19,7 +19,7 @@
         "standaloneMode": false,
         "localStorage": "SYNCHRONIZED",
         "navigation": "UNIFIED",
-        "serviceWorker": "v8.3.0",
+        "serviceWorker": "v8.3.2",
         "duplicationsRemoved": true,
         "installationControls": "CENTRALIZED",
         "updateSystem": "GREEN_BUTTON_ACTIVE"
@@ -68,7 +68,7 @@
           "localStorageSync": true,
           "unifiedNavigation": true,
           "centralizedInstallation": true,
-          "serviceWorkerVersion": "v8.3.0",
+          "serviceWorkerVersion": "v8.3.2",
           "noDuplications": true,
           "optimizedCaching": true,
           "homeButtonFixed": true,
@@ -121,7 +121,7 @@
       "pwaIntegration": {
         "status": "SYNCHRONIZED",
         "unifiedSystem": true,
-        "serviceWorker": "v8.3.0",
+        "serviceWorker": "v8.3.2",
         "cacheStrategy": "OPTIMIZED",
         "updateSystem": "GREEN_BUTTON_ACTIVE"
       },
@@ -150,7 +150,7 @@
         "expirationDate": null,
         "systemIntegration": {
           "unifiedPWA": true,
-          "serviceWorkerVersion": "v8.3.0",
+          "serviceWorkerVersion": "v8.3.2",
           "homeButtonFixed": true,
           "antiRepetitionAdvanced": true,
           "updateSystemIntegrated": true
@@ -170,7 +170,7 @@
       "title": "Sfida Matematica in Famiglia 3ª",
       "description": "Sistema completo di sfide giornaliere con profili personalizzati! 3 sfide da 30 domande al giorno con 4 tipologie diverse: Calcolo, Logica, Problemi e Geometria. Ottimizzato per iOS e tutti i dispositivi. Perfetto per tutta la famiglia!",
       "icon": "🏆",
-      "file": "math_game_updated.html",
+      "file": "sfida-matematica.html",
       "category": "matematica",
       "buttonText": "🎯 Inizia le Sfide",
       "buttonColor": "sfida-matematica",
@@ -184,7 +184,7 @@
         "standaloneMode": false,
         "localStorage": "PROFILES_MANAGED",
         "navigation": "UNIFIED",
-        "serviceWorker": "v8.3.0",
+        "serviceWorker": "v8.3.2",
         "profileSystem": true,
         "dailyChallenges": true,
         "updateSystem": "GREEN_BUTTON_ACTIVE"
@@ -231,7 +231,7 @@
           "localStorageProfiles": true,
           "unifiedNavigation": true,
           "centralizedInstallation": true,
-          "serviceWorkerVersion": "v8.3.0",
+          "serviceWorkerVersion": "v8.3.2",
           "optimizedCaching": true,
           "homeButtonIntegrated": true,
           "updateSystem": "green_button_active",
@@ -415,7 +415,7 @@
     "updateSystem": {
       "enabled": true,
       "type": "GREEN_BUTTON",
-      "serviceWorkerVersion": "v8.3.0",
+      "serviceWorkerVersion": "v8.3.2",
       "autoCheck": true,
       "userControlled": true,
       "bannerAnimation": true,
@@ -426,7 +426,7 @@
       "matematicaIntegrated": true,
       "tabellineIntegrated": true,
       "sfidaMatematicaIntegrated": true,
-      "serviceWorkerVersion": "v8.3.0",
+      "serviceWorkerVersion": "v8.3.2",
       "localStorageSynchronized": true,
       "navigationUnified": true,
       "duplicationsRemoved": true,
@@ -446,7 +446,7 @@
         "Design family-friendly con Comic Sans e gradienti",
         "Audio system con feedback appropriati per bambini",
         "Ottimizzazioni specifiche per iOS e compatibilità multi-dispositivo",
-        "Service Worker v8.3.0 con supporto nuovo gioco",
+        "Service Worker v8.3.2 con supporto nuovo gioco",
         "Cache strategy ottimizzata per gestione profili",
         "Integrazione perfetta nel sistema PWA unificato"
       ],
@@ -496,7 +496,7 @@
       "matematicaIntegrationStatus": "COMPLETED",
       "tabellineIntegrationStatus": "COMPLETED", 
       "sfidaMatematicaIntegrationStatus": "COMPLETED",
-      "serviceWorkerVersion": "v8.3.0",
+      "serviceWorkerVersion": "v8.3.2",
       "localStorageConflicts": "RESOLVED",
       "navigationIssues": "RESOLVED",
       "pwaConflicts": "RESOLVED",
@@ -560,7 +560,7 @@
     "type": "UNIFIED_PWA_SYSTEM",
     "updateManagement": {
       "type": "USER_CONTROLLED_GREEN_BUTTON",
-      "serviceWorkerVersion": "v8.3.0",
+      "serviceWorkerVersion": "v8.3.2",
       "skipWaitingControlled": true,
       "bannerSystem": true,
       "autoCheck": true,
@@ -608,7 +608,7 @@
         "version": "1.0.0",
         "status": "FULLY_INTEGRATED",
         "role": "FAMILY_GAME_COMPONENT",
-        "fileName": "math_game_updated.html",
+        "fileName": "sfida-matematica.html",
         "features": {
           "profileSystemComplete": true,
           "dailyChallengesActive": true,
@@ -625,9 +625,9 @@
         }
       },
       "serviceWorker": {
-        "version": "v8.3.0",
+        "version": "v8.3.2",
         "status": "UNIFIED",
-        "manages": ["index.html", "matematica.html", "tabelline.html", "math_game_updated.html", "games.json"],
+        "manages": ["index.html", "matematica.html", "tabelline.html", "sfida-matematica.html", "games.json"],
         "duplications": false,
         "features": {
           "updateSystem": "GREEN_BUTTON_CONTROLLED",
@@ -681,7 +681,7 @@
     "educational_subjects": ["Matematica", "Calcolo mentale", "Operazioni aritmetiche", "Logica", "Problemi", "Geometria"],
     "technical_features": [
       "PWA Sistema Unificato v1.9.0", 
-      "Service Worker v8.3.0 con supporto profili",
+      "Service Worker v8.3.2 con supporto profili",
       "🎯 Sfida Matematica in Famiglia 3ª v1.0.0 - Completamente Integrata",
       "Sistema profili personalizzati con gestione famiglia",
       "3 sfide giornaliere rinnovabili automaticamente",

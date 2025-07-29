@@ -27,6 +27,10 @@
             background: var(--primary);
             min-height: 100vh;
             overflow-x: hidden;
+            /* iOS Safari fixes */
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .container {
@@ -85,9 +89,12 @@
             cursor: pointer;
             transition: transform 0.2s ease;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            /* iOS touch fixes */
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
-        .header-btn:hover {
+        .header-btn:hover, .header-btn:active {
             transform: scale(1.1);
         }
 
@@ -137,9 +144,13 @@
             min-height: 44px;
             width: 100%;
             margin: 10px 0;
+            /* iOS touch fixes */
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            -webkit-appearance: none;
         }
 
-        .btn:hover {
+        .btn:hover, .btn:active {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
@@ -213,9 +224,13 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+            /* iOS touch fixes */
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            -webkit-appearance: none;
         }
 
-        .avatar-btn:hover, .avatar-btn.selected {
+        .avatar-btn:hover, .avatar-btn.selected, .avatar-btn:active {
             border-color: #667eea;
             transform: scale(1.1);
             background: rgba(102, 126, 234, 0.1);
@@ -226,9 +241,12 @@
             cursor: pointer;
             transition: transform 0.3s ease;
             position: relative;
+            /* iOS touch fixes */
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
-        .profile-card:hover {
+        .profile-card:hover, .profile-card:active {
             transform: translateY(-5px);
         }
 
@@ -250,9 +268,13 @@
             align-items: center;
             justify-content: center;
             z-index: 10;
+            /* iOS touch fixes */
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            -webkit-appearance: none;
         }
 
-        .profile-delete-btn:hover {
+        .profile-delete-btn:hover, .profile-delete-btn:active {
             transform: scale(1.1);
             background: linear-gradient(135deg, #c82333 0%, #a71e2a 100%);
             box-shadow: 0 4px 12px rgba(220, 53, 69, 0.5);
@@ -277,6 +299,9 @@
             position: relative;
             overflow: hidden;
             text-align: left;
+            /* iOS touch fixes */
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .challenge-card h3 {
@@ -366,6 +391,10 @@
             color: #333;
             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
             min-height: 44px;
+            /* iOS touch fixes */
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            -webkit-appearance: none;
         }
 
         /* Responsive option buttons */
@@ -404,7 +433,7 @@
             }
         }
 
-        .option-btn:hover {
+        .option-btn:hover, .option-btn:active {
             border-color: #667eea;
             transform: scale(1.05);
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(200, 210, 255, 0.3) 100%);
@@ -494,6 +523,9 @@
             background: linear-gradient(135deg, rgba(255, 250, 252, 0.95) 0%, rgba(245, 248, 255, 0.95) 100%);
             color: #333;
             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.05);
+            /* iOS fixes */
+            -webkit-appearance: none;
+            -webkit-border-radius: 12px;
         }
 
         .input-group input:focus {
@@ -587,6 +619,16 @@
             .options-grid {
                 grid-template-columns: 1fr;
             }
+            
+            /* Dashboard buttons responsive */
+            .dashboard-buttons {
+                flex-direction: column !important;
+                gap: 10px !important;
+            }
+            
+            .dashboard-buttons .btn {
+                max-width: none !important;
+            }
         }
 
         .rules-section {
@@ -614,9 +656,9 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 0.7rem;
             font-weight: bold;
         }
 
@@ -747,17 +789,31 @@
                 color: white;
             }
         }
+
+        /* iOS Safari specific fixes */
+        @supports (-webkit-touch-callout: none) {
+            .btn, .option-btn, .avatar-btn, .profile-card {
+                -webkit-tap-highlight-color: rgba(0,0,0,0);
+                -webkit-user-select: none;
+            }
+            
+            /* Fix button appearance on iOS */
+            input[type="button"], input[type="submit"], button {
+                -webkit-appearance: none;
+                border-radius: 12px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="header-content">
-            <button class="header-btn" id="homeBtn" onclick="goHome()">🏠</button>
+            <button class="header-btn" id="homeBtn">🏠</button>
             <div>
                 <h1>Sfida Matematica in Famiglia 3ª</h1>
                 <div class="header-subtitle">by Maestro Alberto</div>
             </div>
-            <button class="header-btn" id="soundBtn" onclick="toggleSound()">🔊</button>
+            <button class="header-btn" id="soundBtn">🔊</button>
         </div>
     </div>
 
@@ -768,8 +824,8 @@
                 <div class="card">
                     <h2 style="text-align: center; color: #667eea; margin-bottom: 30px;">Benvenuto alla Sfida Matematica!</h2>
                     <div class="grid grid-2">
-                        <button class="btn btn-primary" onclick="showScreen('rulesScreen')">📚 Regole del Gioco</button>
-                        <button class="btn btn-success" onclick="showScreen('profilesScreen')">👤 Scegli Profilo</button>
+                        <button class="btn btn-primary" data-action="showRules">📚 Regole del Gioco</button>
+                        <button class="btn btn-success" data-action="showProfiles">👤 Scegli Profilo</button>
                     </div>
                 </div>
             </div>
@@ -822,7 +878,7 @@
                         </ul>
                     </div>
 
-                    <button class="btn btn-primary" onclick="showScreen('welcomeScreen')">🔙 Torna Indietro</button>
+                    <button class="btn btn-primary" data-action="showWelcome">🔙 Torna Indietro</button>
                 </div>
             </div>
 
@@ -833,8 +889,8 @@
                     <div id="profilesList" class="grid grid-3">
                         <!-- Profili verranno caricati qui -->
                     </div>
-                    <button class="btn btn-success" onclick="showScreen('createScreen')">➕ Crea Nuovo Profilo</button>
-                    <button class="btn" onclick="showScreen('welcomeScreen')">🔙 Torna Indietro</button>
+                    <button class="btn btn-success" data-action="showCreate">➕ Crea Nuovo Profilo</button>
+                    <button class="btn" data-action="showWelcome">🔙 Torna Indietro</button>
                 </div>
             </div>
 
@@ -850,7 +906,7 @@
 
                     <div class="input-group">
                         <label>Scegli il tuo avatar:</label>
-                        <div class="avatar-grid">
+                        <div class="avatar-grid" id="avatarGrid">
                             <button class="avatar-btn" data-avatar="👦">👦</button>
                             <button class="avatar-btn" data-avatar="👧">👧</button>
                             <button class="avatar-btn" data-avatar="🧒">🧒</button>
@@ -864,8 +920,8 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-success" onclick="createProfile()">✅ Crea Profilo</button>
-                    <button class="btn" onclick="showScreen('profilesScreen')">🔙 Torna Indietro</button>
+                    <button class="btn btn-success" data-action="createProfile">✅ Crea Profilo</button>
+                    <button class="btn" data-action="showProfiles">🔙 Torna Indietro</button>
                 </div>
             </div>
 
@@ -881,7 +937,10 @@
                         <!-- Sfide verranno caricate qui -->
                     </div>
 
-                    <button class="btn" onclick="showScreen('profilesScreen')">👤 Cambia Profilo</button>
+                    <div class="dashboard-buttons" style="display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-top: 20px;">
+                        <button class="btn btn-success" data-action="showProfiles" style="flex: 1; max-width: 200px;">👤 Cambia Profilo</button>
+                        <button class="btn btn-primary" data-action="goBack" style="flex: 1; max-width: 200px;">🔙 Indietro</button>
+                    </div>
                 </div>
             </div>
 
@@ -907,7 +966,7 @@
                     </div>
 
                     <div style="text-align: center; margin-top: 30px;">
-                        <button class="btn btn-danger" onclick="confirmQuit()">🚪 Abbandona Sfida</button>
+                        <button class="btn btn-danger" data-action="confirmQuit">🚪 Abbandona Sfida</button>
                     </div>
                 </div>
             </div>
@@ -938,13 +997,161 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-primary" onclick="showScreen('dashboardScreen')">🏠 Torna al Menu</button>
+                    <button class="btn btn-primary" data-action="showDashboard">🏠 Torna al Menu</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // iOS Detection and Browser Utilities
+        const IOSUtils = {
+            isIOS: /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.userAgent.includes('Mac') && 'ontouchend' in document),
+            isSafari: /^((?!chrome|android).)*safari/i.test(navigator.userAgent),
+            
+            // Normalized date for cross-platform consistency
+            getTodayString() {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            },
+            
+            // Ensure audio context is ready for iOS
+            enableAudio() {
+                if (this.isIOS && audioSystem.audioContext && audioSystem.audioContext.state === 'suspended') {
+                    audioSystem.audioContext.resume();
+                }
+            }
+        };
+
+        // Enhanced Event System for iOS compatibility
+        class EventManager {
+            constructor() {
+                this.handlers = new Map();
+                this.setupEventDelegation();
+            }
+            
+            setupEventDelegation() {
+                // Use event delegation for all clickable elements
+                document.addEventListener('click', this.handleClick.bind(this), true);
+                
+                // Add touch events for iOS
+                if (IOSUtils.isIOS) {
+                    document.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: true });
+                    document.addEventListener('touchend', this.handleTouchEnd.bind(this), { passive: false });
+                }
+            }
+            
+            handleClick(event) {
+                const target = event.target.closest('[data-action]');
+                if (target) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    
+                    const action = target.dataset.action;
+                    this.executeAction(action, target);
+                }
+            }
+            
+            handleTouchStart(event) {
+                // Enable audio on first touch for iOS
+                IOSUtils.enableAudio();
+                
+                const target = event.target.closest('[data-action]');
+                if (target) {
+                    target.classList.add('active');
+                }
+            }
+            
+            handleTouchEnd(event) {
+                const target = event.target.closest('[data-action]');
+                if (target) {
+                    target.classList.remove('active');
+                    
+                    // Prevent double-tap zoom on iOS
+                    event.preventDefault();
+                }
+            }
+            
+            executeAction(action, element) {
+                audioSystem.playClick();
+                
+                switch (action) {
+                    case 'showWelcome':
+                        showScreen('welcomeScreen');
+                        break;
+                    case 'showRules':
+                        showScreen('rulesScreen');
+                        break;
+                    case 'showProfiles':
+                        showScreen('profilesScreen');
+                        break;
+                    case 'showCreate':
+                        showScreen('createScreen');
+                        break;
+                    case 'showDashboard':
+                        showScreen('dashboardScreen');
+                        break;
+                    case 'createProfile':
+                        createProfile();
+                        break;
+                    case 'confirmQuit':
+                        confirmQuit();
+                        break;
+                    case 'goHome':
+                        goToIndex();
+                        break;
+                    case 'goBack':
+                        goHome();
+                        break;
+                    case 'toggleSound':
+                        toggleSound();
+                        break;
+                    case 'startChallenge':
+                        const challengeName = element.dataset.challenge;
+                        startChallenge(challengeName);
+                        break;
+                    case 'showResults':
+                        const resultsData = JSON.parse(element.dataset.results);
+                        const challenge = element.dataset.challenge;
+                        showResults(challenge, resultsData);
+                        break;
+                    case 'selectProfile':
+                        const profileData = JSON.parse(element.dataset.profile);
+                        selectProfile(profileData);
+                        break;
+                    case 'deleteProfile':
+                        const profileId = element.dataset.profileId;
+                        const profileName = element.dataset.profileName;
+                        deleteProfile(profileId, profileName);
+                        break;
+                    case 'selectAvatar':
+                        selectAvatar(element);
+                        break;
+                    case 'selectAnswer':
+                        const answer = element.dataset.answer;
+                        const isCorrect = element.dataset.correct === 'true';
+                        selectAnswer(answer, isCorrect);
+                        break;
+                }
+            }
+            
+            // Safe event listener addition
+            addListener(element, event, handler) {
+                if (element && typeof handler === 'function') {
+                    element.addEventListener(event, handler);
+                    
+                    // Store for cleanup if needed
+                    if (!this.handlers.has(element)) {
+                        this.handlers.set(element, []);
+                    }
+                    this.handlers.get(element).push({ event, handler });
+                }
+            }
+        }
+
         // Seeded Random Generator
         class SeededRandom {
             constructor(seed) {
@@ -992,40 +1199,73 @@
             return hashString(combined);
         }
 
-        // Audio system
+        // Enhanced Audio system with iOS compatibility
         class AudioSystem {
             constructor() {
                 this.audioContext = null;
                 this.enabled = true;
+                this.initialized = false;
                 this.initAudio();
             }
             
             initAudio() {
                 try {
-                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    // Use different approach for iOS
+                    if (IOSUtils.isIOS) {
+                        // Delay initialization until user interaction
+                        this.audioContext = null;
+                    } else {
+                        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        this.initialized = true;
+                    }
                 } catch (e) {
                     console.log('Audio not supported');
                     this.enabled = false;
                 }
             }
             
+            ensureAudioContext() {
+                if (!this.audioContext && this.enabled) {
+                    try {
+                        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        
+                        // Resume context if suspended (common on iOS)
+                        if (this.audioContext.state === 'suspended') {
+                            this.audioContext.resume();
+                        }
+                        
+                        this.initialized = true;
+                    } catch (e) {
+                        console.log('Audio initialization failed');
+                        this.enabled = false;
+                    }
+                }
+            }
+            
             playTone(frequency, duration = 0.2) {
-                if (!this.enabled || !this.audioContext) return;
+                if (!this.enabled) return;
                 
-                const oscillator = this.audioContext.createOscillator();
-                const gainNode = this.audioContext.createGain();
+                this.ensureAudioContext();
+                if (!this.audioContext) return;
                 
-                oscillator.connect(gainNode);
-                gainNode.connect(this.audioContext.destination);
-                
-                oscillator.frequency.value = frequency;
-                oscillator.type = 'sine';
-                
-                gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration);
-                
-                oscillator.start(this.audioContext.currentTime);
-                oscillator.stop(this.audioContext.currentTime + duration);
+                try {
+                    const oscillator = this.audioContext.createOscillator();
+                    const gainNode = this.audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(this.audioContext.destination);
+                    
+                    oscillator.frequency.value = frequency;
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration);
+                    
+                    oscillator.start(this.audioContext.currentTime);
+                    oscillator.stop(this.audioContext.currentTime + duration);
+                } catch (e) {
+                    console.log('Audio playback failed');
+                }
             }
             
             playClick() {
@@ -1057,6 +1297,43 @@
             }
         }
 
+        // Enhanced Timer for iOS compatibility
+        class GameTimer {
+            constructor() {
+                this.startTime = 0;
+                this.intervalId = null;
+                this.isRunning = false;
+            }
+            
+            start(callback) {
+                this.startTime = Date.now();
+                this.isRunning = true;
+                
+                // Use more frequent updates for better accuracy
+                const updateInterval = IOSUtils.isIOS ? 100 : 1000;
+                
+                this.intervalId = setInterval(() => {
+                    if (this.isRunning && callback) {
+                        const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+                        callback(elapsed);
+                    }
+                }, updateInterval);
+            }
+            
+            stop() {
+                this.isRunning = false;
+                if (this.intervalId) {
+                    clearInterval(this.intervalId);
+                    this.intervalId = null;
+                }
+                return Math.floor((Date.now() - this.startTime) / 1000);
+            }
+            
+            getElapsed() {
+                return Math.floor((Date.now() - this.startTime) / 1000);
+            }
+        }
+
         // Game state
         let currentPlayer = null;
         let currentChallenge = null;
@@ -1064,22 +1341,36 @@
         let currentQuestionIndex = 0;
         let gameScore = 0;
         let correctAnswers = 0;
-        let gameStartTime = 0;
         let gameTimer = null;
         let seededRandom = null;
         let usedQuestionHashes = new Set();
         
         const audioSystem = new AudioSystem();
+        const eventManager = new EventManager();
 
         // Initialize game
         function initGame() {
             loadProfiles();
             updateSoundButton();
+            setupHeaderEvents();
+        }
+
+        // Setup header button events
+        function setupHeaderEvents() {
+            const homeBtn = document.getElementById('homeBtn');
+            const soundBtn = document.getElementById('soundBtn');
+            
+            if (homeBtn) {
+                homeBtn.dataset.action = 'goHome';
+            }
+            
+            if (soundBtn) {
+                soundBtn.dataset.action = 'toggleSound';
+            }
         }
 
         // Screen navigation
         function showScreen(screenId) {
-            audioSystem.playClick();
             document.querySelectorAll('.screen').forEach(screen => {
                 screen.classList.remove('active');
             });
@@ -1087,19 +1378,23 @@
         }
 
         function goHome() {
-            audioSystem.playClick();
             showScreen('welcomeScreen');
+        }
+
+        function goToIndex() {
+            window.location.href = './';
         }
 
         function toggleSound() {
             const enabled = audioSystem.toggle();
             updateSoundButton();
-            audioSystem.playClick();
         }
 
         function updateSoundButton() {
             const btn = document.getElementById('soundBtn');
-            btn.textContent = audioSystem.enabled ? '🔊' : '🔇';
+            if (btn) {
+                btn.textContent = audioSystem.enabled ? '🔊' : '🔇';
+            }
         }
 
         // Profile management
@@ -1107,13 +1402,18 @@
             const profiles = JSON.parse(localStorage.getItem('mathGameProfiles') || '[]');
             const profilesList = document.getElementById('profilesList');
             
+            if (!profilesList) return;
+            
             profilesList.innerHTML = '';
             
             profiles.forEach(profile => {
                 const profileCard = document.createElement('div');
                 profileCard.className = 'card profile-card';
+                profileCard.dataset.action = 'selectProfile';
+                profileCard.dataset.profile = JSON.stringify(profile);
+                
                 profileCard.innerHTML = `
-                    <button class="profile-delete-btn" title="Elimina profilo">
+                    <button class="profile-delete-btn" data-action="deleteProfile" data-profile-id="${profile.id}" data-profile-name="${profile.name}" title="Elimina profilo">
                         ×
                     </button>
                     <div class="profile-card-content">
@@ -1124,22 +1424,6 @@
                     </div>
                 `;
                 
-                // Add click event to delete button
-                const deleteBtn = profileCard.querySelector('.profile-delete-btn');
-                deleteBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    deleteProfile(profile.id, profile.name);
-                });
-                
-                // Add click event to the card content (not the delete button)
-                const cardContent = profileCard.querySelector('.profile-card-content');
-                cardContent.addEventListener('click', () => {
-                    selectProfile(profile);
-                });
-                
-                // Make card content clickable
-                cardContent.style.cursor = 'pointer';
-                
                 profilesList.appendChild(profileCard);
             });
         }
@@ -1149,18 +1433,16 @@
             const confirmDelete = confirm(`Sei sicuro di voler eliminare il profilo di ${profileName}?\n\nQuesta azione cancellerà tutti i progressi e non può essere annullata.`);
             
             if (confirmDelete) {
-                audioSystem.playClick();
-                
                 const profiles = JSON.parse(localStorage.getItem('mathGameProfiles') || '[]');
                 
                 // Remove profile from array
-                const updatedProfiles = profiles.filter(p => p.id !== profileId);
+                const updatedProfiles = profiles.filter(p => p.id != profileId);
                 
                 // Update localStorage
                 localStorage.setItem('mathGameProfiles', JSON.stringify(updatedProfiles));
                 
                 // If the deleted profile was currently selected, clear current player
-                if (currentPlayer && currentPlayer.id === profileId) {
+                if (currentPlayer && currentPlayer.id == profileId) {
                     currentPlayer = null;
                 }
                 
@@ -1175,14 +1457,16 @@
         }
 
         function selectProfile(profile) {
-            audioSystem.playClick();
             currentPlayer = profile;
             showDashboard();
         }
 
+        function selectAvatar(element) {
+            document.querySelectorAll('.avatar-btn').forEach(b => b.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
         function createProfile() {
-            audioSystem.playClick();
-            
             const name = document.getElementById('playerName').value.trim();
             const selectedAvatar = document.querySelector('.avatar-btn.selected');
             
@@ -1216,15 +1500,18 @@
             showDashboard();
         }
 
-        // Avatar selection
+        // Setup avatar selection events
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.avatar-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    audioSystem.playClick();
-                    document.querySelectorAll('.avatar-btn').forEach(b => b.classList.remove('selected'));
-                    this.classList.add('selected');
+            const avatarGrid = document.getElementById('avatarGrid');
+            if (avatarGrid) {
+                avatarGrid.addEventListener('click', function(e) {
+                    const avatarBtn = e.target.closest('.avatar-btn');
+                    if (avatarBtn) {
+                        audioSystem.playClick();
+                        selectAvatar(avatarBtn);
+                    }
                 });
-            });
+            }
         });
 
         // Dashboard
@@ -1232,18 +1519,22 @@
             showScreen('dashboardScreen');
             
             const playerInfo = document.getElementById('playerInfo');
-            playerInfo.innerHTML = `
-                <div class="profile-avatar" style="font-size: 4rem;">${currentPlayer.avatar}</div>
-                <h2>Ciao, ${currentPlayer.name}!</h2>
-                <p>Migliore punteggio: ${currentPlayer.stats.bestScore} punti</p>
-            `;
+            if (playerInfo) {
+                playerInfo.innerHTML = `
+                    <div class="profile-avatar" style="font-size: 4rem;">${currentPlayer.avatar}</div>
+                    <h2>Ciao, ${currentPlayer.name}!</h2>
+                    <p>Migliore punteggio: ${currentPlayer.stats.bestScore} punti</p>
+                `;
+            }
             
             loadChallenges();
         }
 
         function loadChallenges() {
-            const today = new Date().toDateString();
+            const today = IOSUtils.getTodayString();
             const challengesList = document.getElementById('challengesList');
+            
+            if (!challengesList) return;
             
             challengesList.innerHTML = '';
             
@@ -1271,7 +1562,9 @@
                         </div>
                     ` : ''}
                     <button class="btn ${isCompleted ? 'btn-primary' : 'btn-success'}" 
-                            onclick="${isCompleted ? `showResults('${challengeName}', ${JSON.stringify(isCompleted).replace(/"/g, '&quot;')})` : `startChallenge('${challengeName}')`}">
+                            data-action="${isCompleted ? 'showResults' : 'startChallenge'}"
+                            data-challenge="${challengeName}"
+                            ${isCompleted ? `data-results='${JSON.stringify(isCompleted)}'` : ''}>
                         ${buttonText}
                     </button>
                 `;
@@ -1282,9 +1575,7 @@
 
         // Game logic
         function startChallenge(challengeName) {
-            audioSystem.playClick();
-            
-            const today = new Date().toDateString();
+            const today = IOSUtils.getTodayString();
             if (currentPlayer.dailyProgress[today] && currentPlayer.dailyProgress[today][challengeName]) {
                 alert('Hai già completato questa sfida oggi!');
                 return;
@@ -1300,11 +1591,10 @@
             currentQuestionIndex = 0;
             gameScore = 0;
             correctAnswers = 0;
-            gameStartTime = Date.now();
             usedQuestionHashes.clear();
             
             // Create seeded random generator
-            const today = new Date().toDateString();
+            const today = IOSUtils.getTodayString();
             const seed = hashString(currentChallenge + today);
             seededRandom = new SeededRandom(seed);
             
@@ -1845,17 +2135,18 @@
                 const button = document.createElement('button');
                 button.className = 'option-btn';
                 button.textContent = option;
-                button.onclick = () => selectAnswer(option, correctIndex === index);
+                button.dataset.action = 'selectAnswer';
+                button.dataset.answer = option;
+                button.dataset.correct = (correctIndex === index).toString();
                 optionsContainer.appendChild(button);
             });
         }
 
         function selectAnswer(selectedAnswer, isCorrect) {
-            audioSystem.playClick();
-            
             // Disable all option buttons
             document.querySelectorAll('.option-btn').forEach(btn => {
                 btn.disabled = true;
+                btn.style.pointerEvents = 'none';
             });
             
             // Show correct/incorrect feedback
@@ -1884,10 +2175,10 @@
         }
 
         function startGameTimer() {
-            gameTimer = setInterval(() => {
-                const elapsed = Math.floor((Date.now() - gameStartTime) / 1000);
+            gameTimer = new GameTimer();
+            gameTimer.start((elapsed) => {
                 document.getElementById('timer').textContent = formatTime(elapsed);
-            }, 1000);
+            });
         }
 
         function formatTime(seconds) {
@@ -1898,17 +2189,17 @@
 
         function confirmQuit() {
             if (confirm('Sei sicuro di voler abbandonare la sfida? Perderai tutti i progressi!')) {
-                audioSystem.playClick();
-                clearInterval(gameTimer);
+                if (gameTimer) {
+                    gameTimer.stop();
+                }
                 showScreen('dashboardScreen');
             }
         }
 
         function endGame() {
-            clearInterval(gameTimer);
+            const finalTime = gameTimer ? gameTimer.stop() : 0;
             audioSystem.playComplete();
             
-            const finalTime = Math.floor((Date.now() - gameStartTime) / 1000);
             const accuracy = Math.round((correctAnswers / 30) * 100);
             
             // Determine trophy
@@ -1936,7 +2227,7 @@
         }
 
         function saveGameResults(score, correct, time, accuracy) {
-            const today = new Date().toDateString();
+            const today = IOSUtils.getTodayString();
             
             // Update player stats
             if (!currentPlayer.dailyProgress[today]) {
@@ -1976,8 +2267,6 @@
         }
 
         function showResults(challengeName, results) {
-            audioSystem.playClick();
-            
             const accuracy = results.accuracy;
             let trophy = '🥉';
             if (accuracy >= 90) trophy = '🏆';
@@ -1994,7 +2283,111 @@
         }
 
         // Initialize game when page loads
-        document.addEventListener('DOMContentLoaded', initGame);
+        document.addEventListener('DOMContentLoaded', function() {
+            // Enable audio on first user interaction for iOS
+            if (IOSUtils.isIOS) {
+                const enableAudioOnFirstTouch = () => {
+                    IOSUtils.enableAudio();
+                    document.removeEventListener('touchstart', enableAudioOnFirstTouch);
+                    document.removeEventListener('click', enableAudioOnFirstTouch);
+                };
+                
+                document.addEventListener('touchstart', enableAudioOnFirstTouch, { once: true });
+                document.addEventListener('click', enableAudioOnFirstTouch, { once: true });
+            }
+            
+            initGame();
+        });
+
+        // Prevent zoom on double tap for iOS
+        if (IOSUtils.isIOS) {
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function (event) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+            
+            // Prevent pinch zoom
+            document.addEventListener('gesturestart', function (e) {
+                e.preventDefault();
+            });
+            
+            document.addEventListener('gesturechange', function (e) {
+                e.preventDefault();
+            });
+            
+            document.addEventListener('gestureend', function (e) {
+                e.preventDefault();
+            });
+        }
+
+        // Handle iOS Safari viewport issues
+        if (IOSUtils.isIOS && IOSUtils.isSafari) {
+            // Fix viewport height issues on iOS Safari
+            const setViewportHeight = () => {
+                const vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            };
+            
+            setViewportHeight();
+            window.addEventListener('resize', setViewportHeight);
+            window.addEventListener('orientationchange', () => {
+                setTimeout(setViewportHeight, 100);
+            });
+        }
+
+        // Error handling for localStorage
+        function safeLocalStorage() {
+            try {
+                const test = 'test';
+                localStorage.setItem(test, test);
+                localStorage.removeItem(test);
+                return true;
+            } catch (e) {
+                console.warn('localStorage not available');
+                return false;
+            }
+        }
+
+        // Fallback for devices without localStorage
+        if (!safeLocalStorage()) {
+            // Use sessionStorage or memory storage as fallback
+            window.localStorage = {
+                getItem: (key) => sessionStorage.getItem(key) || null,
+                setItem: (key, value) => sessionStorage.setItem(key, value),
+                removeItem: (key) => sessionStorage.removeItem(key)
+            };
+        }
+
+        // Performance optimization for iOS
+        if (IOSUtils.isIOS) {
+            // Disable hover effects on iOS to improve performance
+            const style = document.createElement('style');
+            style.textContent = `
+                @media (hover: none) and (pointer: coarse) {
+                    .btn:hover, 
+                    .option-btn:hover, 
+                    .avatar-btn:hover, 
+                    .profile-card:hover,
+                    .header-btn:hover {
+                        transform: none !important;
+                        box-shadow: initial !important;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Debug logging for iOS issues
+        if (IOSUtils.isIOS && window.location.hostname === 'localhost') {
+            console.log('iOS Safari detected - Debug mode');
+            console.log('AudioContext support:', !!window.AudioContext || !!window.webkitAudioContext);
+            console.log('localStorage support:', safeLocalStorage());
+            console.log('Touch events support:', 'ontouchstart' in window);
+        }
     </script>
 </body>
 </html>

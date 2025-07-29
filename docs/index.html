@@ -526,8 +526,8 @@
                 <a href="tabelline.html" class="play-button">⚡ Inizia Sfida</a>
             </div>
 
-            <!-- 🎯 AGGIORNATO: Sfida Matematica in Famiglia 3ª -->
-            <div class="game-card sfida-matematica" onclick="window.location.href='math_game_updated.html'">
+            <!-- 🎯 FIXATO: Sfida Matematica in Famiglia 3ª -->
+            <div class="game-card sfida-matematica" onclick="window.location.href='sfida-matematica.html'">
                 <div class="game-icon">🏆</div>
                 <div class="game-title">
                     Sfida Matematica in Famiglia 3ª
@@ -540,7 +540,7 @@
                     <div class="feature-highlight">📱 Ottimizzato per iOS e tutti i dispositivi</div>
                     <small><em>Perfetto per tutta la famiglia! Sfide che si rinnovano ogni giorno!</em></small>
                 </div>
-                <a href="math_game_updated.html" class="play-button">🎯 Inizia le Sfide</a>
+                <a href="sfida-matematica.html" class="play-button">🎯 Inizia le Sfide</a>
             </div>
 
             <!-- Altro in arrivo -->
@@ -657,7 +657,7 @@
                             console.log('🟢 UPDATE_AVAILABLE ricevuto');
                             let updateMessage = message;
                             
-                            // 🎯 NUOVO: Messaggio speciale per Sfida Matematica
+                            // 🎯 FIXATO: Messaggio speciale per Sfida Matematica
                             if (newFeatures && newFeatures.length > 0) {
                                 updateMessage = '🎯 Nuovo gioco: Sfida Matematica in Famiglia 3ª!';
                             }
@@ -671,7 +671,7 @@
                             console.log('✅ UPDATE_COMPLETED ricevuto');
                             let completeMessage = message;
                             
-                            // 🎯 NUOVO: Messaggio speciale se è stato aggiunto un gioco
+                            // 🎯 FIXATO: Messaggio speciale se è stato aggiunto un gioco
                             if (gameAdded) {
                                 completeMessage = `🎯 ${gameAdded} ora disponibile!`;
                                 // Evidenzia la nuova card del gioco
@@ -710,7 +710,7 @@
             }
         }
 
-        // 🎯 NUOVO: Funzione per evidenziare il nuovo gioco
+        // 🎯 FIXATO: Funzione per evidenziare il nuovo gioco
         function highlightNewGame() {
             const sfidaCard = document.querySelector('.sfida-matematica');
             if (sfidaCard) {
@@ -1260,12 +1260,12 @@
             }
         });
 
-        // 🎯 NUOVO: Funzione per navigare direttamente al nuovo gioco
+        // 🎯 FIXATO: Funzione per navigare direttamente al nuovo gioco
         function goToSfidaMatematica() {
             console.log('🎯 Navigazione a Sfida Matematica');
             showToast('🎯 Caricamento Sfida Matematica in Famiglia 3ª...', 'success');
             setTimeout(() => {
-                window.location.href = 'math_game_updated.html';
+                window.location.href = 'sfida-matematica.html';
             }, 500);
         }
 
@@ -1293,7 +1293,7 @@
             }
             
             setTimeout(() => {
-                showUpdateBanner('v8.3.0-test', '🎯 Test: Aggiornamento disponibile!');
+                showUpdateBanner('v8.3.2-test', '🎯 Test: Aggiornamento disponibile!');
             }, 200);
         }
 
@@ -1309,7 +1309,7 @@
             }
         }
 
-        // 🎯 NUOVO: Debug per evidenziare il nuovo gioco
+        // 🎯 FIXATO: Debug per evidenziare il nuovo gioco
         function testHighlightNewGame() {
             console.log('🧪 Test: Evidenziazione nuovo gioco');
             highlightNewGame();

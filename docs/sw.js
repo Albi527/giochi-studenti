@@ -1,8 +1,8 @@
-// Service Worker v8.3.2 - PWA Giochi Educativi Unificati
+// Service Worker v8.3.3 - PWA Giochi Educativi Unificati
 // Updated per supportare Sfida Matematica in Famiglia 3ª
 
-const CACHE_NAME = 'giochi-educativi-v8.3.2';
-const DATA_CACHE_NAME = 'giochi-data-v8.3.2';
+const CACHE_NAME = 'giochi-educativi-v8.3.3';
+const DATA_CACHE_NAME = 'giochi-data-v8.3.3';
 
 // File da cachare per il funzionamento offline
 const FILES_TO_CACHE = [
@@ -22,7 +22,7 @@ const DATA_URLS = [
 
 // Installazione del Service Worker
 self.addEventListener('install', (event) => {
-    console.log('[ServiceWorker] Install v8.3.2');
+    console.log('[ServiceWorker] Install v8.3.3');
     
     event.waitUntil(
         Promise.all([
@@ -46,7 +46,7 @@ self.addEventListener('install', (event) => {
 
 // Attivazione del Service Worker
 self.addEventListener('activate', (event) => {
-    console.log('[ServiceWorker] Activate v8.3.2');
+    console.log('[ServiceWorker] Activate v8.3.3');
     
     event.waitUntil(
         // Rimuovi cache vecchie
@@ -70,8 +70,8 @@ self.addEventListener('activate', (event) => {
         clients.forEach((client) => {
             client.postMessage({
                 type: 'SW_UPDATED',
-                version: '8.3.2',
-                message: 'Service Worker aggiornato alla versione 8.3.2 con supporto completo per Sfida Matematica!'
+                version: '8.3.3',
+                message: 'Service Worker aggiornato alla versione 8.3.3 con supporto completo per Sfida Matematica!'
             });
         });
     });
@@ -344,7 +344,7 @@ async function handleDocumentRequest(request) {
                     <p>I tuoi progressi e profili sono al sicuro!</p>
                     <button onclick="window.location.reload()">🔄 Riprova</button>
                     <br>
-                    <small>Service Worker v8.3.2 attivo</small>
+                    <small>Service Worker v8.3.3 attivo</small>
                 </div>
             </body>
             </html>
@@ -389,14 +389,14 @@ self.addEventListener('message', (event) => {
         // Notifica il client che il SW è stato aggiornato
         event.ports[0].postMessage({
             type: 'SW_ACTIVATED',
-            version: '8.3.2'
+            version: '8.3.3'
         });
     }
     
     if (event.data && event.data.type === 'GET_VERSION') {
         event.ports[0].postMessage({
             type: 'SW_VERSION',
-            version: '8.3.2',
+            version: '8.3.3',
             cacheName: CACHE_NAME
         });
     }
@@ -408,7 +408,7 @@ self.addEventListener('message', (event) => {
         ]).then(() => {
             event.ports[0].postMessage({
                 type: 'CACHE_CLEARED',
-                version: '8.3.2'
+                version: '8.3.3'
             });
         });
     }
@@ -518,4 +518,4 @@ self.addEventListener('notificationclick', (event) => {
     );
 });
 
-console.log('[ServiceWorker] v8.3.2 loaded with Sfida Matematica support');
+console.log('[ServiceWorker] v8.3.3 loaded with Sfida Matematica support');

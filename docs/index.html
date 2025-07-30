@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giochi Educativi by Maestro Alberto - PWA v8.3.2</title>
+    <title>Giochi Educativi by Maestro Alberto - PWA v8.3.3</title>
     <meta name="description" content="Piattaforma di giochi educativi per studenti con sistema PWA unificato. Include Matematica sul Divano 3ª, Sfida Tabelline e Sfida Matematica in Famiglia 3ª.">
     <meta name="keywords" content="giochi educativi, matematica, tabelline, PWA, studenti, famiglia">
     <meta name="author" content="Maestro Alberto Fogliata">
@@ -338,7 +338,7 @@
             opacity: 0.8;
         }
         
-        /* 🟢 SISTEMA AGGIORNAMENTI PWA v8.3.2 */
+        /* 🟢 SISTEMA AGGIORNAMENTI PWA v8.3.3 */
         .update-banner {
             position: fixed;
             top: 0;
@@ -665,7 +665,7 @@
     </style>
 </head>
 <body>
-    <!-- 🟢 Banner Aggiornamenti PWA v8.3.2 -->
+    <!-- 🟢 Banner Aggiornamenti PWA v8.3.3 -->
     <div class="update-banner" id="update-banner">
         <div class="update-content">
             <div class="update-text">
@@ -685,7 +685,7 @@
 
     <div class="header">
         <h1>🎮 Giochi Educativi</h1>
-        <p>by Maestro Alberto Fogliata <span class="version-badge">v8.3.2</span></p>
+        <p>by Maestro Alberto Fogliata <span class="version-badge">v8.3.3</span></p>
     </div>
 
     <div class="container">
@@ -784,11 +784,11 @@
     </div>
 
     <script>
-        // ========== CONFIGURAZIONE PWA v8.3.2 ==========
+        // ========== CONFIGURAZIONE PWA v8.3.3 ==========
         const PWA_CONFIG = {
-            VERSION: '8.3.2',
+            VERSION: '8.3.3',
             SERVICE_WORKER_URL: './sw.js',
-            CACHE_NAME: 'giochi-educativi-v8.3.2',
+            CACHE_NAME: 'giochi-educativi-v8.3.3',
             UPDATE_CHECK_INTERVAL: 60000, // 1 minuto
             AUTO_DISMISS_DELAY: 15000, // 15 secondi
             GAMES: {
@@ -809,7 +809,7 @@
 
         console.log(`🚀 PWA Giochi Educativi v${PWA_CONFIG.VERSION} - Inizializzazione...`);
 
-        // ========== 🟢 GESTIONE SERVICE WORKER v8.3.2 ==========
+        // ========== 🟢 GESTIONE SERVICE WORKER v8.3.3 ==========
         
         class ServiceWorkerManager {
             constructor() {
@@ -826,7 +826,7 @@
                 }
 
                 try {
-                    console.log('🔧 Registrazione Service Worker v8.3.2...');
+                    console.log('🔧 Registrazione Service Worker v8.3.3...');
                     
                     this.registration = await navigator.serviceWorker.register(PWA_CONFIG.SERVICE_WORKER_URL, {
                         scope: './',

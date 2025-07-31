@@ -1,11 +1,11 @@
-// Service Worker v8.3.4 - COMPLETAMENTE AUTOMATICO PER BAMBINI A SCUOLA
+// Service Worker v8.3.5 - COMPLETAMENTE AUTOMATICO PER BAMBINI A SCUOLA
 // 🚀 ZERO INTERVENTO UTENTE - AGGIORNAMENTI TRASPARENTI
-// 🔧 Risolve conflitto v8.3.2 vs v8.3.3 - Cache Busting Automatico
+// 🍎 Fix iOS Safari - Sfida Matematica ora compatibile iPhone/iPad
 // ⚡ SkipWaiting Immediato + Reload Forzato Automatico
 
-const SW_VERSION = 'v8.3.4';
-const CACHE_NAME = 'giochi-educativi-v8.3.4';
-const DATA_CACHE_NAME = 'giochi-data-v8.3.4';
+const SW_VERSION = 'v8.3.5';
+const CACHE_NAME = 'giochi-educativi-v8.3.5';
+const DATA_CACHE_NAME = 'giochi-data-v8.3.5';
 
 // 🎯 LISTA COMPLETA RISORSE DA CACHEARE (basata sui tuoi file)
 const STATIC_CACHE_URLS = [
@@ -36,6 +36,8 @@ const DATA_URLS = [
 
 // 🚨 CACHE VECCHIE DA ELIMINARE AUTOMATICAMENTE
 const OLD_CACHE_VERSIONS = [
+    'giochi-educativi-v8.3.4',
+    'giochi-data-v8.3.4',
     'giochi-educativi-v8.3.2',
     'giochi-data-v8.3.2', 
     'giochi-educativi-v8.3.3',
@@ -105,7 +107,7 @@ self.addEventListener('install', function(event) {
                         client.postMessage({
                             type: 'SW_INSTALLED',
                             version: SW_VERSION,
-                            message: '🎯 Aggiornamento automatico completato!',
+                            message: '🍎 Sfida Matematica ora compatibile iOS Safari!',
                             autoUpdate: true
                         });
                     });
@@ -145,8 +147,8 @@ self.addEventListener('activate', function(event) {
                 client.postMessage({
                     type: 'SW_ACTIVATED',
                     version: SW_VERSION,
-                    message: '🚀 Sistema aggiornato automaticamente!',
-                    newGameAdded: 'Sfida Matematica in Famiglia 3ª',
+                    message: '🍎 Sfida Matematica ora compatibile iOS Safari!',
+                    newGameAdded: '🍎 Fix iOS: Sfida Matematica funziona su iPhone/iPad!',
                     forceReload: true, // 🔄 FORZA RELOAD AUTOMATICO
                     autoUpdate: true
                 });
@@ -750,7 +752,7 @@ console.log(`📦 Cache principale: ${CACHE_NAME}`);
 console.log(`📊 Cache dati: ${DATA_CACHE_NAME}`);
 console.log(`🎯 Configurato per AGGIORNAMENTI AUTOMATICI`);
 console.log(`👶 Modalità BAMBINI A SCUOLA: ZERO intervento richiesto`);
-console.log(`🔧 Risolve conflitto v8.3.2 vs v8.3.3 automaticamente`);
+console.log(`🍎 Fix iOS Safari: Sfida Matematica ora compatibile iPhone/iPad`);
 console.log(`🚀 Sistema pronto per PWA completamente automatica!`);
 
 // 📊 Esporta informazioni SW per debug (se necessario)
@@ -764,7 +766,8 @@ self.SW_INFO = {
         'Background Sync',
         'Push Notifications Ready',
         'Offline Fallbacks',
-        'Sfida Matematica Special Handling'
+        'Sfida Matematica Special Handling',
+        'iOS Safari Compatibility'
     ],
     mode: 'AUTOMATIC_FOR_CHILDREN'
 };

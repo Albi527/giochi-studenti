@@ -37,7 +37,7 @@
         }
         
         body {
-            font-family: 'Comic Sans MS', cursive, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: var(--primary-gradient);
             min-height: 100vh;
             overflow-x: hidden;
@@ -296,14 +296,23 @@
             50% { transform: scale(1.05); }
         }
         
-        .feature-highlight {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 8px 12px;
-            border-radius: 15px;
-            margin: 5px 0;
-            border-left: 3px solid rgba(255, 255, 255, 0.5);
+        .feature-list {
             text-align: left;
-            font-size: 0.9rem;
+            margin: 10px 0;
+        }
+        
+        .feature-item {
+            color: rgba(255, 255, 255, 0.95);
+            margin: 8px 0;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .feature-icon {
+            font-size: 1rem;
+            flex-shrink: 0;
         }
         
         .footer {
@@ -731,13 +740,21 @@
                     Sfida Matematica in Famiglia 3ª
                 </div>
                 <div class="game-description">
-                    <strong>🎯 Sistema completo di sfide giornaliere per famiglie!</strong><br>
-                    <div class="feature-highlight">👤 Profili personalizzati con 10 avatar</div>
-                    <div class="feature-highlight">📅 3 sfide da 30 domande al giorno</div>
-                    <div class="feature-highlight">🧮 4 tipologie: Calcolo, Logica, Problemi, Geometria</div>
-                    <div class="feature-highlight">🏆 Sistema trofei: Oro, Argento, Bronzo</div>
-                    <div class="feature-highlight">📱 Ottimizzato per iOS e tutti i dispositivi</div>
-                    <small><em>Sfide che si rinnovano automaticamente ogni giorno!</em></small>
+                    <strong>🎯 Sistema completo di sfide giornaliere per famiglie!</strong>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <span class="feature-icon">👤</span>
+                            <span>Profili personalizzati con 10 avatar</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🧮</span>
+                            <span>4 tipologie: Calcolo, Logica, Problemi, Geometria</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🔄</span>
+                            <span>Sfide che si rinnovano automaticamente ogni giorno!</span>
+                        </div>
+                    </div>
                 </div>
                 <a href="sfida-matematica.html" class="play-button" onclick="event.stopPropagation()">🎯 Inizia le Sfide</a>
             </div>

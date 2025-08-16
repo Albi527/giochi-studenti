@@ -1074,14 +1074,13 @@
         };
 
         EventManager.prototype.handleTouchEnd = function(event) {
-            var target = event.target.closest('[data-action]');
-            if (target) {
-                target.classList.remove('active');
-                
-                // Prevent double-tap zoom on iOS
-                event.preventDefault();
-            }
-        };
+    var target = event.target.closest('[data-action]');
+    if (target) {
+        target.classList.remove('active');
+        // (Fix) Non bloccare il click su iOS: rimosso preventDefault()
+        // Se vuoi evitare il doppio tap zoom, gestiscilo altrove o con meta viewport.
+    }
+};
 
         EventManager.prototype.executeAction = function(action, element) {
             audioSystem.playClick();

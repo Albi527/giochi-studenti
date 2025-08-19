@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impara i Numeri - Gioco Educativo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            font-size: 14px;
+        }
+
+        /* Header fisso */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .home-icon, .mic-icon {
+            width: 35px;
+            height: 35px;
+            background: #e8f4fd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .home-icon:hover, .mic-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .mic-icon.recording {
+            background: #ff4444;
+            color: white;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .menu-btn {
+            position: fixed;
+            top: 60px;
+            right: 15px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+        .menu-btn:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+
+        /* Layout principale */
+        .container {
+            padding-top: 60px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-area {
+            flex: 1;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Schermata menu livelli */
+        .level-selection {
+            background: #f0f4f8;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            text-align: center;
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .level-selection h1 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .level-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-height: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .level-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        .level-card h3 {
+            font-size: 0.8em;
+            margin-bottom: 3px;
+        }
+
+        .level-card p {
+            font-size: 0.6em;
+            opacity: 0.9;
+        }
+
+        /* Player stats */
+        .player-stats {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: #e8f4fd;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 15px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item .label {
+            font-size: 0.7em;
+            color: #666;
+        }
+
+        .stat-item .value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .stars {
+            color: #ffd700;
+            font-size: 1em;
+        }
+
+        /* Game modes */
+        .game-modes {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .mode-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.7em;
+            font-weight: bold;
+            position: relative;
+            min-height: 50px;
+        }
+
+        .mode-btn:hover {
+            background: #45a049;
+            transform: scale(1.02);
+        }
+
+        .mode-btn.mic-required {
+            background: #ff9800;
+            border: 2px solid #f57c00;
+        }
+
+        .mode-btn.mic-required:hover {
+            background: #f57c00;
+        }
+
+        .mode-btn.mic-required::before {
+            content: '🎤';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff5722;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        /* Game content */
+        .game-content {
+            background: #f0f4f8;
+            border-radius: 15px;
+            padding: 18px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            max-width: 630px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .game-title {
+            color: #4CAF50;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .number-display {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+            margin: 10px 0;
+            padding: 10px;
+            background: #e8f4fd;
+            border-radius: 8px;
+            border: 2px solid #4CAF50;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+            margin: 10px 0;
+        }
+
+        .option-btn {
+            background: #e3f2fd;
+            border: 3px solid #2196F3;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .option-btn:hover {
+            background: #2196F3;
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .option-btn.correct {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .option-btn.wrong {
+            background: #f44336;
+            color: white;
+            border-color: #f44336;
+        }
+
+        /* Drag and drop */
+        .compose-area {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2px;
+            margin: 8px 0;
+            min-height: 32px;
+            background: #e8f5e8;
+            border: 2px dashed #4CAF50;
+            border-radius: 5px;
+            padding: 5px;
+            align-items: center;
+            max-width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .digit-slot {
+            width: 22px;
+            height: 30px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f8ff;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .digit-slot.filled {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .digits-bank {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2px;
+            margin: 6px 0;
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .draggable-digit {
+            width: 24px;
+            height: 30px;
+            background: #2196F3;
+            color: white;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85em;
+            font-weight: bold;
+            cursor: grab;
+            transition: all 0.3s ease;
+        }
+
+        .draggable-digit:hover {
+            transform: scale(1.05);
+        }
+
+        .draggable-digit.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+
+        /* Progress and feedback */
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            transition: width 0.5s ease;
+        }
+
+        .feedback {
+            font-size: 1em;
+            font-weight: bold;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 6px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .feedback.success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #4CAF50;
+        }
+
+        .feedback.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f44336;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mic feedback */
+        .mic-feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.2em;
+            z-index: 2000;
+            display: none;
+        }
+
+        /* Abaco e tabella */
+        .helper-tools {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 12px 0;
+        }
+
+        .position-tables, .position-table {
+            background: #f0f4f8;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .position-tables h4 {
+            text-align: center;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 0.8em;
+        }
+
+        .position-table table {
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+
+        .position-table th, .position-table td {
+            border: 1px solid #ddd;
+            padding: 4px 6px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.7em;
+            min-width: 28px;
+        }
+
+        .position-table th {
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 10px;
+            }
+
+            .home-icon, .mic-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 14px;
+            }
+
+            .level-selection, .game-content {
+                margin: 5px;
+                padding: 15px;
+            }
+
+            .number-display {
+                font-size: 2em;
+            }
+
+            .option-btn {
+                font-size: 1em;
+                padding: 12px;
+            }
+
+            .levels-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .game-modes {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .helper-tools {
+                flex-direction: column;
+            }
+
+            .position-table th, .position-table td {
+                padding: 4px 6px;
+                font-size: 0.7em;
+                min-width: 25px;
+            }
+
+            .levels-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .game-modes {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header fisso -->
+    <div class="header">
+        <div class="home-icon" onclick="goHome()">🏠</div>
+        <div class="mic-icon" id="micIcon">🎤</div>
+    </div>
+
+    <!-- Bottone menu principale -->
+    <button class="menu-btn" onclick="showLevelSelection()">MENU PRINCIPALE</button>
+
+    <!-- Container principale -->
+    <div class="container">
+        <div class="game-area" id="gameArea">
+            <!-- Contenuto dinamico -->
+        </div>
+    </div>
+
+    <!-- Feedback microfono -->
+    <div class="mic-feedback" id="micFeedback">
+        <div>ORA PARLA! 🎤</div>
+    </div>
+
+    <script>
+        // Stato del gioco
+        let gameState = {
+            currentLevel: 1,
+            currentMode: null,
+            score: 0,
+            stars: 0,
+            badges: [],
+            currentQuestion: 0,
+            totalQuestions: 10,
+            currentNumber: 0,
+            answers: [],
+            isRecording: false,
+            microphoneAllowed: false,
+            mediaStream: null,
+            speechSynthesis: window.speechSynthesis,
+            recognition: null
+        };
+
+        // Configurazione livelli
+        const levels = {
+            1: { name: "LIVELLO 1", range: [0, 100], description: "Numeri 0-100 (ripasso)" },
+            2: { name: "LIVELLO 2", range: [101, 999], description: "Numeri 101-999" },
+            3: { name: "LIVELLO 3", range: [1000, 5000], description: "Numeri 1.000-5.000" },
+            4: { name: "LIVELLO 4", range: [5001, 10000], description: "Numeri 5.001-10.000" }
+        };
+
+        // Modalità di gioco
+        const gameModes = {
+            listen: "ASCOLTA",
+            speak: "PARLA",
+            compose: "COMPONI",
+            speed: "VELOCITA"
+        };
+
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', function() {
+            loadGameState();
+            initSpeechRecognition();
+            // NON richiedere permessi all'avvio - solo quando necessario
+            showLevelSelection();
+            playSound('start');
+        });
+
+        // Cleanup quando si chiude la pagina
+        window.addEventListener('beforeunload', function() {
+            if (gameState.mediaStream) {
+                gameState.mediaStream.getTracks().forEach(track => track.stop());
+                console.log('MediaStream chiuso');
+            }
+            saveGameState();
+        });
+
+        // Navigazione
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        function showLevelSelection() {
+            const gameArea = document.getElementById('gameArea');
+            gameArea.innerHTML = `
+                <div class="level-selection">
+                    <h1>🎲 IMPARA I NUMERI</h1>
+                    
+                    <div class="player-stats">
+                        <div class="stat-item">
+                            <div class="label">PUNTEGGIO</div>
+                            <div class="value">${gameState.score}</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="label">STELLE</div>
+                            <div class="value stars">${'⭐'.repeat(gameState.stars)}</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="label">BADGE</div>
+                            <div class="value">${gameState.badges.length}</div>
+                        </div>
+                    </div>
+
+                    <div class="levels-grid">
+                        ${Object.entries(levels).map(([level, config]) => `
+                            <button class="level-card" onclick="selectLevel(${level})">
+                                <h3>${config.name}</h3>
+                                <p>${config.description}</p>
+                            </button>
+                        `).join('')}
+                    </div>
+
+                    <div class="game-modes">
+                        <button class="mode-btn" onclick="startGame('listen')">
+                            🎧 ${gameModes.listen}
+                            <div style="font-size: 0.6em; opacity: 0.8; margin-top: 2px;">✅ NO MIC</div>
+                        </button>
+                        <button class="mode-btn mic-required" onclick="startGameWithMic('speak')" style="position: relative;">
+                            🗣️ ${gameModes.speak}
+                            <div style="font-size: 0.6em; opacity: 0.8; margin-top: 2px;">🎤 MIC</div>
+                        </button>
+                        <button class="mode-btn" onclick="startGame('compose')">
+                            🔢 ${gameModes.compose}
+                            <div style="font-size: 0.6em; opacity: 0.8; margin-top: 2px;">✅ NO MIC</div>
+                        </button>
+                        <button class="mode-btn mic-required" onclick="startGameWithMic('speed')" style="position: relative;">
+                            ⚡ ${gameModes.speed}
+                            <div style="font-size: 0.6em; opacity: 0.8; margin-top: 2px;">🎤 MIC</div>
+                        </button>
+                    </div>
+
+                    <div style="margin-top: 15px; padding: 10px; background: rgba(255,193,7,0.1); border-radius: 8px; text-align: center;">
+                        <p style="margin: 0; font-size: 0.8em; color: #856404;">
+                            💡 <strong>SUGGERIMENTO:</strong> Le modalità con 🎤 richiedono l'accesso al microfono. 
+                            Se hai problemi, prova prima le modalità senza microfono!
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectLevel(level) {
+            gameState.currentLevel = level;
+            saveGameState(); // Salva quando si seleziona un livello
+            playSound('click');
+            showFeedback(`LIVELLO ${level} SELEZIONATO!`, 'success');
+        }
+
+        // Avvio giochi con microfono (richiede permessi al momento del clic)
+        async function startGameWithMic(mode) {
+            if (!gameState.currentLevel) {
+                showFeedback('SELEZIONA PRIMA UN LIVELLO!', 'error');
+                return;
+            }
+
+            // Mostra dialog di preparazione microfono
+            showMicrophoneSetupDialog(mode);
+        }
+
+        function showMicrophoneSetupDialog(mode) {
+            const dialog = document.createElement('div');
+            dialog.style.cssText = `
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background: #f0f4f8; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 3000; text-align: center; max-width: 400px; width: 90%;
+            `;
+            
+            const modeNames = {
+                'speak': '🗣️ LEGGI AD ALTA VOCE',
+                'speed': '⚡ SFIDA VELOCITA'
+            };
+            
+            dialog.innerHTML = `
+                <h3 style="color: #4CAF50; margin-bottom: 15px;">🎤 ATTIVAZIONE MICROFONO</h3>
+                <p style="margin-bottom: 15px;">HAI SCELTO: <strong>${modeNames[mode]}</strong></p>
+                <p style="margin-bottom: 15px;">QUESTA MODALITA RICHIEDE L'ACCESSO AL MICROFONO PER RICONOSCERE LA TUA VOCE.</p>
+                <p style="margin-bottom: 15px; font-size: 0.8em; color: #666; background: #e9ecef; padding: 12px; border-radius: 8px;">
+                    🔍 <strong>COSA SUCCEDE:</strong><br>
+                    1. CLICCANDO "ATTIVA MICROFONO" IL BROWSER TI CHIEDERA IL PERMESSO<br>
+                    2. SCEGLI <strong>"CONSENTI"</strong> NELLA BARRA DEL BROWSER<br>
+                    3. IL GIOCO INIZIERA AUTOMATICAMENTE
+                </p>
+                <div>
+                    <button onclick="this.parentElement.parentElement.remove(); activateMicrophoneAndStart('${mode}');" 
+                            style="background: #4CAF50; color: white; border: none; padding: 12px 20px; border-radius: 8px; margin: 5px; cursor: pointer; font-weight: bold; font-size: 1em;">
+                        🎤 ATTIVA MICROFONO
+                    </button>
+                    <button onclick="this.parentElement.parentElement.remove();" 
+                            style="background: #6c757d; color: white; border: none; padding: 12px 20px; border-radius: 8px; margin: 5px; cursor: pointer;">
+                        ANNULLA
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(dialog);
+        }
+
+        async function activateMicrophoneAndStart(mode) {
+            try {
+                // Richiedi permessi con user gesture
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                gameState.mediaStream = stream;
+                gameState.microphoneAllowed = true;
+                updateMicrophoneIcon();
+                
+                showFeedback('🎤 MICROFONO ATTIVATO! INIZIAMO IL GIOCO...', 'success');
+                
+                // Inizia il gioco dopo un breve delay
+                setTimeout(() => {
+                    startGame(mode);
+                }, 1500);
+                
+            } catch (error) {
+                console.warn('Permessi microfono negati:', error);
+                gameState.microphoneAllowed = false;
+                updateMicrophoneIcon();
+                
+                // Mostra dialog alternativo
+                showMicrophoneErrorDialog(mode);
+            }
+        }
+
+        function showMicrophoneErrorDialog(mode) {
+            const dialog = document.createElement('div');
+            dialog.style.cssText = `
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background: #f0f4f8; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 3000; text-align: center; max-width: 400px; width: 90%;
+            `;
+            
+            dialog.innerHTML = `
+                <h3 style="color: #ff6b6b; margin-bottom: 15px;">🚫 MICROFONO NON DISPONIBILE</h3>
+                <p style="margin-bottom: 15px;">NON E STATO POSSIBILE ACCEDERE AL MICROFONO.</p>
+                
+                <div style="background: #e9ecef; padding: 15px; border-radius: 8px; margin: 15px 0; text-align: left;">
+                    <h4 style="margin-top: 0; color: #495057;">🔧 POSSIBILI SOLUZIONI:</h4>
+                    <ul style="margin: 8px 0; padding-left: 15px; color: #6c757d; font-size: 0.9em;">
+                        <li>RICARICA LA PAGINA E RIPROVA</li>
+                        <li>CONTROLLA CHE NESSUN'ALTRA APP STIA USANDO IL MICROFONO</li>
+                        <li>VERIFICA LE IMPOSTAZIONI PRIVACY DEL BROWSER</li>
+                    </ul>
+                </div>
+                
+                <div style="background: #e7f3ff; padding: 12px; border-radius: 8px; margin: 15px 0;">
+                    <p style="margin: 0; color: #0066cc; font-size: 0.9em;">
+                        💡 <strong>NEL FRATTEMPO:</strong> PROVA LE MODALITA "ASCOLTA E SCEGLI" E "COMPONI IL NUMERO" - FUNZIONANO PERFETTAMENTE SENZA MICROFONO!
+                    </p>
+                </div>
+                
+                <div>
+                    <button onclick="this.parentElement.parentElement.remove(); activateMicrophoneAndStart('${mode}');" 
+                            style="background: #4CAF50; color: white; border: none; padding: 10px 15px; border-radius: 8px; margin: 3px; cursor: pointer; font-size: 0.9em;">
+                        🔄 RIPROVA
+                    </button>
+                    <button onclick="this.parentElement.parentElement.remove(); showLevelSelection();" 
+                            style="background: #2196F3; color: white; border: none; padding: 10px 15px; border-radius: 8px; margin: 3px; cursor: pointer; font-size: 0.9em;">
+                        🎮 ALTRE MODALITA
+                    </button>
+                    <button onclick="this.parentElement.parentElement.remove();" 
+                            style="background: #6c757d; color: white; border: none; padding: 10px 15px; border-radius: 8px; margin: 3px; cursor: pointer; font-size: 0.9em;">
+                        CHIUDI
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(dialog);
+        }
+
+        // Avvio giochi (modalità senza microfono o con microfono già attivato)
+        function startGame(mode) {
+            if (!gameState.currentLevel) {
+                showFeedback('SELEZIONA PRIMA UN LIVELLO!', 'error');
+                return;
+            }
+
+            gameState.currentMode = mode;
+            gameState.currentQuestion = 0;
+            gameState.answers = [];
+            playSound('start');
+
+            switch(mode) {
+                case 'listen':
+                    startListenAndChoose();
+                    break;
+                case 'speak':
+                    startReadAloud();
+                    break;
+                case 'compose':
+                    startComposeNumber();
+                    break;
+                case 'speed':
+                    startSpeedChallenge();
+                    break;
+            }
+        }
+
+        // Modalità "Ascolta e Scegli"
+        function startListenAndChoose() {
+            const gameArea = document.getElementById('gameArea');
+            gameState.currentNumber = generateRandomNumber();
+            
+            const options = [
+                gameState.currentNumber,
+                generateRandomNumber(),
+                generateRandomNumber()
+            ].sort(() => Math.random() - 0.5);
+
+            gameArea.innerHTML = `
+                <div class="game-content">
+                    <h2 class="game-title">🎧 ASCOLTA E SCEGLI</h2>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${(gameState.currentQuestion / gameState.totalQuestions) * 100}%"></div>
+                    </div>
+                    <p>DOMANDA ${gameState.currentQuestion + 1} DI ${gameState.totalQuestions}</p>
+                    
+                    <div style="margin: 15px 0;">
+                        <button onclick="speakNumber(${gameState.currentNumber})" 
+                                style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 0.9em; cursor: pointer;">
+                            🔊 ASCOLTA IL NUMERO
+                        </button>
+                    </div>
+
+                    <div class="options-grid">
+                        ${options.map(num => `
+                            <button class="option-btn" onclick="checkAnswer(${num}, ${gameState.currentNumber})">
+                                ${num.toLocaleString('it-IT')}
+                            </button>
+                        `).join('')}
+                    </div>
+
+                    ${createHelperTools()}
+                </div>
+            `;
+
+            // Pronuncia automatica dopo 1 secondo
+            setTimeout(() => speakNumber(gameState.currentNumber), 1000);
+        }
+
+        // Modalità "Leggi ad Alta Voce"
+        function startReadAloud() {
+            const gameArea = document.getElementById('gameArea');
+            gameState.currentNumber = generateRandomNumber();
+
+            gameArea.innerHTML = `
+                <div class="game-content">
+                    <h2 class="game-title">🗣️ LEGGI AD ALTA VOCE</h2>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${(gameState.currentQuestion / gameState.totalQuestions) * 100}%"></div>
+                    </div>
+                    <p>DOMANDA ${gameState.currentQuestion + 1} DI ${gameState.totalQuestions}</p>
+                    
+                    <div class="number-display">${gameState.currentNumber.toLocaleString('it-IT')}</div>
+                    
+                    <p style="font-size: 0.9em; margin: 10px 0;">LEGGI QUESTO NUMERO AD ALTA VOCE!</p>
+                    
+                    <button onclick="startRecording()" 
+                            style="background: #ff6b6b; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 1em; cursor: pointer; margin: 10px;">
+                        🎤 INIZIA A PARLARE
+                    </button>
+
+                    ${createHelperTools()}
+                </div>
+            `;
+        }
+
+        // Modalità "Componi il Numero"
+        function startComposeNumber() {
+            const gameArea = document.getElementById('gameArea');
+            gameState.currentNumber = generateRandomNumber();
+            const digits = gameState.currentNumber.toString().split('');
+            const allDigits = [0,1,2,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
+
+            gameArea.innerHTML = `
+                <div class="game-content">
+                    <h2 class="game-title">🔢 COMPONI IL NUMERO</h2>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${(gameState.currentQuestion / gameState.totalQuestions) * 100}%"></div>
+                    </div>
+                    <p>DOMANDA ${gameState.currentQuestion + 1} DI ${gameState.totalQuestions}</p>
+                    
+                    <button onclick="speakNumber(${gameState.currentNumber})" 
+                            style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 0.9em; cursor: pointer; margin: 10px;">
+                        🔊 ASCOLTA IL NUMERO
+                    </button>
+
+                    <div class="compose-area" id="composeArea">
+                        ${digits.map((_, i) => `<div class="digit-slot" data-position="${i}"></div>`).join('')}
+                    </div>
+
+                    <div class="digits-bank">
+                        ${allDigits.map(digit => `
+                            <div class="draggable-digit" draggable="true" data-digit="${digit}">
+                                ${digit}
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <button onclick="checkComposedNumber()" 
+                            style="background: #2196F3; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 0.9em; cursor: pointer; margin: 10px;">
+                        ✓ VERIFICA
+                    </button>
+
+                    ${createHelperTools()}
+                </div>
+            `;
+
+            initDragAndDrop();
+            setTimeout(() => speakNumber(gameState.currentNumber), 1000);
+        }
+
+        // Modalità "Sfida Velocità"
+        function startSpeedChallenge() {
+            const gameArea = document.getElementById('gameArea');
+            const numbers = [];
+            for(let i = 0; i < 5; i++) {
+                numbers.push(generateRandomNumber());
+            }
+
+            gameArea.innerHTML = `
+                <div class="game-content">
+                    <h2 class="game-title">⚡ SFIDA VELOCITA</h2>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${(gameState.currentQuestion / gameState.totalQuestions) * 100}%"></div>
+                    </div>
+                    <p>LEGGI QUESTA SEQUENZA DI NUMERI IL PIU VELOCEMENTE POSSIBILE!</p>
+                    
+                    <div style="font-size: 1.3em; margin: 10px 0; line-height: 1.2;">
+                        ${numbers.map(num => `<div style="margin: 5px 0;">${num.toLocaleString('it-IT')}</div>`).join('')}
+                    </div>
+                    
+                    <button onclick="startSpeedRecording([${numbers.join(',')}])" 
+                            style="background: #ff6b6b; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 1em; cursor: pointer;">
+                        🏃‍♂️ INIZIA LA SFIDA!
+                    </button>
+
+                    <div id="speedTimer" style="font-size: 1em; margin: 10px 0; font-weight: bold;"></div>
+                </div>
+            `;
+        }
+
+        // Funzioni di supporto
+        function generateRandomNumber() {
+            const [min, max] = levels[gameState.currentLevel].range;
+            
+            // 50% di probabilità di generare numeri con zeri
+            if (Math.random() < 0.5) {
+                return generateNumberWithZeros(min, max);
+            }
+            
+            // Altrimenti genera numero normale
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function generateNumberWithZeros(min, max) {
+            // Pattern per numeri con zeri più interessanti per i bambini
+            const patterns = [
+                // Numeri che finiscono con 00
+                () => Math.floor(Math.random() * (Math.floor(max/100) - Math.ceil(min/100) + 1) + Math.ceil(min/100)) * 100,
+                
+                // Numeri che finiscono con 0X (X = 1-9)
+                () => {
+                    const base = Math.floor(Math.random() * (Math.floor(max/100) - Math.ceil(min/100) + 1) + Math.ceil(min/100)) * 100;
+                    return base + Math.floor(Math.random() * 9) + 1;
+                },
+                
+                // Numeri con zero nelle decine (X0X)
+                () => {
+                    const thousands = Math.floor(Math.random() * 9) + 1;
+                    const hundreds = Math.floor(Math.random() * 10);
+                    const units = Math.floor(Math.random() * 10);
+                    const number = thousands * 1000 + hundreds * 100 + units;
+                    return number >= min && number <= max ? number : generateRandomNumber();
+                },
+                
+                // Numeri con zero nelle centinaia (X0XX)
+                () => {
+                    const thousands = Math.floor(Math.random() * 9) + 1;
+                    const tens = Math.floor(Math.random() * 10);
+                    const units = Math.floor(Math.random() * 10);
+                    const number = thousands * 1000 + tens * 10 + units;
+                    return number >= min && number <= max ? number : generateRandomNumber();
+                }
+            ];
+            
+            // Scegli un pattern casuale
+            const pattern = patterns[Math.floor(Math.random() * patterns.length)];
+            const number = pattern();
+            
+            // Verifica che sia nel range, altrimenti genera numero normale
+            return (number >= min && number <= max) ? number : Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function speakNumber(number) {
+            if (gameState.speechSynthesis) {
+                const utterance = new SpeechSynthesisUtterance(numberToWords(number));
+                utterance.lang = 'it-IT';
+                utterance.rate = 0.8;
+                gameState.speechSynthesis.speak(utterance);
+                playSound('speak');
+            }
+        }
+
+        function numberToWords(num) {
+            // Conversione numero in parole per la sintesi vocale
+            const ones = ['zero', 'uno', 'due', 'tre', 'quattro', 'cinque', 'sei', 'sette', 'otto', 'nove'];
+            const teens = ['dieci', 'undici', 'dodici', 'tredici', 'quattordici', 'quindici', 'sedici', 'diciassette', 'diciotto', 'diciannove'];
+            const tens = ['', '', 'venti', 'trenta', 'quaranta', 'cinquanta', 'sessanta', 'settanta', 'ottanta', 'novanta'];
+            const hundreds = ['', 'cento', 'duecento', 'trecento', 'quattrocento', 'cinquecento', 'seicento', 'settecento', 'ottocento', 'novecento'];
+
+            if (num === 0) return 'zero';
+            if (num < 10) return ones[num];
+            if (num < 20) return teens[num - 10];
+            if (num < 100) {
+                const ten = Math.floor(num / 10);
+                const one = num % 10;
+                return tens[ten] + (one > 0 ? ones[one] : '');
+            }
+            if (num < 1000) {
+                const hundred = Math.floor(num / 100);
+                const remainder = num % 100;
+                return hundreds[hundred] + (remainder > 0 ? ' ' + numberToWords(remainder) : '');
+            }
+            if (num < 10000) {
+                const thousand = Math.floor(num / 1000);
+                const remainder = num % 1000;
+                const thousandWord = thousand === 1 ? 'mille' : ones[thousand] + 'mila';
+                return thousandWord + (remainder > 0 ? ' ' + numberToWords(remainder) : '');
+            }
+            
+            return num.toString(); // Fallback
+        }
+
+        function checkAnswer(selected, correct) {
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                const btnValue = parseInt(btn.textContent.replace(/\./g, ''));
+                if (btnValue === correct) {
+                    btn.classList.add('correct');
+                } else if (btnValue === selected && selected !== correct) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (selected === correct) {
+                playSound('success');
+                showFeedback('CORRETTO! 🎉', 'success');
+                gameState.score += 10;
+                gameState.answers.push(true);
+                saveGameState(); // Salva quando si guadagnano punti
+            } else {
+                playSound('error');
+                showFeedback(`SBAGLIATO! LA RISPOSTA CORRETTA ERA ${correct.toLocaleString('it-IT')}`, 'error');
+                gameState.answers.push(false);
+            }
+
+            setTimeout(() => {
+                gameState.currentQuestion++;
+                if (gameState.currentQuestion < gameState.totalQuestions) {
+                    startListenAndChoose();
+                } else {
+                    showResults();
+                }
+            }, 2000);
+        }
+
+        // Gestione permessi microfono
+        async function requestMicrophonePermission() {
+            try {
+                // Mantieni lo stream attivo per conservare i permessi
+                if (!gameState.mediaStream) {
+                    gameState.mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    console.log('MediaStream ottenuto e mantenuto attivo');
+                }
+                
+                gameState.microphoneAllowed = true;
+                updateMicrophoneIcon();
+                console.log('Permessi microfono concessi e mantenuti');
+                
+                // Non fermare lo stream per mantenere i permessi
+                return true;
+            } catch (error) {
+                console.warn('Permessi microfono negati:', error);
+                gameState.microphoneAllowed = false;
+                updateMicrophoneIcon();
+                showMicrophonePermissionDialog();
+                return false;
+            }
+        }
+
+        function showMicrophonePermissionDialog() {
+            const dialog = document.createElement('div');
+            dialog.style.cssText = `
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background: #f0f4f8; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 3000; text-align: center; max-width: 350px; width: 90%;
+            `;
+            
+            dialog.innerHTML = `
+                <h3 style="color: #4CAF50; margin-bottom: 15px;">🎤 PERMESSI MICROFONO</h3>
+                <p style="margin-bottom: 15px;">PER GIOCARE ALLE MODALITA VOCALI, IL GIOCO HA BISOGNO DI ACCEDERE AL MICROFONO.</p>
+                <p style="margin-bottom: 15px; font-size: 0.8em; color: #666;">
+                    IL BROWSER TI CHIEDERA IL PERMESSO. SCEGLI <strong>"CONSENTI"</strong> PER ATTIVARE TUTTE LE FUNZIONI.
+                </p>
+                <p style="margin-bottom: 15px; font-size: 0.7em; color: #999;">
+                    💡 SUGGERIMENTO: LE MODALITA "ASCOLTA E SCEGLI" E "COMPONI IL NUMERO" FUNZIONANO ANCHE SENZA MICROFONO!
+                </p>
+                <div>
+                    <button onclick="this.parentElement.parentElement.remove(); requestMicrophonePermission();" 
+                            style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 8px; margin: 5px; cursor: pointer; font-weight: bold;">
+                        🎤 RICHIEDI PERMESSI
+                    </button>
+                    <button onclick="this.parentElement.parentElement.remove();" 
+                            style="background: #ccc; color: #333; border: none; padding: 10px 20px; border-radius: 8px; margin: 5px; cursor: pointer;">
+                        CHIUDI
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(dialog);
+        }
+
+        function updateMicrophoneIcon() {
+            const micIcon = document.getElementById('micIcon');
+            if (gameState.microphoneAllowed) {
+                micIcon.innerHTML = '🎤';
+                micIcon.title = 'Microfono attivo';
+            } else {
+                micIcon.innerHTML = '🔇';
+                micIcon.title = 'Microfono non disponibile - Clicca per riattivare';
+            }
+        }
+
+        // Riconoscimento vocale
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window) {
+                // Crea UNA SOLA istanza globale riutilizzabile
+                gameState.recognition = new webkitSpeechRecognition();
+                gameState.recognition.lang = 'it-IT';
+                gameState.recognition.continuous = false;
+                gameState.recognition.interimResults = false;
+
+                gameState.recognition.onresult = function(event) {
+                    const spokenText = event.results[0][0].transcript.toLowerCase();
+                    handleSpeechResult(spokenText);
+                };
+
+                gameState.recognition.onerror = function(event) {
+                    console.error('Errore riconoscimento:', event.error);
+                    
+                    let errorMessage = 'ERRORE NEL RICONOSCIMENTO VOCALE. RIPROVA!';
+                    
+                    switch(event.error) {
+                        case 'not-allowed':
+                            errorMessage = 'PERMESSI MICROFONO NEGATI. CONTROLLA LE IMPOSTAZIONI DEL BROWSER.';
+                            gameState.microphoneAllowed = false;
+                            updateMicrophoneIcon();
+                            // Richiedi di nuovo i permessi
+                            setTimeout(() => requestMicrophonePermission(), 1000);
+                            break;
+                        case 'no-speech':
+                            errorMessage = 'NESSUN SUONO RILEVATO. PARLA PIU FORTE!';
+                            break;
+                        case 'audio-capture':
+                            errorMessage = 'MICROFONO NON DISPONIBILE. CONTROLLA I COLLEGAMENTI.';
+                            break;
+                        case 'network':
+                            errorMessage = 'ERRORE DI RETE. CONTROLLA LA CONNESSIONE INTERNET.';
+                            break;
+                    }
+                    
+                    showFeedback(errorMessage, 'error');
+                    stopRecording();
+                };
+
+                gameState.recognition.onend = function() {
+                    stopRecording();
+                };
+                
+                console.log('SpeechRecognition inizializzato (istanza singola)');
+            } else {
+                console.warn('Riconoscimento vocale non supportato in questo browser');
+                gameState.microphoneAllowed = false;
+                updateMicrophoneIcon();
+            }
+        }
+
+        function startRecording() {
+            // Verifica permessi prima di procedere
+            if (!gameState.microphoneAllowed || !gameState.mediaStream) {
+                console.log('Richiedendo permessi microfono...');
+                requestMicrophonePermission().then(success => {
+                    if (success) {
+                        // Riprova dopo aver ottenuto i permessi
+                        setTimeout(() => startRecording(), 500);
+                    }
+                });
+                return;
+            }
+
+            if (!gameState.recognition) {
+                showFeedback('RICONOSCIMENTO VOCALE NON SUPPORTATO IN QUESTO BROWSER', 'error');
+                return;
+            }
+
+            // Verifica che non sia già in registrazione
+            if (gameState.isRecording) {
+                console.log('Già in registrazione, fermando prima...');
+                gameState.recognition.stop();
+                return;
+            }
+
+            const micIcon = document.getElementById('micIcon');
+            
+            try {
+                // Riutilizza la stessa istanza di SpeechRecognition
+                gameState.isRecording = true;
+                micIcon.classList.add('recording');
+                gameState.recognition.start();
+                playSound('record_start');
+                console.log('Registrazione avviata immediatamente');
+                
+                setTimeout(() => {
+                    if (gameState.isRecording) {
+                        gameState.recognition.stop();
+                    }
+                }, 5000); // Stop dopo 5 secondi
+            } catch (error) {
+                console.error('Errore avvio registrazione:', error);
+                showFeedback('IMPOSSIBILE AVVIARE LA REGISTRAZIONE. RIPROVA!', 'error');
+                stopRecording();
+            }
+        }
+
+        function stopRecording() {
+            gameState.isRecording = false;
+            document.getElementById('micIcon').classList.remove('recording');
+        }
+
+        function handleSpeechResult(spokenText) {
+            console.log('Riconosciuto:', spokenText);
+            
+            // Analizza il numero pronunciato
+            const spokenNumber = parseSpokenNumber(spokenText);
+            const correct = gameState.currentNumber;
+            
+            if (Math.abs(spokenNumber - correct) <= correct * 0.1) { // 10% tolleranza
+                playSound('success');
+                showFeedback('PERFETTO! HAI PRONUNCIATO CORRETTAMENTE! 🎉', 'success');
+                gameState.score += 15;
+                gameState.answers.push(true);
+                saveGameState(); // Salva quando si guadagnano punti
+            } else {
+                playSound('error');
+                showFeedback(`RIPROVA! IL NUMERO ERA ${correct.toLocaleString('it-IT')}. HAI DETTO QUALCOSA CHE SUONA COME "${spokenText}"`, 'error');
+                gameState.answers.push(false);
+            }
+
+            setTimeout(() => {
+                gameState.currentQuestion++;
+                if (gameState.currentQuestion < gameState.totalQuestions) {
+                    startReadAloud();
+                } else {
+                    showResults();
+                }
+            }, 3000);
+        }
+
+        function parseSpokenNumber(text) {
+            // Conversione semplificata da testo a numero
+            // Questa è una versione base - in produzione servirebbe una libreria più sofisticata
+            const cleanText = text.replace(/\s+/g, '').toLowerCase();
+            
+            // Mappature base
+            const digitMap = {
+                'zero': 0, 'uno': 1, 'due': 2, 'tre': 3, 'quattro': 4,
+                'cinque': 5, 'sei': 6, 'sette': 7, 'otto': 8, 'nove': 9,
+                'dieci': 10, 'undici': 11, 'dodici': 12, 'tredici': 13,
+                'quattordici': 14, 'quindici': 15, 'sedici': 16, 'diciassette': 17,
+                'diciotto': 18, 'diciannove': 19, 'venti': 20, 'trenta': 30,
+                'quaranta': 40, 'cinquanta': 50, 'sessanta': 60, 'settanta': 70,
+                'ottanta': 80, 'novanta': 90, 'cento': 100, 'mille': 1000
+            };
+
+            // Cerca corrispondenze esatte
+            if (digitMap[cleanText] !== undefined) {
+                return digitMap[cleanText];
+            }
+
+            // Fallback: cerca numeri nel testo
+            const numbers = text.match(/\d+/g);
+            if (numbers && numbers.length > 0) {
+                return parseInt(numbers[0]);
+            }
+
+            return -1; // Non riconosciuto
+        }
+
+        // Drag and Drop
+        function initDragAndDrop() {
+            const draggableDigits = document.querySelectorAll('.draggable-digit');
+            const digitSlots = document.querySelectorAll('.digit-slot');
+
+            draggableDigits.forEach(digit => {
+                digit.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('text/plain', this.dataset.digit);
+                    this.classList.add('dragging');
+                });
+
+                digit.addEventListener('dragend', function(e) {
+                    this.classList.remove('dragging');
+                });
+            });
+
+            digitSlots.forEach(slot => {
+                slot.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                });
+
+                slot.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    const digit = e.dataTransfer.getData('text/plain');
+                    this.textContent = digit;
+                    this.classList.add('filled');
+                    this.dataset.digit = digit;
+                    playSound('drop');
+                });
+
+                slot.addEventListener('click', function() {
+                    this.textContent = '';
+                    this.classList.remove('filled');
+                    delete this.dataset.digit;
+                });
+            });
+        }
+
+        function checkComposedNumber() {
+            const slots = document.querySelectorAll('.digit-slot');
+            let composedNumber = '';
+            
+            slots.forEach(slot => {
+                composedNumber += slot.dataset.digit || '0';
+            });
+
+            const composed = parseInt(composedNumber);
+            const correct = gameState.currentNumber;
+
+            if (composed === correct) {
+                playSound('success');
+                showFeedback('PERFETTO! HAI COMPOSTO IL NUMERO CORRETTAMENTE! 🎉', 'success');
+                gameState.score += 20;
+                gameState.answers.push(true);
+                saveGameState(); // Salva quando si guadagnano punti
+            } else {
+                playSound('error');
+                showFeedback(`QUASI! IL NUMERO CORRETTO ERA ${correct.toLocaleString('it-IT')}`, 'error');
+                gameState.answers.push(false);
+            }
+
+            setTimeout(() => {
+                gameState.currentQuestion++;
+                if (gameState.currentQuestion < gameState.totalQuestions) {
+                    startComposeNumber();
+                } else {
+                    showResults();
+                }
+            }, 3000);
+        }
+
+        // Sfida velocità 
+        function startSpeedRecording(numbers) {
+            const startTime = Date.now();
+            const timer = document.getElementById('speedTimer');
+            
+            const timerInterval = setInterval(() => {
+                const elapsed = (Date.now() - startTime) / 1000;
+                timer.textContent = `TEMPO: ${elapsed.toFixed(1)}s`;
+            }, 100);
+
+            if (gameState.recognition) {
+                gameState.recognition.onresult = function(event) {
+                    clearInterval(timerInterval);
+                    const endTime = Date.now();
+                    const totalTime = (endTime - startTime) / 1000;
+                    
+                    const spokenText = event.results[0][0].transcript;
+                    handleSpeedResult(spokenText, numbers, totalTime);
+                };
+
+                gameState.recognition.start();
+                gameState.isRecording = true;
+                document.getElementById('micIcon').classList.add('recording');
+            }
+        }
+
+        function handleSpeedResult(spokenText, numbers, time) {
+            stopRecording();
+            
+            // Valutazione semplificata basata sul tempo
+            let score = 0;
+            if (time < 10) score = 30;
+            else if (time < 15) score = 20;
+            else if (time < 20) score = 10;
+            else score = 5;
+
+            gameState.score += score;
+            gameState.answers.push(time < 20); // Successo se sotto 20 secondi
+            saveGameState(); // Salva quando si guadagnano punti
+
+            playSound('success');
+            showFeedback(`TEMPO: ${time.toFixed(1)}s - PUNTEGGIO: ${score} PUNTI! 🏃‍♂️`, 'success');
+
+            setTimeout(() => {
+                gameState.currentQuestion++;
+                if (gameState.currentQuestion < gameState.totalQuestions) {
+                    startSpeedChallenge();
+                } else {
+                    showResults();
+                }
+            }, 3000);
+        }
+
+        // Strumenti di aiuto
+        function createHelperTools() {
+            return `
+                <div class="helper-tools">
+                    <div class="position-tables">
+                        <h4>TABELLA POSIZIONALE</h4>
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
+                            <!-- Casa delle migliaia -->
+                            <div class="position-table">
+                                <table>
+                                    <tr>
+                                        <th style="background: #ff9800; color: white;">dak</th>
+                                        <th style="background: #ffc107; color: black;">uk</th>
+                                    </tr>
+                                    <tr>
+                                        <td style="background: #ffe0b2; color: #e65100;">10000</td>
+                                        <td style="background: #fff3c4; color: #f57c00;">1000</td>
+                                    </tr>
+                                </table>
+                                <div style="text-align: center; margin-top: 2px; font-size: 0.6em; color: #666;">CASA MIGLIAIA</div>
+                            </div>
+
+                            <!-- Separatore punto rosso -->
+                            <div style="width: 10px; height: 10px; background: #f44336; border-radius: 50%; box-shadow: 0 1px 4px rgba(244, 67, 54, 0.5);"></div>
+
+                            <!-- Casa delle unità -->
+                            <div class="position-table">
+                                <table>
+                                    <tr>
+                                        <th style="background: #4CAF50; color: white;">h</th>
+                                        <th style="background: #f44336; color: white;">da</th>
+                                        <th style="background: #2196F3; color: white;">u</th>
+                                    </tr>
+                                    <tr>
+                                        <td style="background: #c8e6c9; color: #2e7d32;">100</td>
+                                        <td style="background: #ffcdd2; color: #c62828;">10</td>
+                                        <td style="background: #bbdefb; color: #1565c0;">1</td>
+                                    </tr>
+                                </table>
+                                <div style="text-align: center; margin-top: 2px; font-size: 0.6em; color: #666;">CASA UNITA</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Risultati e feedback
+        function showResults() {
+            const correctAnswers = gameState.answers.filter(answer => answer).length;
+            const percentage = (correctAnswers / gameState.totalQuestions) * 100;
+            
+            let stars = 0;
+            if (percentage >= 90) stars = 3;
+            else if (percentage >= 70) stars = 2;
+            else if (percentage >= 50) stars = 1;
+
+            gameState.stars += stars;
+
+            // Badge system
+            checkForBadges();
+            
+            // Salva lo stato con le nuove stelle e badge
+            saveGameState();
+
+            const gameArea = document.getElementById('gameArea');
+            gameArea.innerHTML = `
+                <div class="game-content">
+                    <h2 class="game-title">🏆 RISULTATI</h2>
+                    
+                    <div style="font-size: 2.5em; margin: 15px 0;">
+                        ${'⭐'.repeat(stars)}
+                    </div>
+                    
+                    <div style="font-size: 1.2em; margin: 15px 0;">
+                        <p>RISPOSTE CORRETTE: ${correctAnswers}/${gameState.totalQuestions}</p>
+                        <p>PERCENTUALE: ${percentage.toFixed(0)}%</p>
+                        <p>PUNTEGGIO: ${gameState.score} PUNTI</p>
+                        <p>STELLE GUADAGNATE: ${stars}</p>
+                    </div>
+
+                    ${gameState.badges.length > 0 ? `
+                        <div style="margin: 15px 0;">
+                            <h3>🏅 BADGE SBLOCCATI:</h3>
+                            ${gameState.badges.map(badge => `<p>🏅 ${badge}</p>`).join('')}
+                        </div>
+                    ` : ''}
+
+                    <div style="margin: 20px 0;">
+                        <button onclick="startGame('${gameState.currentMode}')" 
+                                style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 0.9em; cursor: pointer; margin: 6px;">
+                            🔄 GIOCA ANCORA
+                        </button>
+                        <button onclick="showLevelSelection()" 
+                                style="background: #2196F3; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 0.9em; cursor: pointer; margin: 6px;">
+                            📚 MENU PRINCIPALE
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            playSound('complete');
+        }
+
+        function checkForBadges() {
+            const newBadges = [];
+            
+            if (gameState.score >= 200 && !gameState.badges.includes('ESPERTO DELLE MIGLIAIA')) {
+                newBadges.push('ESPERTO DELLE MIGLIAIA');
+            }
+            
+            if (gameState.currentMode === 'speed' && !gameState.badges.includes('VELOCISTA DEI NUMERI')) {
+                newBadges.push('VELOCISTA DEI NUMERI');
+            }
+            
+            if (gameState.stars >= 10 && !gameState.badges.includes('COLLEZIONISTA DI STELLE')) {
+                newBadges.push('COLLEZIONISTA DI STELLE');
+            }
+
+            gameState.badges = [...gameState.badges, ...newBadges];
+        }
+
+        function showFeedback(message, type) {
+            const existingFeedback = document.querySelector('.feedback');
+            if (existingFeedback) {
+                existingFeedback.remove();
+            }
+
+            const feedback = document.createElement('div');
+            feedback.className = `feedback ${type}`;
+            feedback.textContent = message;
+            
+            const gameContent = document.querySelector('.game-content');
+            if (gameContent) {
+                gameContent.appendChild(feedback);
+                
+                setTimeout(() => {
+                    feedback.remove();
+                }, 3000);
+            }
+        }
+
+        // Sistema audio
+        function playSound(type) {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            const sounds = {
+                success: [523.25, 659.25, 783.99], // Do-Mi-Sol
+                error: [196, 147], // Sol-Re
+                click: [800],
+                start: [262, 330, 392, 523], // Do-Mi-Sol-Do
+                complete: [523, 587, 659, 698, 784, 880, 988, 1047], // Scala ascendente
+                drop: [440],
+                beep: [800],
+                speak: [600],
+                record_start: [440, 554]
+            };
+
+            const frequencies = sounds[type] || [440];
+            
+            frequencies.forEach((freq, index) => {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.3);
+                }, index * 150);
+            });
+        }
+
+        // Gestione eventi microfono
+        document.getElementById('micIcon').addEventListener('click', function() {
+            if (!gameState.microphoneAllowed) {
+                requestMicrophonePermission();
+            } else if (gameState.isRecording) {
+                gameState.recognition.stop();
+            } else if (gameState.currentMode === 'speak') {
+                startRecording();
+            } else {
+                showFeedback('SELEZIONA PRIMA UNA MODALITA VOCALE PER USARE IL MICROFONO!', 'error');
+            }
+        });
+
+        // Salvataggio stato (localStorage reale)
+        function saveGameState() {
+            try {
+                // Salva solo i dati persistenti, non gli oggetti del browser
+                const persistentState = {
+                    score: gameState.score,
+                    stars: gameState.stars,
+                    badges: gameState.badges,
+                    currentLevel: gameState.currentLevel,
+                    microphoneAllowed: gameState.microphoneAllowed
+                };
+                
+                localStorage.setItem('numeri_game_state', JSON.stringify(persistentState));
+                console.log('Stato salvato:', JSON.stringify(persistentState, null, 2));
+            } catch (error) {
+                console.error('Errore salvataggio stato:', error);
+            }
+        }
+
+        function loadGameState() {
+            try {
+                const savedState = localStorage.getItem('numeri_game_state');
+                if (savedState) {
+                    const parsedState = JSON.parse(savedState);
+                    
+                    // Ripristina solo i dati persistenti
+                    gameState.score = parsedState.score || 0;
+                    gameState.stars = parsedState.stars || 0;
+                    gameState.badges = parsedState.badges || [];
+                    gameState.currentLevel = parsedState.currentLevel || 1;
+                    gameState.microphoneAllowed = parsedState.microphoneAllowed || false;
+                    
+                    console.log('Stato caricato:', JSON.stringify(parsedState, null, 2));
+                } else {
+                    console.log('Nessuno stato salvato trovato, usando valori predefiniti');
+                }
+            } catch (error) {
+                console.error('Errore caricamento stato:', error);
+                // Usa valori predefiniti in caso di errore
+                gameState.score = 0;
+                gameState.stars = 0;
+                gameState.badges = [];
+                gameState.currentLevel = 1;
+                gameState.microphoneAllowed = false;
+            }
+        }
+
+        // Auto-salvataggio ogni 2 minuti (meno frequente ora che salviamo esplicitamente)
+        setInterval(saveGameState, 120000);
+    </script>
+</body>
+</html>

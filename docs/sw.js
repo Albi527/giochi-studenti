@@ -1,8 +1,8 @@
 // Service Worker v8.4.0 - COMPLETAMENTE AUTOMATICO PER BAMBINI A SCUOLA
-// 🚀 ZERO INTERVENTO UTENTE - AGGIORNAMENTI TRASPARENTI
+// 🚀 ZERO INTERVENTO UTENTE - AGGIORNAMENTI TRASPARENTI E SILENZIOSI
 // 🔢 NUOVO: Gioco "Impara i Numeri" aggiunto e ottimizzato
 // 🍎 Fix iOS Safari - Tutti i giochi compatibili iPhone/iPad
-// ⚡ SkipWaiting Immediato + Reload Forzato Automatico
+// ⚡ SkipWaiting IMMEDIATO + Reload AUTOMATICO + NO BANNER + NO BOTTONI
 
 const SW_VERSION = 'v8.4.0';
 const CACHE_NAME = 'giochi-educativi-v8.4.0';
@@ -38,8 +38,8 @@ const DATA_URLS = [
 
 // 🚨 CACHE VECCHIE DA ELIMINARE AUTOMATICAMENTE
 const OLD_CACHE_VERSIONS = [
-    'giochi-educativi-v8.3.6',  // 🆕 Versione precedente
-    'giochi-data-v8.3.6',      // 🆕 Versione precedente
+    'giochi-educativi-v8.3.6',
+    'giochi-data-v8.3.6',
     'giochi-educativi-v8.3.5',
     'giochi-data-v8.3.5',
     'giochi-educativi-v8.3.4',
@@ -48,48 +48,45 @@ const OLD_CACHE_VERSIONS = [
     'giochi-data-v8.3.2', 
     'giochi-educativi-v8.3.3',
     'giochi-data-v8.3.3',
-    // Aggiungi altre versioni se esistono
     'giochi-educativi-v8.2.0',
     'giochi-data-v8.2.0',
     'giochi-educativi-v8.1.0',
     'giochi-data-v8.1.0'
 ];
 
-console.log(`🚀 Service Worker ${SW_VERSION} - Avvio AUTOMATICO con gioco NUMERI`);
+console.log(`🚀 Service Worker ${SW_VERSION} - MODALITÀ AUTOMATICA SCUOLA ATTIVA`);
 
 // ========================================
-// 🔧 INSTALLAZIONE AUTOMATICA AGGRESSIVA
+// 🔧 INSTALLAZIONE AUTOMATICA IMMEDIATA
 // ========================================
 
 self.addEventListener('install', function(event) {
-    console.log(`🔧 SW ${SW_VERSION} - INSTALLAZIONE in corso...`);
+    console.log(`🔧 SW ${SW_VERSION} - INSTALLAZIONE AUTOMATICA in corso...`);
     
-    // ⚡ SKIP WAITING IMMEDIATO - NESSUNA ATTESA
+    // ⚡ SKIP WAITING IMMEDIATO E AGGRESSIVO - NESSUNA ATTESA
     self.skipWaiting();
     
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(function(cache) {
-                console.log(`📦 Cache ${CACHE_NAME} aperta - Caricamento risorse...`);
+                console.log(`📦 Cache ${CACHE_NAME} aperta - Caricamento automatico risorse...`);
                 
-                // 🎯 CACHE TUTTO IMMEDIATAMENTE
+                // 🎯 CACHE TUTTO IMMEDIATAMENTE con cache busting aggressivo
                 return cache.addAll(STATIC_CACHE_URLS.map(url => {
-                    // Cache busting: aggiungi timestamp per forzare aggiornamento
-                    const bustingUrl = url + (url.includes('?') ? '&' : '?') + `sw=${SW_VERSION}&t=${Date.now()}`;
-                    console.log(`📥 Cachando: ${url} -> ${bustingUrl}`);
+                    const bustingUrl = url + (url.includes('?') ? '&' : '?') + `sw=${SW_VERSION}&t=${Date.now()}&auto=1`;
+                    console.log(`📥 Cache automatica: ${url}`);
                     return bustingUrl;
                 }));
             })
             .then(function() {
-                console.log(`✅ SW ${SW_VERSION} - Tutte le risorse STATICHE cachate!`);
+                console.log(`✅ SW ${SW_VERSION} - Tutte le risorse STATICHE cachate automaticamente!`);
                 return caches.open(DATA_CACHE_NAME);
             })
             .then(function(dataCache) {
-                console.log(`📊 Cache DATI ${DATA_CACHE_NAME} aperta`);
-                // Cache dei dati con strategia diversa
+                console.log(`📊 Cache DATI ${DATA_CACHE_NAME} aperta automaticamente`);
                 return Promise.all(
                     DATA_URLS.map(url => {
-                        const bustingUrl = url + `?sw=${SW_VERSION}&t=${Date.now()}`;
+                        const bustingUrl = url + `?sw=${SW_VERSION}&t=${Date.now()}&auto=1`;
                         return fetch(bustingUrl)
                             .then(response => {
                                 if (response.ok) {
@@ -105,33 +102,34 @@ self.addEventListener('install', function(event) {
                 );
             })
             .then(function() {
-                console.log(`🎉 SW ${SW_VERSION} - INSTALLAZIONE COMPLETATA!`);
+                console.log(`🎉 SW ${SW_VERSION} - INSTALLAZIONE AUTOMATICA COMPLETATA!`);
                 
-                // 📢 Notifica installazione completata
+                // 📢 Notifica DISCRETA installazione completata - NO BANNER
                 self.clients.matchAll().then(clients => {
                     clients.forEach(client => {
                         client.postMessage({
                             type: 'SW_INSTALLED',
                             version: SW_VERSION,
-                            message: '🔢 Nuovo gioco "Impara i Numeri" disponibile!',
+                            message: '🔢 Nuovo gioco disponibile',
                             newGame: 'numeri.html',
+                            silentMode: true,  // 🔇 MODALITÀ SILENZIOSA
                             autoUpdate: true
                         });
                     });
                 });
             })
             .catch(function(error) {
-                console.error(`❌ Errore installazione SW ${SW_VERSION}:`, error);
+                console.error(`❌ Errore installazione automatica SW ${SW_VERSION}:`, error);
             })
     );
 });
 
 // ========================================
-// ⚡ ATTIVAZIONE AUTOMATICA AGGRESSIVA  
+// ⚡ ATTIVAZIONE AUTOMATICA IMMEDIATA  
 // ========================================
 
 self.addEventListener('activate', function(event) {
-    console.log(`⚡ SW ${SW_VERSION} - ATTIVAZIONE in corso...`);
+    console.log(`⚡ SW ${SW_VERSION} - ATTIVAZIONE AUTOMATICA in corso...`);
     
     event.waitUntil(
         Promise.all([
@@ -142,75 +140,70 @@ self.addEventListener('activate', function(event) {
             self.clients.claim()
         ])
         .then(function() {
-            console.log(`✅ SW ${SW_VERSION} - ATTIVAZIONE COMPLETATA!`);
+            console.log(`✅ SW ${SW_VERSION} - ATTIVAZIONE AUTOMATICA COMPLETATA!`);
             
-            // 📢 Notifica a tutti i client che l'aggiornamento è pronto
             return self.clients.matchAll();
         })
         .then(function(clients) {
-            console.log(`👥 Trovati ${clients.length} client attivi`);
+            console.log(`👥 Trovati ${clients.length} client - Applicazione automatica...`);
             
             clients.forEach(client => {
                 client.postMessage({
                     type: 'SW_ACTIVATED',
                     version: SW_VERSION,
-                    message: '🔢 Nuovo gioco "Impara i Numeri" aggiunto!',
-                    newGameAdded: '🔢 Impara i numeri 0-10.000 con voce e drag&drop!',
+                    message: '✅ Aggiornamento automatico completato',
+                    newGameAdded: '🔢 Gioco Numeri disponibile',
                     games: ['matematica.html', 'sfida-matematica.html', 'tabelline.html', 'numeri.html'],
-                    forceReload: true, // 🔄 FORZA RELOAD AUTOMATICO
+                    forceReload: true,    // 🔄 FORZA RELOAD AUTOMATICO
+                    silentMode: true,     // 🔇 MODALITÀ SILENZIOSA
                     autoUpdate: true
                 });
             });
             
-            // 🔄 RELOAD AUTOMATICO DOPO 2 SECONDI PER SICUREZZA
+            // 🔄 RELOAD AUTOMATICO IMMEDIATO per completare aggiornamento
             setTimeout(() => {
                 clients.forEach(client => {
                     client.postMessage({
                         type: 'FORCE_RELOAD',
-                        message: '🔄 Reload automatico per completare aggiornamento...'
+                        message: '🔄 Completamento automatico in corso...',
+                        silentMode: true
                     });
                 });
-            }, 2000);
+            }, 1000); // Ridotto a 1 secondo per velocità
         })
         .catch(function(error) {
-            console.error(`❌ Errore attivazione SW ${SW_VERSION}:`, error);
+            console.error(`❌ Errore attivazione automatica SW ${SW_VERSION}:`, error);
         })
     );
 });
 
-// 🧹 FUNZIONE PULIZIA CACHE AUTOMATICA
+// 🧹 FUNZIONE PULIZIA CACHE AUTOMATICA MIGLIORATA
 function cleanupOldCaches() {
-    console.log('🧹 Avvio pulizia automatica cache vecchie...');
+    console.log('🧹 Pulizia automatica cache vecchie...');
     
     return caches.keys().then(function(cacheNames) {
         const cachesToDelete = cacheNames.filter(cacheName => {
-            // Elimina cache vecchie specifiche
             if (OLD_CACHE_VERSIONS.includes(cacheName)) {
-                console.log(`🗑️ Eliminando cache vecchia: ${cacheName}`);
+                console.log(`🗑️ Eliminazione automatica cache: ${cacheName}`);
                 return true;
             }
             
-            // Elimina cache con pattern vecchi
             if (cacheName.startsWith('giochi-') && 
                 cacheName !== CACHE_NAME && 
                 cacheName !== DATA_CACHE_NAME) {
-                console.log(`🗑️ Eliminando cache pattern vecchio: ${cacheName}`);
+                console.log(`🗑️ Eliminazione automatica pattern: ${cacheName}`);
                 return true;
             }
             
             return false;
         });
         
-        console.log(`🧹 Eliminando ${cachesToDelete.length} cache vecchie:`, cachesToDelete);
+        console.log(`🧹 Eliminazione automatica di ${cachesToDelete.length} cache vecchie`);
         
         return Promise.all(
             cachesToDelete.map(cacheName => {
                 return caches.delete(cacheName).then(deleted => {
-                    if (deleted) {
-                        console.log(`✅ Cache eliminata: ${cacheName}`);
-                    } else {
-                        console.log(`⚠️ Impossibile eliminare: ${cacheName}`);
-                    }
+                    console.log(`${deleted ? '✅' : '⚠️'} Cache ${cacheName}: ${deleted ? 'eliminata' : 'errore'}`);
                     return deleted;
                 });
             })
@@ -219,17 +212,17 @@ function cleanupOldCaches() {
 }
 
 // ========================================
-// 📡 GESTIONE MESSAGGI DAI CLIENT
+// 📡 GESTIONE MESSAGGI DAI CLIENT (SEMPLIFICATA)
 // ========================================
 
 self.addEventListener('message', function(event) {
     const { type, payload } = event.data || {};
     
-    console.log(`📨 Messaggio ricevuto:`, event.data);
+    console.log(`📨 Messaggio ricevuto (modalità automatica):`, type);
     
     switch (type) {
         case 'SKIP_WAITING':
-            console.log('⚡ SKIP_WAITING richiesto - Attivazione immediata...');
+            console.log('⚡ SKIP_WAITING - Attivazione automatica immediata...');
             self.skipWaiting();
             break;
             
@@ -237,31 +230,37 @@ self.addEventListener('message', function(event) {
             event.ports[0]?.postMessage({
                 version: SW_VERSION,
                 caches: [CACHE_NAME, DATA_CACHE_NAME],
-                games: ['matematica.html', 'sfida-matematica.html', 'tabelline.html', 'numeri.html']
+                games: ['matematica.html', 'sfida-matematica.html', 'tabelline.html', 'numeri.html'],
+                automaticMode: true
             });
             break;
             
         case 'FORCE_UPDATE':
-            console.log('🔄 FORCE_UPDATE richiesto - Ricarico cache...');
+            console.log('🔄 FORCE_UPDATE automatico - Ricarico cache...');
             event.waitUntil(
-                caches.delete(CACHE_NAME)
-                    .then(() => caches.delete(DATA_CACHE_NAME))
-                    .then(() => {
-                        console.log('🔄 Cache eliminate, ricaricamento...');
-                        self.registration.update();
-                    })
+                Promise.all([
+                    caches.delete(CACHE_NAME),
+                    caches.delete(DATA_CACHE_NAME)
+                ]).then(() => {
+                    console.log('🔄 Cache eliminate automaticamente, ricaricamento...');
+                    self.registration.update();
+                })
             );
             break;
             
         case 'CLEANUP_CACHES':
-            console.log('🧹 CLEANUP_CACHES richiesto');
+            console.log('🧹 CLEANUP_CACHES automatico');
             event.waitUntil(cleanupOldCaches());
+            break;
+            
+        default:
+            // Ignora altri messaggi in modalità automatica
             break;
     }
 });
 
 // ========================================
-// 🌐 GESTIONE RICHIESTE CON STRATEGIA INTELLIGENTE
+// 🌐 GESTIONE RICHIESTE CON STRATEGIA OTTIMIZZATA
 // ========================================
 
 self.addEventListener('fetch', function(event) {
@@ -273,49 +272,44 @@ self.addEventListener('fetch', function(event) {
         return;
     }
     
-    // 🎯 STRATEGIA BASATA SUL TIPO DI RICHIESTA
+    // 🎯 STRATEGIA INTELLIGENTE BASATA SUL TIPO
     if (request.method === 'GET') {
         if (isDataRequest(url.pathname)) {
-            // 📊 STRATEGIA DATI: Network First con Cache Fallback
             event.respondWith(handleDataRequest(request));
         } else if (isDocumentRequest(request)) {
-            // 📄 STRATEGIA DOCUMENTI: Cache First con Network Fallback  
             event.respondWith(handleDocumentRequest(request));
         } else if (isSfidaMatematicaRequest(url.pathname)) {
-            // 🏆 STRATEGIA SPECIALE per Sfida Matematica
             event.respondWith(handleSfidaMatematicaRequest(request));
         } else if (isNumeriGameRequest(url.pathname)) {
-            // 🔢 STRATEGIA SPECIALE per Gioco Numeri
             event.respondWith(handleNumeriGameRequest(request));
         } else {
-            // 🎯 STRATEGIA GENERICA: Cache First
             event.respondWith(handleOtherRequests(request));
         }
     }
 });
 
-// 📊 GESTIONE RICHIESTE DATI (games.json, etc.)
+// 📊 GESTIONE RICHIESTE DATI (Automatica)
 function handleDataRequest(request) {
-    console.log('📊 Gestione richiesta DATI:', request.url);
+    console.log('📊 Gestione automatica richiesta DATI:', request.url);
     
     return caches.open(DATA_CACHE_NAME).then(function(cache) {
         return fetch(request).then(function(networkResponse) {
             if (networkResponse.ok) {
-                console.log('📥 Dati aggiornati dalla rete, aggiorno cache');
+                console.log('📥 Dati aggiornati automaticamente dalla rete');
                 cache.put(request, networkResponse.clone());
                 return networkResponse;
             }
             throw new Error('Network response not ok');
         }).catch(function() {
-            console.log('📋 Rete non disponibile, uso cache dati');
+            console.log('📋 Uso cache dati automaticamente');
             return cache.match(request).then(function(cachedResponse) {
                 if (cachedResponse) {
                     return cachedResponse;
                 }
-                // Fallback per dati mancanti
                 return new Response(JSON.stringify({
                     error: 'Dati non disponibili offline',
                     version: SW_VERSION,
+                    automaticMode: true,
                     offline: true
                 }), {
                     headers: { 'Content-Type': 'application/json' }
@@ -325,23 +319,23 @@ function handleDataRequest(request) {
     });
 }
 
-// 📄 GESTIONE RICHIESTE DOCUMENTI (HTML)
+// 📄 GESTIONE RICHIESTE DOCUMENTI (Cache First con Background Update)
 function handleDocumentRequest(request) {
-    console.log('📄 Gestione richiesta DOCUMENTO:', request.url);
+    console.log('📄 Gestione automatica documento:', request.url);
     
     return caches.open(CACHE_NAME).then(function(cache) {
         return cache.match(request).then(function(cachedResponse) {
             if (cachedResponse) {
-                console.log('📋 Documento trovato in cache');
+                console.log('📋 Documento da cache automatica');
                 
-                // 🔄 Aggiornamento in background
+                // 🔄 Aggiornamento silenzioso in background
                 fetch(request).then(function(networkResponse) {
                     if (networkResponse.ok) {
-                        console.log('🔄 Aggiornamento background documento in cache');
+                        console.log('🔄 Aggiornamento automatico background documento');
                         cache.put(request, networkResponse.clone());
                     }
-                }).catch(function() {
-                    console.log('🌐 Rete non disponibile per aggiornamento background');
+                }).catch(() => {
+                    // Ignora errori di background update
                 });
                 
                 return cachedResponse;
@@ -350,114 +344,118 @@ function handleDocumentRequest(request) {
             // Se non in cache, prova la rete
             return fetch(request).then(function(networkResponse) {
                 if (networkResponse.ok) {
-                    console.log('📥 Documento dalla rete, aggiungo a cache');
+                    console.log('📥 Documento dalla rete, cache automatica');
                     cache.put(request, networkResponse.clone());
                     return networkResponse;
                 }
                 throw new Error('Network response not ok');
             }).catch(function() {
-                console.log('❌ Documento non disponibile, fallback offline');
+                console.log('❌ Documento non disponibile, fallback automatico');
                 return generateOfflinePage(request);
             });
         });
     });
 }
 
-// 🏆 GESTIONE SPECIALE per SFIDA MATEMATICA
+// 🏆 GESTIONE AUTOMATICA SFIDA MATEMATICA
 function handleSfidaMatematicaRequest(request) {
-    console.log('🏆 Gestione SPECIALE Sfida Matematica:', request.url);
+    console.log('🏆 Gestione automatica Sfida Matematica:', request.url);
     
     return caches.open(CACHE_NAME).then(function(cache) {
         return cache.match(request).then(function(cachedResponse) {
             if (cachedResponse) {
-                console.log('🏆 Sfida Matematica trovata in cache');
+                console.log('🏆 Sfida Matematica da cache automatica');
                 
-                // Aggiornamento background con priorità alta
+                // Background update silenzioso
                 fetch(request).then(function(networkResponse) {
                     if (networkResponse.ok) {
-                        console.log('🔄 Aggiornamento prioritario Sfida Matematica');
+                        console.log('🔄 Aggiornamento automatico Sfida Matematica');
                         cache.put(request, networkResponse.clone());
                         
-                        // Notifica ai client dell'aggiornamento
+                        // Notifica discreta ai client
                         self.clients.matchAll().then(clients => {
                             clients.forEach(client => {
                                 client.postMessage({
                                     type: 'SFIDA_UPDATED',
-                                    message: '🏆 Sfida Matematica aggiornata!',
-                                    url: request.url
+                                    message: '🏆 Sfida aggiornata automaticamente',
+                                    url: request.url,
+                                    silentMode: true
                                 });
                             });
                         });
                     }
-                }).catch(() => console.log('🌐 Rete non disponibile per Sfida Matematica'));
+                }).catch(() => {
+                    // Ignora errori
+                });
                 
                 return cachedResponse;
             }
             
-            // Se non in cache, prova rete con retry
             return fetchWithRetry(request, 2).then(function(networkResponse) {
                 if (networkResponse.ok) {
-                    console.log('🏆 Sfida Matematica dalla rete, cache prioritaria');
+                    console.log('🏆 Sfida Matematica dalla rete, cache automatica');
                     cache.put(request, networkResponse.clone());
                     return networkResponse;
                 }
                 throw new Error('Network response not ok');
             }).catch(function() {
-                console.log('❌ Sfida Matematica non disponibile, fallback speciale');
+                console.log('❌ Sfida Matematica non disponibile, fallback automatico');
                 return generateSfidaOfflinePage();
             });
         });
     });
 }
 
-// 🔢 GESTIONE SPECIALE per GIOCO NUMERI (NUOVO)
+// 🔢 GESTIONE AUTOMATICA GIOCO NUMERI
 function handleNumeriGameRequest(request) {
-    console.log('🔢 Gestione SPECIALE Gioco Numeri:', request.url);
+    console.log('🔢 Gestione automatica Gioco Numeri:', request.url);
     
     return caches.open(CACHE_NAME).then(function(cache) {
         return cache.match(request).then(function(cachedResponse) {
             if (cachedResponse) {
-                console.log('🔢 Gioco Numeri trovato in cache');
+                console.log('🔢 Gioco Numeri da cache automatica');
                 
-                // Aggiornamento background con priorità alta per il nuovo gioco
+                // Background update silenzioso con priorità
                 fetch(request).then(function(networkResponse) {
                     if (networkResponse.ok) {
-                        console.log('🔄 Aggiornamento prioritario Gioco Numeri');
+                        console.log('🔄 Aggiornamento automatico Gioco Numeri');
                         cache.put(request, networkResponse.clone());
                         
-                        // Notifica ai client dell'aggiornamento
+                        // Notifica discreta
                         self.clients.matchAll().then(clients => {
                             clients.forEach(client => {
                                 client.postMessage({
                                     type: 'NUMERI_UPDATED',
-                                    message: '🔢 Gioco Numeri aggiornato!',
-                                    url: request.url
+                                    message: '🔢 Gioco Numeri aggiornato automaticamente',
+                                    url: request.url,
+                                    silentMode: true
                                 });
                             });
                         });
                     }
-                }).catch(() => console.log('🌐 Rete non disponibile per Gioco Numeri'));
+                }).catch(() => {
+                    // Ignora errori
+                });
                 
                 return cachedResponse;
             }
             
-            // Se non in cache, prova rete con retry
             return fetchWithRetry(request, 2).then(function(networkResponse) {
                 if (networkResponse.ok) {
-                    console.log('🔢 Gioco Numeri dalla rete, cache prioritaria');
+                    console.log('🔢 Gioco Numeri dalla rete, cache automatica');
                     cache.put(request, networkResponse.clone());
                     return networkResponse;
                 }
                 throw new Error('Network response not ok');
             }).catch(function() {
-                console.log('❌ Gioco Numeri non disponibile, fallback speciale');
+                console.log('❌ Gioco Numeri non disponibile, fallback automatico');
                 return generateNumeriOfflinePage();
             });
         });
     });
 }
 
-// 🎯 GESTIONE ALTRE RICHIESTE
+// 🎯 GESTIONE AUTOMATICA ALTRE RICHIESTE
 function handleOtherRequests(request) {
     return caches.open(CACHE_NAME).then(function(cache) {
         return cache.match(request).then(function(cachedResponse) {
@@ -475,11 +473,11 @@ function handleOtherRequests(request) {
     });
 }
 
-// 🔄 FETCH CON RETRY per richieste critiche
+// 🔄 FETCH CON RETRY AUTOMATICO
 function fetchWithRetry(request, retries = 1) {
     return fetch(request).catch(function(error) {
         if (retries > 0) {
-            console.log(`🔄 Retry richiesta ${request.url}, tentativi rimasti: ${retries}`);
+            console.log(`🔄 Retry automatico ${request.url}, tentativi: ${retries}`);
             return new Promise(resolve => {
                 setTimeout(() => {
                     resolve(fetchWithRetry(request, retries - 1));
@@ -491,7 +489,7 @@ function fetchWithRetry(request, retries = 1) {
 }
 
 // ========================================
-// 🎯 FUNZIONI DI UTILITÀ
+// 🎯 FUNZIONI DI UTILITÀ (UNCHANGED)
 // ========================================
 
 function isDataRequest(pathname) {
@@ -512,14 +510,13 @@ function isSfidaMatematicaRequest(pathname) {
            pathname.includes('sfida_matematica');
 }
 
-// 🔢 NUOVA FUNZIONE per riconoscere richieste del Gioco Numeri
 function isNumeriGameRequest(pathname) {
     return pathname.includes('numeri.html') ||
            pathname.includes('numeri_') ||
            pathname.endsWith('/numeri');
 }
 
-// 📄 GENERA PAGINA OFFLINE GENERICA
+// 📄 PAGINA OFFLINE GENERICA (SEMPLIFICATA)
 function generateOfflinePage(request) {
     const offlineHtml = `
     <!DOCTYPE html>
@@ -534,7 +531,7 @@ function generateOfflinePage(request) {
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 color: white; 
                 text-align: center; 
-                padding: 50px 20px;
+                padding: 30px 20px;
                 margin: 0;
                 min-height: 100vh;
                 display: flex;
@@ -542,55 +539,49 @@ function generateOfflinePage(request) {
                 justify-content: center;
             }
             .offline-card {
-                background: rgba(255,255,255,0.1);
-                padding: 40px;
+                background: rgba(255,255,255,0.15);
+                padding: 30px;
                 border-radius: 20px;
                 backdrop-filter: blur(10px);
                 max-width: 500px;
                 margin: 0 auto;
             }
             h1 { font-size: 2.5rem; margin-bottom: 20px; }
-            p { font-size: 1.2rem; line-height: 1.6; margin-bottom: 30px; }
+            p { font-size: 1.2rem; line-height: 1.6; margin-bottom: 20px; }
             .btn {
-                background: linear-gradient(45deg, #ff6b6b, #ffa500);
+                background: linear-gradient(45deg, #4CAF50, #45a049);
                 color: white;
-                padding: 15px 30px;
+                padding: 12px 25px;
                 border: none;
                 border-radius: 10px;
-                font-size: 1.1rem;
+                font-size: 1rem;
                 cursor: pointer;
                 text-decoration: none;
                 display: inline-block;
-                margin: 10px;
+                margin: 8px;
             }
             .games-grid {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-                margin: 20px 0;
-            }
-            .game-btn {
-                background: rgba(255,255,255,0.2);
-                padding: 10px;
-                border-radius: 8px;
-                font-size: 0.9rem;
+                gap: 8px;
+                margin: 15px 0;
             }
         </style>
     </head>
     <body>
         <div class="offline-card">
-            <h1>🌐 Sei Offline!</h1>
-            <p>Non c'è connessione internet, ma alcuni giochi potrebbero funzionare lo stesso!</p>
+            <h1>🌐 Offline</h1>
+            <p>Connessione assente. Alcuni giochi funzionano offline!</p>
             
             <div class="games-grid">
-                <a href="/matematica.html" class="btn game-btn">🧮 Matematica</a>
-                <a href="/tabelline.html" class="btn game-btn">🎯 Tabelline</a>
-                <a href="/numeri.html" class="btn game-btn">🔢 Numeri</a>
-                <a href="/sfida-matematica.html" class="btn game-btn">🏆 Sfida</a>
+                <a href="/matematica.html" class="btn">🧮 Matematica</a>
+                <a href="/tabelline.html" class="btn">🎯 Tabelline</a>
+                <a href="/numeri.html" class="btn">🔢 Numeri</a>
+                <a href="/sfida-matematica.html" class="btn">🏆 Sfida</a>
             </div>
             
-            <p><strong>Service Worker:</strong> ${SW_VERSION}</p>
-            <a href="/" class="btn">🏠 Torna alla Home</a>
+            <p style="font-size: 0.9rem; opacity: 0.8;">Modalità Automatica: ${SW_VERSION}</p>
+            <a href="/" class="btn">🏠 Home</a>
             <button onclick="window.location.reload()" class="btn">🔄 Riprova</button>
         </div>
     </body>
@@ -602,7 +593,7 @@ function generateOfflinePage(request) {
     });
 }
 
-// 🏆 GENERA PAGINA OFFLINE SPECIALE per SFIDA MATEMATICA
+// 🏆 PAGINA OFFLINE SFIDA MATEMATICA (SEMPLIFICATA)
 function generateSfidaOfflinePage() {
     const sfidaOfflineHtml = `
     <!DOCTYPE html>
@@ -625,79 +616,49 @@ function generateSfidaOfflinePage() {
                 justify-content: center;
             }
             .offline-card {
-                background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(248, 250, 255, 0.15) 100%);
-                padding: 30px;
+                background: rgba(255,255,255,0.15);
+                padding: 25px;
                 border-radius: 20px;
                 backdrop-filter: blur(15px);
-                max-width: 600px;
+                max-width: 500px;
                 margin: 0 auto;
-                border: 1px solid rgba(255,255,255,0.2);
             }
-            h1 { font-size: 2.2rem; margin-bottom: 15px; }
-            .emoji { font-size: 3rem; margin: 20px 0; }
-            p { font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px; }
-            .feature-list {
-                text-align: left;
-                background: rgba(255,255,255,0.1);
-                padding: 20px;
-                border-radius: 10px;
-                margin: 20px 0;
-            }
-            .feature-list li {
-                margin: 8px 0;
-                font-size: 1rem;
-            }
+            h1 { font-size: 2rem; margin-bottom: 15px; }
+            .emoji { font-size: 2.5rem; margin: 15px 0; }
+            p { font-size: 1rem; line-height: 1.5; margin-bottom: 15px; }
             .btn {
-                background: linear-gradient(45deg, #ff6b6b, #ffa500);
+                background: linear-gradient(45deg, #4CAF50, #45a049);
                 color: white;
-                padding: 12px 25px;
+                padding: 10px 20px;
                 border: none;
-                border-radius: 10px;
-                font-size: 1rem;
+                border-radius: 8px;
+                font-size: 0.9rem;
                 cursor: pointer;
                 text-decoration: none;
                 display: inline-block;
-                margin: 8px;
-                transition: transform 0.3s ease;
-            }
-            .btn:hover { transform: translateY(-2px); }
-            .version { 
-                font-size: 0.9rem; 
-                opacity: 0.8; 
-                margin-top: 20px;
-                background: rgba(0,0,0,0.2);
-                padding: 10px;
-                border-radius: 5px;
+                margin: 5px;
             }
         </style>
     </head>
     <body>
         <div class="offline-card">
             <div class="emoji">🏆</div>
-            <h1>Sfida Matematica in Famiglia 3ª</h1>
-            <p><strong>🌐 Modalità Offline Attiva</strong></p>
+            <h1>Sfida Matematica</h1>
+            <p><strong>🌐 Offline</strong></p>
+            <p>La Sfida non è disponibile offline. Prova altri giochi:</p>
             
-            <p>La Sfida Matematica non è ancora disponibile offline, ma puoi:</p>
-            
-            <div class="feature-list">
-                <ul>
-                    <li>🧮 Giocare con <strong>Matematica sul Divano 3ª</strong></li>
-                    <li>🎯 Allenarti con <strong>Sfida Tabelline</strong></li>
-                    <li>🔢 Imparare con <strong>Gioco dei Numeri</strong> (NUOVO!)</li>
-                    <li>🔄 Riprovare quando torni online</li>
-                </ul>
+            <div style="margin: 15px 0;">
+                <a href="/matematica.html" class="btn">🧮 Matematica</a>
+                <a href="/tabelline.html" class="btn">🎯 Tabelline</a>
+                <a href="/numeri.html" class="btn">🔢 Numeri</a>
             </div>
             
-            <a href="/" class="btn">🏠 Torna alla Home</a>
-            <a href="/matematica.html" class="btn">🧮 Matematica</a>
-            <a href="/tabelline.html" class="btn">🎯 Tabelline</a>
-            <a href="/numeri.html" class="btn">🔢 Numeri</a>
+            <a href="/" class="btn">🏠 Home</a>
             <button onclick="window.location.reload()" class="btn">🔄 Riconnetti</button>
             
-            <div class="version">
-                Service Worker: ${SW_VERSION}<br>
-                Modalità: Offline Automatica
-            </div>
+            <p style="font-size: 0.8rem; margin-top: 15px; opacity: 0.7;">
+                Modalità Automatica: ${SW_VERSION}
+            </p>
         </div>
     </body>
     </html>
@@ -708,7 +669,7 @@ function generateSfidaOfflinePage() {
     });
 }
 
-// 🔢 GENERA PAGINA OFFLINE SPECIALE per GIOCO NUMERI (NUOVO)
+// 🔢 PAGINA OFFLINE GIOCO NUMERI (OTTIMIZZATA)
 function generateNumeriOfflinePage() {
     const numeriOfflineHtml = `
     <!DOCTYPE html>
@@ -731,56 +692,33 @@ function generateNumeriOfflinePage() {
                 justify-content: center;
             }
             .offline-card {
-                background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(248, 250, 255, 0.15) 100%);
-                padding: 30px;
+                background: rgba(255,255,255,0.15);
+                padding: 25px;
                 border-radius: 20px;
                 backdrop-filter: blur(15px);
-                max-width: 600px;
+                max-width: 500px;
                 margin: 0 auto;
-                border: 1px solid rgba(255,255,255,0.2);
             }
-            h1 { font-size: 2.2rem; margin-bottom: 15px; }
-            .emoji { font-size: 3rem; margin: 20px 0; }
-            p { font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px; }
-            .feature-list {
-                text-align: left;
-                background: rgba(255,255,255,0.1);
-                padding: 20px;
-                border-radius: 10px;
-                margin: 20px 0;
-            }
-            .feature-list li {
-                margin: 8px 0;
-                font-size: 1rem;
-            }
+            h1 { font-size: 2rem; margin-bottom: 15px; }
+            .emoji { font-size: 2.5rem; margin: 15px 0; }
+            p { font-size: 1rem; line-height: 1.5; margin-bottom: 15px; }
             .btn {
                 background: linear-gradient(45deg, #4CAF50, #45a049);
                 color: white;
-                padding: 12px 25px;
+                padding: 10px 20px;
                 border: none;
-                border-radius: 10px;
-                font-size: 1rem;
+                border-radius: 8px;
+                font-size: 0.9rem;
                 cursor: pointer;
                 text-decoration: none;
                 display: inline-block;
-                margin: 8px;
-                transition: transform 0.3s ease;
-            }
-            .btn:hover { transform: translateY(-2px); }
-            .version { 
-                font-size: 0.9rem; 
-                opacity: 0.8; 
-                margin-top: 20px;
-                background: rgba(0,0,0,0.2);
-                padding: 10px;
-                border-radius: 5px;
+                margin: 5px;
             }
             .highlight {
                 background: rgba(76, 175, 80, 0.2);
-                padding: 15px;
-                border-radius: 10px;
-                margin: 15px 0;
-                border-left: 4px solid #4CAF50;
+                padding: 12px;
+                border-radius: 8px;
+                margin: 12px 0;
             }
         </style>
     </head>
@@ -788,43 +726,29 @@ function generateNumeriOfflinePage() {
         <div class="offline-card">
             <div class="emoji">🔢</div>
             <h1>Impara i Numeri</h1>
-            <p><strong>🌐 Modalità Offline Attiva</strong></p>
+            <p><strong>🌐 Offline</strong></p>
             
             <div class="highlight">
-                <p><strong>🆕 NOVITÀ:</strong> Questo gioco funziona completamente offline!</p>
-                <p>Puoi giocare anche senza internet e i tuoi progressi verranno salvati.</p>
+                <p><strong>✅ FUNZIONA OFFLINE!</strong></p>
+                <p>Questo gioco è completamente disponibile senza internet.</p>
             </div>
             
-            <p>Il Gioco dei Numeri include:</p>
+            <p>Include: Ascolta, Parla, Componi, Velocità</p>
+            <p>Numeri da 0 a 10.000 + Tabelle Posizionali</p>
             
-            <div class="feature-list">
-                <ul>
-                    <li>🎧 <strong>Ascolta e Scegli</strong> - Numeri da 0 a 10.000</li>
-                    <li>🗣️ <strong>Leggi ad Alta Voce</strong> - Con riconoscimento vocale</li>
-                    <li>🔢 <strong>Componi il Numero</strong> - Drag & Drop interattivo</li>
-                    <li>⚡ <strong>Sfida Velocità</strong> - Quanto sei veloce?</li>
-                    <li>📊 <strong>Tabelle Posizionali</strong> - Strumenti di aiuto</li>
-                    <li>⭐ <strong>Sistema Punteggi</strong> - Stelle e badge</li>
-                </ul>
-            </div>
-            
-            <p>Quando torni online, il gioco si sincronizzerà automaticamente!</p>
-            
-            <a href="/numeri.html" class="btn" style="background: linear-gradient(45deg, #4CAF50, #45a049); font-size: 1.2rem; padding: 15px 30px;">
+            <a href="/numeri.html" class="btn" style="background: linear-gradient(45deg, #FF5722, #F44336); font-size: 1.1rem; padding: 12px 25px;">
                 🎮 GIOCA ORA
             </a>
             
-            <div style="margin-top: 20px;">
+            <div style="margin-top: 15px;">
                 <a href="/" class="btn">🏠 Home</a>
                 <a href="/matematica.html" class="btn">🧮 Matematica</a>
                 <a href="/tabelline.html" class="btn">🎯 Tabelline</a>
-                <button onclick="window.location.reload()" class="btn">🔄 Riconnetti</button>
             </div>
             
-            <div class="version">
-                Service Worker: ${SW_VERSION}<br>
-                Modalità: Offline Supportata ✅
-            </div>
+            <p style="font-size: 0.8rem; margin-top: 15px; opacity: 0.7;">
+                Modalità Automatica: ${SW_VERSION} ✅
+            </p>
         </div>
     </body>
     </html>
@@ -836,14 +760,15 @@ function generateNumeriOfflinePage() {
 }
 
 // ========================================
-// 🔄 GESTIONE AGGIORNAMENTI AUTOMATICI
+// 🔄 AGGIORNAMENTI AUTOMATICI BACKGROUND
 // ========================================
 
-// Auto-check per aggiornamenti ogni 30 secondi quando attivo
+// Auto-check aggiornamenti ogni 30 secondi quando attivo
 self.addEventListener('activate', function() {
+    // Schedule automatic background updates
     setInterval(() => {
         if (self.registration) {
-            console.log('🔄 Auto-check aggiornamenti...');
+            console.log('🔄 Auto-check aggiornamenti silenziosi...');
             self.registration.update().catch(() => {
                 // Ignora errori di check automatico
             });
@@ -852,11 +777,11 @@ self.addEventListener('activate', function() {
 });
 
 // ========================================
-// 🎯 SYNC BACKGROUND per PROFILI E NUMERI
+// 🎯 SYNC BACKGROUND AUTOMATICO
 // ========================================
 
 self.addEventListener('sync', function(event) {
-    console.log('🔄 Background Sync:', event.tag);
+    console.log('🔄 Background Sync automatico:', event.tag);
     
     if (event.tag === 'profile-sync') {
         event.waitUntil(syncProfiles());
@@ -868,15 +793,16 @@ self.addEventListener('sync', function(event) {
 });
 
 function syncProfiles() {
-    console.log('👤 Sincronizzazione profili in background...');
+    console.log('👤 Sincronizzazione automatica profili...');
     return Promise.resolve().then(() => {
-        console.log('✅ Profili sincronizzati');
+        console.log('✅ Profili sincronizzati automaticamente');
         
         return self.clients.matchAll().then(clients => {
             clients.forEach(client => {
                 client.postMessage({
                     type: 'PROFILES_SYNCED',
-                    message: '👤 Profili sincronizzati automaticamente'
+                    message: 'Profili sincronizzati',
+                    silentMode: true
                 });
             });
         });
@@ -884,33 +810,34 @@ function syncProfiles() {
 }
 
 function syncGameData() {
-    console.log('🎮 Sincronizzazione dati gioco in background...');
+    console.log('🎮 Sincronizzazione automatica dati gioco...');
     return Promise.resolve().then(() => {
-        console.log('✅ Dati gioco sincronizzati');
+        console.log('✅ Dati gioco sincronizzati automaticamente');
         
         return self.clients.matchAll().then(clients => {
             clients.forEach(client => {
                 client.postMessage({
                     type: 'GAME_DATA_SYNCED',
-                    message: '🎮 Dati di gioco sincronizzati'
+                    message: 'Dati sincronizzati',
+                    silentMode: true
                 });
             });
         });
     });
 }
 
-// 🔢 NUOVA FUNZIONE: Sincronizzazione progressi Gioco Numeri
 function syncNumeriProgress() {
-    console.log('🔢 Sincronizzazione progressi Numeri in background...');
+    console.log('🔢 Sincronizzazione automatica progressi Numeri...');
     return Promise.resolve().then(() => {
-        console.log('✅ Progressi Numeri sincronizzati');
+        console.log('✅ Progressi Numeri sincronizzati automaticamente');
         
         return self.clients.matchAll().then(clients => {
             clients.forEach(client => {
                 client.postMessage({
                     type: 'NUMERI_PROGRESS_SYNCED',
-                    message: '🔢 Progressi Gioco Numeri sincronizzati',
-                    game: 'numeri.html'
+                    message: 'Progressi sincronizzati',
+                    game: 'numeri.html',
+                    silentMode: true
                 });
             });
         });
@@ -918,31 +845,27 @@ function syncNumeriProgress() {
 }
 
 // ========================================
-// 📱 GESTIONE NOTIFICHE PUSH (preparato per futuro)
+// 📱 NOTIFICHE PUSH (pronto per futuro, modalità automatica)
 // ========================================
 
 self.addEventListener('push', function(event) {
     if (!event.data) return;
     
     const data = event.data.json();
-    console.log('🔔 Notifica push ricevuta:', data);
+    console.log('🔔 Notifica push automatica:', data);
     
     const options = {
-        body: data.body || 'Nuovi giochi educativi disponibili!',
+        body: data.body || 'Giochi aggiornati automaticamente!',
         icon: '/icon-192x192.png',
         badge: '/icon-192x192.png',
         vibrate: [200, 100, 200],
-        tag: 'educational-games',
+        tag: 'educational-games-auto',
         requireInteraction: false,
+        silent: true, // Modalità silenziosa
         actions: [
             {
                 action: 'open',
-                title: '🎯 Gioca Ora',
-                icon: '/icon-192x192.png'
-            },
-            {
-                action: 'close',
-                title: '❌ Chiudi',
+                title: '🎯 Apri',
                 icon: '/icon-192x192.png'
             }
         ]
@@ -964,40 +887,45 @@ self.addEventListener('notificationclick', function(event) {
 });
 
 // ========================================
-// 🎯 LOG FINALE E STATO
+// 🎯 LOG FINALE E STATO AUTOMATICO
 // ========================================
 
-console.log(`✅ Service Worker ${SW_VERSION} COMPLETAMENTE CARICATO!`);
+console.log(`✅ Service Worker ${SW_VERSION} AUTOMATICO COMPLETAMENTE CARICATO!`);
 console.log(`📦 Cache principale: ${CACHE_NAME}`);
 console.log(`📊 Cache dati: ${DATA_CACHE_NAME}`);
-console.log(`🎯 Configurato per AGGIORNAMENTI AUTOMATICI`);
-console.log(`👶 Modalità BAMBINI A SCUOLA: ZERO intervento richiesto`);
-console.log(`🔢 NUOVO: Gioco "Impara i Numeri" aggiunto e ottimizzato`);
-console.log(`🍎 Fix iOS Safari: Tutti i giochi compatibili iPhone/iPad`);
-console.log(`🚀 Sistema pronto per PWA completamente automatica!`);
+console.log(`🔄 Modalità: COMPLETAMENTE AUTOMATICA`);
+console.log(`👶 Target: BAMBINI A SCUOLA - ZERO INTERVENTO`);
+console.log(`🔢 Nuovo gioco: "Impara i Numeri" ottimizzato`);
+console.log(`🍎 iOS Safari: Compatibilità completa`);
+console.log(`🚀 Aggiornamenti: TRASPARENTI E SILENZIOSI`);
+console.log(`🎯 Sistema: PWA AUTOMATICA per ambiente educativo!`);
 
-// 📊 Esporta informazioni SW per debug (se necessario)
+// 📊 Informazioni SW per debugging
 self.SW_INFO = {
     version: SW_VERSION,
+    mode: 'COMPLETELY_AUTOMATIC',
+    target: 'SCHOOL_CHILDREN',
+    userIntervention: 'ZERO',
     caches: [CACHE_NAME, DATA_CACHE_NAME],
     games: ['matematica.html', 'sfida-matematica.html', 'tabelline.html', 'numeri.html'],
     features: [
-        'Auto SkipWaiting',
-        'Auto Cache Cleanup', 
-        'Auto Reload',
-        'Background Sync',
-        'Push Notifications Ready',
-        'Offline Fallbacks',
-        'Sfida Matematica Special Handling',
-        'Numeri Game Special Handling (NEW)',
-        'iOS Safari Compatibility'
+        'Immediate SkipWaiting',
+        'Automatic Cache Cleanup', 
+        'Automatic Reload',
+        'Silent Background Sync',
+        'Silent Push Notifications',
+        'Silent Offline Fallbacks',
+        'Silent Game Updates',
+        'iOS Safari Full Compatibility',
+        'Zero User Intervention Required'
     ],
-    mode: 'AUTOMATIC_FOR_CHILDREN',
     newInVersion: [
-        'Gioco Numeri aggiunto a cache',
-        'Gestione speciale per numeri.html',
-        'Pagina offline dedicata per Gioco Numeri',
-        'Sync progressi Gioco Numeri',
-        'Notifiche aggiornamento Gioco Numeri'
-    ]
+        'Gioco Numeri completamente cachato',
+        'Gestione automatica numeri.html',
+        'Fallback offline ottimizzato per Numeri',
+        'Sync automatico progressi Numeri',
+        'Notifiche silenziose aggiornamenti',
+        'Modalità scuola senza banner/bottoni'
+    ],
+    updateStrategy: 'TRANSPARENT_SILENT_AUTOMATIC'
 };

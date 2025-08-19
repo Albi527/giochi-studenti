@@ -85,7 +85,6 @@
         
         .container {
             padding: 2rem;
-            transition: padding-top 0.3s ease;
         }
         
         .games-grid {
@@ -374,12 +373,11 @@
             opacity: 0.8;
         }
         
-        /* 🔧 FIX: Carta installazione nascosta di default */
+        /* Install card nascosta di default */
         #install-card {
             display: none;
         }
         
-        /* Stili per installazione */
         .install-card-hidden {
             display: none !important;
         }
@@ -457,54 +455,6 @@
             font-family: inherit;
         }
         
-        /* 🟢 SISTEMA AGGIORNAMENTI PWA v8.4.0 */
-        
-        
-        
-        
-        
-            50% { 
-                background: linear-gradient(135deg, #34ce57 0%, #2dd4aa 100%);
-                box-shadow: 0 2px 25px rgba(40, 167, 69, 0.5);
-            }
-        }
-        
-        
-        
-        
-        
-        
-        
-        
-            50% { opacity: 0.7; transform: scale(1.2); }
-        }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Adattamento layout con banner */
-        
-        
-        
-        
         /* Toast notifications */
         .toast {
             position: fixed;
@@ -531,6 +481,11 @@
             box-shadow: 0 4px 20px rgba(255, 152, 0, 0.3);
         }
         
+        .toast.info {
+            background: #2196F3;
+            box-shadow: 0 4px 20px rgba(33, 150, 243, 0.3);
+        }
+        
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
@@ -553,15 +508,9 @@
                 gap: 1rem;
             }
             
-            
-            
-            
-            
             .container {
                 padding: 1rem;
             }
-            
-            
         }
         
         @media (max-width: 480px) {
@@ -572,10 +521,6 @@
             .game-card {
                 padding: 1.5rem;
             }
-            
-            
-            
-            
         }
         
         /* Accessibilità */
@@ -600,20 +545,6 @@
     </style>
 </head>
 <body>
-    <!-- 🟢 Banner Aggiornamenti PWA v8.4.0 -->
-<span class="update-message" id="update-message">🚀 Nuovo aggiornamento disponibile!</span>
-            </div>
-            <div class="update-actions">
-                <button class="update-button" id="update-button" onclick="updateApp()">
-                    ✨ Aggiorna Ora
-                </button>
-                <button class="dismiss-button" onclick="dismissUpdate()">
-                    ⏰ Più Tardi
-                </button>
-            </div>
-        </div>
-    </div>
-
     <div class="header">
         <h1>🎮 Giochi Educativi</h1>
         <p>by Maestro Alberto Fogliata <span class="version-badge">v8.4.0</span></p>
@@ -621,7 +552,7 @@
 
     <div class="container">
         <div class="games-grid">
-            <!-- Smart Install Card - 🔧 NASCOSTA DI DEFAULT -->
+            <!-- Smart Install Card - NASCOSTA DI DEFAULT -->
             <div class="game-card smart-install-card" id="install-card">
                 <div class="device-badge" id="device-badge">🔍 Rilevamento...</div>
                 <div class="game-icon">🤖</div>
@@ -655,7 +586,7 @@
                 <a href="tabelline.html" class="play-button" onclick="event.stopPropagation()">⚡ Inizia Sfida</a>
             </div>
 
-            <!-- 🎯 Sfida Matematica in Famiglia 3ª - INTEGRATA -->
+            <!-- Sfida Matematica in Famiglia 3ª -->
             <div class="game-card sfida-matematica" id="sfida-card" onclick="navigateToGame('sfida-matematica.html')">
                 <div class="game-icon">🏆</div>
                 <div class="game-title">
@@ -681,7 +612,7 @@
                 <a href="sfida-matematica.html" class="play-button" onclick="event.stopPropagation()">🎯 Inizia le Sfide</a>
             </div>
 
-            <!-- 🔢 Impara i Numeri -->
+            <!-- Impara i Numeri -->
             <div class="game-card impara-numeri" id="numeri-card" onclick="navigateToGame('numeri.html')">
                 <div class="game-icon">🔢</div>
                 <div class="game-title">
@@ -749,14 +680,14 @@
     </div>
 
     <script>
-        // ========== CONFIGURAZIONE PWA v8.4.0 ==========
+        // ========== CONFIGURAZIONE PWA AUTOMATICA v8.4.0 ==========
         const PWA_CONFIG = {
             VERSION: '8.4.0',
             SERVICE_WORKER_URL: './sw.js',
             CACHE_NAME: 'giochi-educativi-v8.4.0',
             DATA_CACHE_NAME: 'giochi-data-v8.4.0',
-            UPDATE_CHECK_INTERVAL: 30000, // 30 secondi - allineato con sw.js
-            AUTO_DISMISS_DELAY: 15000, // 15 secondi
+            AUTOMATIC_MODE: true, // 🔄 MODALITÀ COMPLETAMENTE AUTOMATICA
+            SILENT_UPDATES: true,  // 🔇 AGGIORNAMENTI SILENZIOSI
             GAMES: {
                 matematica: { file: 'matematica.html', name: 'Matematica sul Divano 3ª' },
                 tabelline: { file: 'tabelline.html', name: 'Sfida Tabelline' },
@@ -765,321 +696,189 @@
             }
         };
 
-        // ========== STATO GLOBALE ==========
+        // ========== STATO GLOBALE SEMPLIFICATO ==========
         let deviceInfo = {};
         let deferredPrompt = null;
         let swRegistration = null;
-        let updateDismissed = false;
         let refreshing = false;
-        let newWorker = null;
-        let updateCheckInterval = null;
 
-        console.log(`🚀 PWA Giochi Educativi v${PWA_CONFIG.VERSION} - Inizializzazione...`);
+        console.log(`🚀 PWA Giochi Educativi v${PWA_CONFIG.VERSION} - MODALITÀ AUTOMATICA ATTIVA`);
 
-        // ========== 🟢 GESTIONE SERVICE WORKER v8.4.0 ==========
+        // ========== SERVICE WORKER AUTOMATICO v8.4.0 ==========
         
-        class ServiceWorkerManager {
+        class AutomaticServiceWorkerManager {
             constructor() {
                 this.registration = null;
-                this.isUpdating = false;
-                this.pendingUpdate = false;
+                this.isInitialized = false;
             }
 
             async init() {
                 if (!('serviceWorker' in navigator)) {
                     console.log('❌ Service Worker non supportato');
-                    showToast('⚠️ Service Worker non supportato in questo browser', 'warning');
                     return false;
                 }
 
                 try {
-                    console.log('🔧 Registrazione Service Worker v8.4.0...');
+                    console.log('🔧 Inizializzazione Service Worker automatico...');
                     
                     this.registration = await navigator.serviceWorker.register(PWA_CONFIG.SERVICE_WORKER_URL, {
                         scope: './',
-                        updateViaCache: 'none' // Forza controllo aggiornamenti
+                        updateViaCache: 'none'
                     });
 
-                    console.log('✅ Service Worker registrato:', this.registration.scope);
+                    console.log('✅ Service Worker registrato automaticamente:', this.registration.scope);
                     swRegistration = this.registration;
 
-                    // Setup event listeners
-                    this.setupEventListeners();
+                    // Setup event listeners automatici
+                    this.setupAutomaticListeners();
                     
                     // Controllo immediato per aggiornamenti
-                    await this.checkForUpdates();
+                    this.scheduleAutomaticUpdates();
                     
-                    // Setup controlli periodici - allineato con sw.js (30 secondi)
-                    this.setupPeriodicUpdates();
-                    
+                    this.isInitialized = true;
                     return true;
 
                 } catch (error) {
-                    console.error('❌ Errore registrazione Service Worker:', error);
-                    showToast('❌ Errore inizializzazione PWA', 'error');
+                    console.error('❌ Errore Service Worker:', error);
                     return false;
                 }
             }
 
-            setupEventListeners() {
-                // Nuovo SW trovato
+            setupAutomaticListeners() {
+                // 🔄 GESTIONE AUTOMATICA EVENTI SW
                 this.registration.addEventListener('updatefound', () => {
-                    console.log('🔄 Nuovo Service Worker in installazione...');
+                    console.log('🔄 Nuovo SW trovato - Gestione automatica...');
                     const installingWorker = this.registration.installing;
                     
                     if (installingWorker) {
                         installingWorker.addEventListener('statechange', () => {
-                            console.log(`📱 Nuovo SW state: ${installingWorker.state}`);
-                            
                             if (installingWorker.state === 'installed') {
                                 if (navigator.serviceWorker.controller) {
-                                    console.log('🟢 Nuovo SW in attesa - mostro banner');
-                                    newWorker = installingWorker;
-                                    this.pendingUpdate = true;
-                                    if (!updateDismissed) {
-                                        this.showUpdateBanner('🔢 Nuovo Gioco: Impara i Numeri con sintesi vocale e 4 modalità!');
-                                    }
+                                    // 🔄 AGGIORNAMENTO AUTOMATICO - NESSUN BANNER
+                                    console.log('🔄 Nuovo SW pronto - Applicazione automatica...');
+                                    this.triggerAutomaticUpdate();
                                 } else {
-                                    console.log('✅ Primo SW installato');
-                                    this.notifyUpdateCompleted('✅ PWA installata e pronta!');
+                                    console.log('✅ Primo SW installato automaticamente');
+                                    this.showInfoToast('✅ Giochi installati e pronti!');
                                 }
                             }
                         });
                     }
                 });
 
-                // SW in attesa già presente
-                if (this.registration.waiting && !updateDismissed) {
-                    console.log('🟢 SW già in waiting - mostro banner immediatamente');
-                    newWorker = this.registration.waiting;
-                    this.pendingUpdate = true;
-                    this.showUpdateBanner('🔢 Nuovo Gioco: Impara i Numeri con sintesi vocale e 4 modalità!');
+                // SW già in waiting - Attiva immediatamente
+                if (this.registration.waiting) {
+                    console.log('🔄 SW in waiting - Attivazione automatica immediata...');
+                    this.triggerAutomaticUpdate();
                 }
 
                 // Messaggi dal Service Worker
                 navigator.serviceWorker.addEventListener('message', this.handleSWMessage.bind(this));
 
-                // Cambio controller
+                // Cambio controller - Reload automatico
                 navigator.serviceWorker.addEventListener('controllerchange', () => {
-                    console.log('🔄 Controller SW cambiato');
+                    console.log('🔄 Controller SW cambiato - Reload automatico...');
                     if (!refreshing) {
                         refreshing = true;
-                        this.showUpdatingState();
-                        setTimeout(() => window.location.reload(), 1500);
+                        this.showInfoToast('🔄 Completamento aggiornamento automatico...');
+                        setTimeout(() => window.location.reload(), 1000);
                     }
                 });
             }
 
             handleSWMessage(event) {
-                const { type, message, version, gameAdded, newFeatures, forceReload } = event.data;
-                console.log('💬 Messaggio dal SW:', event.data);
+                const { type, message, gameAdded, forceReload } = event.data;
+                console.log('💬 Messaggio SW:', event.data);
 
                 switch (type) {
                     case 'SW_INSTALLED':
-                        if (!updateDismissed) {
-                            this.showUpdateBanner(message || '🔢 Nuovo gioco Impara i Numeri disponibile!');
-                        }
-                        break;
-
                     case 'SW_UPDATED':
-                        if (!updateDismissed) {
-                            let updateMessage = message || '🚀 Nuovo aggiornamento disponibile!';
-                            if (gameAdded) {
-                                updateMessage = `🎯 ${gameAdded}`;
-                            }
-                            this.showUpdateBanner(updateMessage);
+                        // 🔇 MODALITÀ SILENZIOSA - Solo log
+                        console.log('✅ SW aggiornato automaticamente');
+                        if (gameAdded) {
+                            this.highlightNewGame();
                         }
                         break;
 
                     case 'SW_ACTIVATED':
-                        this.notifyUpdateCompleted('✅ Aggiornamento completato! Nuovo gioco Impara i Numeri disponibile!');
+                        console.log('✅ SW attivato automaticamente');
                         if (gameAdded) {
+                            this.showInfoToast('🔢 Nuovo gioco disponibile!');
                             this.highlightNewGame();
                         }
-                        // Se forceReload è true, ricarica automaticamente dopo il messaggio
+                        // Reload automatico se richiesto
                         if (forceReload && !refreshing) {
                             refreshing = true;
-                            setTimeout(() => window.location.reload(), 2000);
+                            setTimeout(() => window.location.reload(), 1500);
                         }
                         break;
 
                     case 'FORCE_RELOAD':
-                        console.log('🔄 Reload forzato dal SW');
+                        console.log('🔄 Reload automatico richiesto');
                         if (!refreshing) {
                             refreshing = true;
-                            this.showUpdatingState();
-                            showToast(message || '🔄 Completamento aggiornamento automatico...', 'success');
-                            setTimeout(() => window.location.reload(), 1000);
+                            setTimeout(() => window.location.reload(), 500);
                         }
                         break;
 
                     case 'UPDATE_COMPLETED':
-                        this.notifyUpdateCompleted(message || '✅ Aggiornamento completato!');
-                        break;
-
-                    case 'RELOAD_REQUIRED':
-                        this.showUpdatingState();
-                        setTimeout(() => {
-                            if (!refreshing) {
-                                refreshing = true;
-                                window.location.reload();
-                            }
-                        }, 2000);
+                        console.log('✅ Aggiornamento completato automaticamente');
                         break;
 
                     case 'NUMERI_ADDED':
-                        showToast(message, 'success');
+                        this.showInfoToast('🔢 Nuovo gioco Impara i Numeri!');
                         this.highlightNewGame();
                         break;
 
+                    // Eventi silenziosi - solo log
                     case 'PROFILES_SYNCED':
                     case 'GAME_DATA_SYNCED':
+                    case 'NUMERI_PROGRESS_SYNCED':
                         console.log('🔄 Sincronizzazione background:', message);
-                        // Toast silenzioso per non disturbare l'utente
                         break;
                 }
             }
 
-            async checkForUpdates() {
-                if (this.registration && !this.isUpdating) {
-                    try {
-                        console.log('🔍 Controllo aggiornamenti...');
-                        await this.registration.update();
-                    } catch (error) {
-                        console.log('⚠️ Errore controllo aggiornamenti:', error);
-                    }
-                }
-            }
-
-            setupPeriodicUpdates() {
-                // Controllo aggiornamenti ogni 30 secondi - allineato con sw.js
-                updateCheckInterval = setInterval(() => {
-                    if (!updateDismissed && !this.isUpdating) {
-                        this.checkForUpdates();
-                    }
-                }, PWA_CONFIG.UPDATE_CHECK_INTERVAL);
-            }
-
-            showUpdateBanner(message = '🚀 Nuovo aggiornamento disponibile!') {
-                console.log('🟢 Mostrando banner aggiornamento');
+            triggerAutomaticUpdate() {
+                console.log('🔄 Attivazione automatica aggiornamento...');
                 
-                const banner = document.getElementById('update-banner');
-                const messageEl = document.getElementById('update-message');
-                const body = document.body;
-
-                if (!banner || !messageEl) {
-                    console.log('❌ Elementi banner non trovati');
-                    return;
-                }
-
-                // Reset stato
-                updateDismissed = false;
-                
-                // Aggiorna messaggio
-                messageEl.textContent = message;
-
-                // Mostra banner con animazione
-                banner.classList.remove('show');
-                body.classList.remove('update-banner-visible');
-                
-                setTimeout(() => {
-                    banner.classList.add('show');
-                    body.classList.add('update-banner-visible');
-                }, 100);
-
-                // Auto-dismiss dopo 15 secondi
-                setTimeout(() => {
-                    if (banner.classList.contains('show') && !updateDismissed && !this.isUpdating) {
-                        console.log('⏰ Auto-dismiss banner');
-                        this.dismissUpdate();
-                    }
-                }, PWA_CONFIG.AUTO_DISMISS_DELAY);
-            }
-
-            hideUpdateBanner() {
-                const banner = document.getElementById('update-banner');
-                const body = document.body;
-                
-                if (banner) {
-                    banner.classList.remove('show');
-                    body.classList.remove('update-banner-visible');
-                    updateDismissed = false; // Reset per prossimi aggiornamenti
-                }
-            }
-
-            showUpdatingState() {
-                const messageEl = document.getElementById('update-message');
-                const updateBtn = document.getElementById('update-button');
-                
-                if (messageEl && updateBtn) {
-                    messageEl.innerHTML = '<span class="updating-spinner"></span>Aggiornamento automatico in corso...';
-                    updateBtn.disabled = true;
-                    updateBtn.textContent = 'Attendere...';
-                    updateBtn.style.opacity = '0.7';
-                }
-            }
-
-            async updateApp() {
-                if (this.isUpdating) return;
-                
-                console.log('🟢 Aggiornamento richiesto dall\'utente');
-                this.isUpdating = true;
-                
-                this.showUpdatingState();
-                showToast('🔄 Aggiornamento automatico in corso...', 'success');
-
                 try {
-                    if (newWorker) {
-                        console.log('📤 Invio skipWaiting al nuovo SW');
-                        newWorker.postMessage({ type: 'SKIP_WAITING' });
-                    } else if (this.registration && this.registration.waiting) {
-                        console.log('📤 Invio skipWaiting al SW waiting');
+                    if (this.registration && this.registration.waiting) {
+                        // Invia skip waiting automaticamente
                         this.registration.waiting.postMessage({ type: 'SKIP_WAITING' });
                     } else {
-                        console.log('🔄 Ricarico direttamente');
+                        // Reload diretto
                         setTimeout(() => {
                             if (!refreshing) {
                                 refreshing = true;
                                 window.location.reload();
                             }
-                        }, 1500);
+                        }, 1000);
                     }
                 } catch (error) {
-                    console.error('❌ Errore aggiornamento:', error);
-                    showToast('❌ Errore durante l\'aggiornamento', 'error');
-                    this.isUpdating = false;
+                    console.error('❌ Errore aggiornamento automatico:', error);
                 }
             }
 
-            dismissUpdate() {
-                console.log('❌ Banner chiuso dall\'utente');
-                this.hideUpdateBanner();
-                updateDismissed = true;
-
-                // Reset dismiss dopo 5 minuti
-                setTimeout(() => {
-                    console.log('🔄 Reset dismiss status');
-                    updateDismissed = false;
-                }, 300000);
-            }
-
-            notifyUpdateCompleted(message) {
-                this.hideUpdateBanner();
-                showToast(message, 'success');
-                this.isUpdating = false;
-                this.pendingUpdate = false;
+            scheduleAutomaticUpdates() {
+                // Controllo aggiornamenti automatico ogni 60 secondi in background
+                setInterval(() => {
+                    if (this.registration && !refreshing) {
+                        this.registration.update().catch(() => {
+                            // Ignora errori di controllo automatico
+                        });
+                    }
+                }, 60000); // 1 minuto
             }
 
             highlightNewGame() {
                 const numeriCard = document.getElementById('numeri-card');
                 if (numeriCard) {
-                    console.log('🔢 Evidenziazione nuovo gioco Impara i Numeri');
+                    console.log('🔢 Evidenziazione automatica nuovo gioco');
                     
-                    // Effetto speciale
                     numeriCard.style.animation = 'pulse 2s ease-in-out 3';
                     numeriCard.style.boxShadow = '0 0 30px rgba(255, 152, 0, 0.8)';
                     
-                    // Scroll verso il gioco
                     setTimeout(() => {
                         numeriCard.scrollIntoView({ 
                             behavior: 'smooth', 
@@ -1087,27 +886,35 @@
                         });
                     }, 1000);
                     
-                    // Rimuovi effetto
                     setTimeout(() => {
                         numeriCard.style.animation = '';
                         numeriCard.style.boxShadow = '';
                     }, 6000);
                 }
             }
+
+            showInfoToast(message) {
+                // Toast informativo discreto - scompare automaticamente
+                const toast = document.createElement('div');
+                toast.className = 'toast info';
+                toast.textContent = message;
+                toast.style.fontSize = '0.9rem';
+                
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => {
+                        if (document.body.contains(toast)) {
+                            document.body.removeChild(toast);
+                        }
+                    }, 300);
+                }, 2500); // Toast più breve
+            }
         }
 
-        // Istanza globale Service Worker Manager
-        const swManager = new ServiceWorkerManager();
-
-        // ========== FUNZIONI GLOBALI PER IL TEMPLATE ==========
-        
-        function updateApp() {
-            swManager.updateApp();
-        }
-
-        function dismissUpdate() {
-            swManager.dismissUpdate();
-        }
+        // Istanza globale Service Worker automatico
+        const autoSWManager = new AutomaticServiceWorkerManager();
 
         // ========== GESTIONE DISPOSITIVI E INSTALLAZIONE ==========
         
@@ -1134,17 +941,14 @@
         }
 
         function isAppInstalled() {
-            // Modalità standalone
             if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
                 return true;
             }
             
-            // iOS standalone
             if (deviceInfo.isiOS && window.navigator.standalone) {
                 return true;
             }
             
-            // Flag localStorage
             try {
                 return localStorage.getItem('app-installed') === 'true';
             } catch (e) {
@@ -1185,34 +989,20 @@
             }
         }
 
-        // 🔧 FIX: Nuova funzione per MOSTRARE la carta installazione
         function showInstallCard() {
             const installCard = document.getElementById('install-card');
             if (installCard) {
-                console.log('📱 Mostro carta installazione - PWA non installata');
+                console.log('📱 Mostro carta installazione');
                 
-                // Mostra la carta con animazione
                 installCard.style.display = 'block';
                 installCard.style.opacity = '0';
                 installCard.style.transform = 'scale(0.8)';
                 
-                // Animazione di entrata
                 setTimeout(() => {
                     installCard.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
                     installCard.style.opacity = '1';
                     installCard.style.transform = 'scale(1)';
                 }, 50);
-
-                // Forza ridisposizione della griglia
-                requestAnimationFrame(() => {
-                    const gamesGrid = document.querySelector('.games-grid');
-                    if (gamesGrid) {
-                        gamesGrid.style.display = 'none';
-                        setTimeout(() => {
-                            gamesGrid.style.display = 'grid';
-                        }, 10);
-                    }
-                });
             }
         }
 
@@ -1232,18 +1022,7 @@
                 
                 setTimeout(() => {
                     installCard.style.display = 'none';
-                    reorganizeGrid();
                 }, 500);
-            }
-        }
-
-        function reorganizeGrid() {
-            const gamesGrid = document.querySelector('.games-grid');
-            if (gamesGrid) {
-                gamesGrid.style.display = 'none';
-                setTimeout(() => {
-                    gamesGrid.style.display = 'grid';
-                }, 10);
             }
         }
 
@@ -1269,9 +1048,9 @@
                                 <li><strong>Conferma l'installazione</strong></li>
                                 <li>L'app apparirà nel menu Start/Applicazioni!</li>
                             </ol>
-                            <div style="background: #fff3cd; padding: 10px; border-radius: 5px; margin-top: 15px; border-left: 4px solid #ffc107;">
-                                <p style="margin: 0; font-weight: bold; color: #856404;">
-                                    ⚠️ IMPORTANTE: Clicca "Ho installato l'app" dopo l'installazione per rimuovere questa card.
+                            <div style="background: #d4edda; padding: 10px; border-radius: 5px; margin-top: 15px; border-left: 4px solid #28a745;">
+                                <p style="margin: 0; font-weight: bold; color: #155724;">
+                                    ✅ AUTOMATICO: Tutti gli aggiornamenti saranno automatici!
                                 </p>
                             </div>
                         </div>
@@ -1292,9 +1071,9 @@
                                 <li><strong>Conferma "Installa"</strong></li>
                                 <li>L'app apparirà nella schermata home!</li>
                             </ol>
-                            <div style="background: #fff3cd; padding: 10px; border-radius: 5px; margin-top: 15px; border-left: 4px solid #ffc107;">
-                                <p style="margin: 0; font-weight: bold; color: #856404;">
-                                    ⚠️ IMPORTANTE: Clicca "Ho installato l'app" dopo l'installazione.
+                            <div style="background: #d4edda; padding: 10px; border-radius: 5px; margin-top: 15px; border-left: 4px solid #28a745;">
+                                <p style="margin: 0; font-weight: bold; color: #155724;">
+                                    ✅ AUTOMATICO: Tutti gli aggiornamenti saranno automatici!
                                 </p>
                             </div>
                         </div>
@@ -1309,7 +1088,7 @@
                         <p><strong>Aggiungi alla schermata home!</strong></p>
                         <div style="background: #d4edda; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #28a745;">
                             <p style="margin: 0; font-weight: bold; color: #155724;">
-                                ✨ <strong>NOVITÀ v8.4.0:</strong> Nuovo gioco Impara i Numeri con sintesi vocale italiana!
+                                ✨ <strong>NOVITÀ v8.4.0:</strong> Aggiornamenti completamente automatici!
                             </p>
                         </div>
                         <div style="text-align: left; background: #f5f5f5; padding: 15px; border-radius: 10px; margin: 20px 0;">
@@ -1320,9 +1099,9 @@
                                 <li><strong>Conferma "Aggiungi"</strong></li>
                                 <li>L'app apparirà nella schermata home come app nativa!</li>
                             </ol>
-                            <div style="background: #fff3cd; padding: 10px; border-radius: 5px; margin-top: 15px; border-left: 4px solid #ffc107;">
-                                <p style="margin: 0; font-weight: bold; color: #856404;">
-                                    ⚠️ IMPORTANTE: Clicca "Ho aggiunto l'app" dopo averla aggiunta.
+                            <div style="background: #d4edda; padding: 10px; border-radius: 5px; margin-top: 15px; border-left: 4px solid #28a745;">
+                                <p style="margin: 0; font-weight: bold; color: #155724;">
+                                    ✅ AUTOMATICO: Tutti gli aggiornamenti saranno automatici!
                                 </p>
                             </div>
                         </div>
@@ -1340,9 +1119,9 @@
                             <ul>
                                 <li><strong>Desktop:</strong> Chrome o Edge</li>
                                 <li><strong>Android:</strong> Chrome</li>
-                                <li><strong>iOS:</strong> Safari (con nuovo gioco Impara i Numeri!)</li>
+                                <li><strong>iOS:</strong> Safari</li>
                             </ul>
-                            <p>Con questi browser potrai installare l'app come PWA nativa!</p>
+                            <p>Con questi browser potrai installare l'app come PWA nativa con aggiornamenti automatici!</p>
                         </div>
                         <button class="understand-button" onclick="closeInstallModal()">Ho capito</button>
                     </div>
@@ -1388,11 +1167,11 @@
             toast.className = `toast ${type}`;
             toast.textContent = message;
             
-            // Stile basato sul tipo
             const styles = {
                 success: { background: '#4CAF50', shadow: 'rgba(76, 175, 80, 0.3)' },
                 error: { background: '#f44336', shadow: 'rgba(244, 67, 54, 0.3)' },
-                warning: { background: '#ff9800', shadow: 'rgba(255, 152, 0, 0.3)' }
+                warning: { background: '#ff9800', shadow: 'rgba(255, 152, 0, 0.3)' },
+                info: { background: '#2196F3', shadow: 'rgba(33, 150, 243, 0.3)' }
             };
             
             if (styles[type]) {
@@ -1409,18 +1188,17 @@
                         document.body.removeChild(toast);
                     }
                 }, 300);
-            }, 4000);
+            }, 3000);
         }
 
-        // ========== EVENT LISTENERS ==========
+        // ========== EVENT LISTENERS AUTOMATICI ==========
         
         // PWA Install Prompt
         window.addEventListener('beforeinstallprompt', (e) => {
-            console.log('📲 Native install prompt detected');
+            console.log('📲 Native install prompt rilevato');
             e.preventDefault();
             deferredPrompt = e;
             
-            // Aggiorna il comportamento della card
             const installCard = document.getElementById('install-card');
             if (installCard && installCard.style.display !== 'none') {
                 const playButton = installCard.querySelector('.play-button');
@@ -1435,22 +1213,19 @@
 
         // PWA Installed
         window.addEventListener('appinstalled', (evt) => {
-            console.log('🎉 PWA installata con successo!');
+            console.log('🎉 PWA installata automaticamente!');
             deferredPrompt = null;
-            showToast('🎉 App installata con successo!', 'success');
             markAsInstalled();
         });
 
         function triggerNativeInstall() {
             if (deferredPrompt) {
-                console.log('🚀 Trigger native install prompt');
+                console.log('🚀 Trigger installazione automatica');
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then((choiceResult) => {
                     if (choiceResult.outcome === 'accepted') {
                         console.log('✅ Installazione accettata');
                         markAsInstalled();
-                    } else {
-                        console.log('❌ Installazione rifiutata');
                     }
                     deferredPrompt = null;
                 });
@@ -1469,90 +1244,77 @@
             }
         });
 
-        // ========== INIZIALIZZAZIONE ==========
+        // ========== INIZIALIZZAZIONE AUTOMATICA ==========
         
-        async function initializeApp() {
-            console.log(`🚀 Inizializzazione PWA v${PWA_CONFIG.VERSION}...`);
+        async function initializeAutomaticApp() {
+            console.log(`🚀 Inizializzazione PWA AUTOMATICA v${PWA_CONFIG.VERSION}...`);
             
             try {
                 // 1. Rileva dispositivo
                 detectDevice();
                 
-                // 2. Inizializza Service Worker
-                const swInitialized = await swManager.init();
+                // 2. Inizializza Service Worker automatico
+                const swInitialized = await autoSWManager.init();
                 
-                // 3. 🔧 FIX: Gestione installazione MIGLIORATA
+                // 3. Gestione installazione
                 if (isAppInstalled()) {
-                    console.log('✅ PWA già installata - carta rimane nascosta');
-                    // La carta rimane nascosta (display: none nel CSS)
+                    console.log('✅ PWA già installata');
                 } else {
-                    console.log('📱 PWA non installata - mostro carta installazione');
-                    showInstallCard(); // 🔧 FIX: MOSTRA invece di nascondere
-                    setTimeout(updateSmartCard, 100); // 🔧 FIX: Ridotto delay
+                    console.log('📱 PWA non installata - mostro carta');
+                    showInstallCard();
+                    setTimeout(updateSmartCard, 100);
                 }
                 
                 // 4. Log stato finale
-                console.log('✅ Inizializzazione completata');
+                console.log('✅ Inizializzazione automatica completata');
                 console.log(`🎮 Giochi disponibili: ${Object.keys(PWA_CONFIG.GAMES).length}`);
-                console.log(`🟢 Service Worker: ${swInitialized ? 'ATTIVO v8.4.0' : 'NON DISPONIBILE'}`);
+                console.log(`🔄 Service Worker: ${swInitialized ? 'AUTOMATICO v8.4.0' : 'NON DISPONIBILE'}`);
                 console.log(`📱 PWA Status: ${isAppInstalled() ? 'INSTALLATA' : 'NON INSTALLATA'}`);
                 
-                // 5. Toast di benvenuto
+                // 5. Toast di benvenuto discreto
                 if (swInitialized) {
                     setTimeout(() => {
-                        showToast(`🎮 PWA v${PWA_CONFIG.VERSION} caricata - Nuovo gioco Impara i Numeri disponibile!`, 'success');
+                        showToast(`🎮 PWA v${PWA_CONFIG.VERSION} pronta - Modalità automatica attiva!`, 'info');
                     }, 1000);
                 }
                 
             } catch (error) {
                 console.error('❌ Errore inizializzazione:', error);
-                showToast('⚠️ Errore durante l\'inizializzazione', 'error');
             }
         }
 
-        // ========== DEBUG FUNCTIONS (Rimuovi in produzione se necessario) ==========
+        // ========== FUNZIONI DEBUG MINIMALI ==========
         
-        function resetInstallationStatus() {
-            try {
-                localStorage.removeItem('app-installed');
-                localStorage.removeItem('app-installed-date');
-                console.log('🔄 Stato installazione resettato');
-                location.reload();
-            } catch (e) {
-                console.log('❌ Impossibile resettare');
-            }
-        }
-
-        function testUpdateBanner() {
-            updateDismissed = false;
-            swManager.showUpdateBanner('🧪 Test: Nuovo gioco Impara i Numeri con sintesi vocale!');
-        }
-
-        function testHighlightGame() {
-            swManager.highlightNewGame();
-        }
-
-        // Esponi funzioni debug
         window.DEBUG = {
-            resetInstallationStatus,
-            testUpdateBanner,
-            testHighlightGame,
-            forceUpdate: () => swManager.checkForUpdates(),
+            resetInstallationStatus: () => {
+                try {
+                    localStorage.removeItem('app-installed');
+                    localStorage.removeItem('app-installed-date');
+                    console.log('🔄 Stato installazione resettato');
+                    location.reload();
+                } catch (e) {
+                    console.log('❌ Impossibile resettare');
+                }
+            },
             showConfig: () => console.table(PWA_CONFIG),
             showDeviceInfo: () => console.table(deviceInfo),
-            testShowInstallCard: showInstallCard // 🔧 FIX: Nuova funzione debug
+            triggerUpdate: () => {
+                if (autoSWManager.registration) {
+                    autoSWManager.registration.update();
+                }
+            }
         };
 
-        // ========== AVVIO ==========
+        // ========== AVVIO AUTOMATICO ==========
         
         // Inizializza quando DOM è pronto
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeApp);
+            document.addEventListener('DOMContentLoaded', initializeAutomaticApp);
         } else {
-            initializeApp();
+            initializeAutomaticApp();
         }
 
-        console.log(`✅ PWA v${PWA_CONFIG.VERSION} - Script caricato e pronto - Nuovo gioco Impara i Numeri attivo`);
+        console.log(`✅ PWA AUTOMATICA v${PWA_CONFIG.VERSION} - Script caricato - ZERO intervento utente richiesto`);
         
     </script>
 </body>

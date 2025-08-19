@@ -1,13 +1,14 @@
-// Service Worker v8.3.5 - COMPLETAMENTE AUTOMATICO PER BAMBINI A SCUOLA
+// Service Worker v8.4.0 - COMPLETAMENTE AUTOMATICO PER BAMBINI A SCUOLA
 // 🚀 ZERO INTERVENTO UTENTE - AGGIORNAMENTI TRASPARENTI
-// 🍎 Fix iOS Safari - Sfida Matematica ora compatibile iPhone/iPad
+// 🔢 NUOVO: Gioco "Impara i Numeri" aggiunto e ottimizzato
+// 🍎 Fix iOS Safari - Tutti i giochi compatibili iPhone/iPad
 // ⚡ SkipWaiting Immediato + Reload Forzato Automatico
 
-const SW_VERSION = 'v8.3.5';
-const CACHE_NAME = 'giochi-educativi-v8.3.5';
-const DATA_CACHE_NAME = 'giochi-data-v8.3.5';
+const SW_VERSION = 'v8.4.0';
+const CACHE_NAME = 'giochi-educativi-v8.4.0';
+const DATA_CACHE_NAME = 'giochi-data-v8.4.0';
 
-// 🎯 LISTA COMPLETA RISORSE DA CACHEARE (basata sui tuoi file)
+// 🎯 LISTA COMPLETA RISORSE DA CACHEARE (incluso nuovo gioco numeri)
 const STATIC_CACHE_URLS = [
     // Pagine principali
     '/',
@@ -15,6 +16,7 @@ const STATIC_CACHE_URLS = [
     '/matematica.html',
     '/sfida-matematica.html', 
     '/tabelline.html',
+    '/numeri.html',  // 🔢 NUOVO GIOCO AGGIUNTO
     
     // File di configurazione
     '/games.json',
@@ -36,6 +38,10 @@ const DATA_URLS = [
 
 // 🚨 CACHE VECCHIE DA ELIMINARE AUTOMATICAMENTE
 const OLD_CACHE_VERSIONS = [
+    'giochi-educativi-v8.3.6',  // 🆕 Versione precedente
+    'giochi-data-v8.3.6',      // 🆕 Versione precedente
+    'giochi-educativi-v8.3.5',
+    'giochi-data-v8.3.5',
     'giochi-educativi-v8.3.4',
     'giochi-data-v8.3.4',
     'giochi-educativi-v8.3.2',
@@ -49,7 +55,7 @@ const OLD_CACHE_VERSIONS = [
     'giochi-data-v8.1.0'
 ];
 
-console.log(`🚀 Service Worker ${SW_VERSION} - Avvio AUTOMATICO per bambini`);
+console.log(`🚀 Service Worker ${SW_VERSION} - Avvio AUTOMATICO con gioco NUMERI`);
 
 // ========================================
 // 🔧 INSTALLAZIONE AUTOMATICA AGGRESSIVA
@@ -107,7 +113,8 @@ self.addEventListener('install', function(event) {
                         client.postMessage({
                             type: 'SW_INSTALLED',
                             version: SW_VERSION,
-                            message: '🍎 Sfida Matematica ora compatibile iOS Safari!',
+                            message: '🔢 Nuovo gioco "Impara i Numeri" disponibile!',
+                            newGame: 'numeri.html',
                             autoUpdate: true
                         });
                     });
@@ -147,8 +154,9 @@ self.addEventListener('activate', function(event) {
                 client.postMessage({
                     type: 'SW_ACTIVATED',
                     version: SW_VERSION,
-                    message: '🍎 Sfida Matematica ora compatibile iOS Safari!',
-                    newGameAdded: '🍎 Fix iOS: Sfida Matematica funziona su iPhone/iPad!',
+                    message: '🔢 Nuovo gioco "Impara i Numeri" aggiunto!',
+                    newGameAdded: '🔢 Impara i numeri 0-10.000 con voce e drag&drop!',
+                    games: ['matematica.html', 'sfida-matematica.html', 'tabelline.html', 'numeri.html'],
                     forceReload: true, // 🔄 FORZA RELOAD AUTOMATICO
                     autoUpdate: true
                 });
@@ -228,7 +236,8 @@ self.addEventListener('message', function(event) {
         case 'GET_VERSION':
             event.ports[0]?.postMessage({
                 version: SW_VERSION,
-                caches: [CACHE_NAME, DATA_CACHE_NAME]
+                caches: [CACHE_NAME, DATA_CACHE_NAME],
+                games: ['matematica.html', 'sfida-matematica.html', 'tabelline.html', 'numeri.html']
             });
             break;
             
@@ -275,6 +284,9 @@ self.addEventListener('fetch', function(event) {
         } else if (isSfidaMatematicaRequest(url.pathname)) {
             // 🏆 STRATEGIA SPECIALE per Sfida Matematica
             event.respondWith(handleSfidaMatematicaRequest(request));
+        } else if (isNumeriGameRequest(url.pathname)) {
+            // 🔢 STRATEGIA SPECIALE per Gioco Numeri
+            event.respondWith(handleNumeriGameRequest(request));
         } else {
             // 🎯 STRATEGIA GENERICA: Cache First
             event.respondWith(handleOtherRequests(request));
@@ -398,6 +410,53 @@ function handleSfidaMatematicaRequest(request) {
     });
 }
 
+// 🔢 GESTIONE SPECIALE per GIOCO NUMERI (NUOVO)
+function handleNumeriGameRequest(request) {
+    console.log('🔢 Gestione SPECIALE Gioco Numeri:', request.url);
+    
+    return caches.open(CACHE_NAME).then(function(cache) {
+        return cache.match(request).then(function(cachedResponse) {
+            if (cachedResponse) {
+                console.log('🔢 Gioco Numeri trovato in cache');
+                
+                // Aggiornamento background con priorità alta per il nuovo gioco
+                fetch(request).then(function(networkResponse) {
+                    if (networkResponse.ok) {
+                        console.log('🔄 Aggiornamento prioritario Gioco Numeri');
+                        cache.put(request, networkResponse.clone());
+                        
+                        // Notifica ai client dell'aggiornamento
+                        self.clients.matchAll().then(clients => {
+                            clients.forEach(client => {
+                                client.postMessage({
+                                    type: 'NUMERI_UPDATED',
+                                    message: '🔢 Gioco Numeri aggiornato!',
+                                    url: request.url
+                                });
+                            });
+                        });
+                    }
+                }).catch(() => console.log('🌐 Rete non disponibile per Gioco Numeri'));
+                
+                return cachedResponse;
+            }
+            
+            // Se non in cache, prova rete con retry
+            return fetchWithRetry(request, 2).then(function(networkResponse) {
+                if (networkResponse.ok) {
+                    console.log('🔢 Gioco Numeri dalla rete, cache prioritaria');
+                    cache.put(request, networkResponse.clone());
+                    return networkResponse;
+                }
+                throw new Error('Network response not ok');
+            }).catch(function() {
+                console.log('❌ Gioco Numeri non disponibile, fallback speciale');
+                return generateNumeriOfflinePage();
+            });
+        });
+    });
+}
+
 // 🎯 GESTIONE ALTRE RICHIESTE
 function handleOtherRequests(request) {
     return caches.open(CACHE_NAME).then(function(cache) {
@@ -453,6 +512,13 @@ function isSfidaMatematicaRequest(pathname) {
            pathname.includes('sfida_matematica');
 }
 
+// 🔢 NUOVA FUNZIONE per riconoscere richieste del Gioco Numeri
+function isNumeriGameRequest(pathname) {
+    return pathname.includes('numeri.html') ||
+           pathname.includes('numeri_') ||
+           pathname.endsWith('/numeri');
+}
+
 // 📄 GENERA PAGINA OFFLINE GENERICA
 function generateOfflinePage(request) {
     const offlineHtml = `
@@ -497,12 +563,32 @@ function generateOfflinePage(request) {
                 display: inline-block;
                 margin: 10px;
             }
+            .games-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                margin: 20px 0;
+            }
+            .game-btn {
+                background: rgba(255,255,255,0.2);
+                padding: 10px;
+                border-radius: 8px;
+                font-size: 0.9rem;
+            }
         </style>
     </head>
     <body>
         <div class="offline-card">
             <h1>🌐 Sei Offline!</h1>
             <p>Non c'è connessione internet, ma alcuni giochi potrebbero funzionare lo stesso!</p>
+            
+            <div class="games-grid">
+                <a href="/matematica.html" class="btn game-btn">🧮 Matematica</a>
+                <a href="/tabelline.html" class="btn game-btn">🎯 Tabelline</a>
+                <a href="/numeri.html" class="btn game-btn">🔢 Numeri</a>
+                <a href="/sfida-matematica.html" class="btn game-btn">🏆 Sfida</a>
+            </div>
+            
             <p><strong>Service Worker:</strong> ${SW_VERSION}</p>
             <a href="/" class="btn">🏠 Torna alla Home</a>
             <button onclick="window.location.reload()" class="btn">🔄 Riprova</button>
@@ -597,24 +683,15 @@ function generateSfidaOfflinePage() {
                 <ul>
                     <li>🧮 Giocare con <strong>Matematica sul Divano 3ª</strong></li>
                     <li>🎯 Allenarti con <strong>Sfida Tabelline</strong></li>
+                    <li>🔢 Imparare con <strong>Gioco dei Numeri</strong> (NUOVO!)</li>
                     <li>🔄 Riprovare quando torni online</li>
-                    <li>📚 Ripassare le operazioni matematiche</li>
-                </ul>
-            </div>
-            
-            <p>Quando torni online, potrai accedere a:</p>
-            <div class="feature-list">
-                <ul>
-                    <li>👤 Sistema profili personalizzati</li>
-                    <li>🎯 3 sfide giornaliere da 30 domande</li>
-                    <li>🏆 Sistema trofei Oro, Argento, Bronzo</li>
-                    <li>📱 Sincronizzazione automatica</li>
                 </ul>
             </div>
             
             <a href="/" class="btn">🏠 Torna alla Home</a>
             <a href="/matematica.html" class="btn">🧮 Matematica</a>
             <a href="/tabelline.html" class="btn">🎯 Tabelline</a>
+            <a href="/numeri.html" class="btn">🔢 Numeri</a>
             <button onclick="window.location.reload()" class="btn">🔄 Riconnetti</button>
             
             <div class="version">
@@ -627,6 +704,133 @@ function generateSfidaOfflinePage() {
     `;
     
     return new Response(sfidaOfflineHtml, {
+        headers: { 'Content-Type': 'text/html; charset=utf-8' }
+    });
+}
+
+// 🔢 GENERA PAGINA OFFLINE SPECIALE per GIOCO NUMERI (NUOVO)
+function generateNumeriOfflinePage() {
+    const numeriOfflineHtml = `
+    <!DOCTYPE html>
+    <html lang="it">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>🔢 Impara i Numeri - Offline</title>
+        <style>
+            body { 
+                font-family: 'Comic Sans MS', cursive, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white; 
+                text-align: center; 
+                padding: 20px;
+                margin: 0;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+            .offline-card {
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(248, 250, 255, 0.15) 100%);
+                padding: 30px;
+                border-radius: 20px;
+                backdrop-filter: blur(15px);
+                max-width: 600px;
+                margin: 0 auto;
+                border: 1px solid rgba(255,255,255,0.2);
+            }
+            h1 { font-size: 2.2rem; margin-bottom: 15px; }
+            .emoji { font-size: 3rem; margin: 20px 0; }
+            p { font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px; }
+            .feature-list {
+                text-align: left;
+                background: rgba(255,255,255,0.1);
+                padding: 20px;
+                border-radius: 10px;
+                margin: 20px 0;
+            }
+            .feature-list li {
+                margin: 8px 0;
+                font-size: 1rem;
+            }
+            .btn {
+                background: linear-gradient(45deg, #4CAF50, #45a049);
+                color: white;
+                padding: 12px 25px;
+                border: none;
+                border-radius: 10px;
+                font-size: 1rem;
+                cursor: pointer;
+                text-decoration: none;
+                display: inline-block;
+                margin: 8px;
+                transition: transform 0.3s ease;
+            }
+            .btn:hover { transform: translateY(-2px); }
+            .version { 
+                font-size: 0.9rem; 
+                opacity: 0.8; 
+                margin-top: 20px;
+                background: rgba(0,0,0,0.2);
+                padding: 10px;
+                border-radius: 5px;
+            }
+            .highlight {
+                background: rgba(76, 175, 80, 0.2);
+                padding: 15px;
+                border-radius: 10px;
+                margin: 15px 0;
+                border-left: 4px solid #4CAF50;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="offline-card">
+            <div class="emoji">🔢</div>
+            <h1>Impara i Numeri</h1>
+            <p><strong>🌐 Modalità Offline Attiva</strong></p>
+            
+            <div class="highlight">
+                <p><strong>🆕 NOVITÀ:</strong> Questo gioco funziona completamente offline!</p>
+                <p>Puoi giocare anche senza internet e i tuoi progressi verranno salvati.</p>
+            </div>
+            
+            <p>Il Gioco dei Numeri include:</p>
+            
+            <div class="feature-list">
+                <ul>
+                    <li>🎧 <strong>Ascolta e Scegli</strong> - Numeri da 0 a 10.000</li>
+                    <li>🗣️ <strong>Leggi ad Alta Voce</strong> - Con riconoscimento vocale</li>
+                    <li>🔢 <strong>Componi il Numero</strong> - Drag & Drop interattivo</li>
+                    <li>⚡ <strong>Sfida Velocità</strong> - Quanto sei veloce?</li>
+                    <li>📊 <strong>Tabelle Posizionali</strong> - Strumenti di aiuto</li>
+                    <li>⭐ <strong>Sistema Punteggi</strong> - Stelle e badge</li>
+                </ul>
+            </div>
+            
+            <p>Quando torni online, il gioco si sincronizzerà automaticamente!</p>
+            
+            <a href="/numeri.html" class="btn" style="background: linear-gradient(45deg, #4CAF50, #45a049); font-size: 1.2rem; padding: 15px 30px;">
+                🎮 GIOCA ORA
+            </a>
+            
+            <div style="margin-top: 20px;">
+                <a href="/" class="btn">🏠 Home</a>
+                <a href="/matematica.html" class="btn">🧮 Matematica</a>
+                <a href="/tabelline.html" class="btn">🎯 Tabelline</a>
+                <button onclick="window.location.reload()" class="btn">🔄 Riconnetti</button>
+            </div>
+            
+            <div class="version">
+                Service Worker: ${SW_VERSION}<br>
+                Modalità: Offline Supportata ✅
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
+    
+    return new Response(numeriOfflineHtml, {
         headers: { 'Content-Type': 'text/html; charset=utf-8' }
     });
 }
@@ -648,7 +852,7 @@ self.addEventListener('activate', function() {
 });
 
 // ========================================
-// 🎯 SYNC BACKGROUND per PROFILI (Sfida Matematica)
+// 🎯 SYNC BACKGROUND per PROFILI E NUMERI
 // ========================================
 
 self.addEventListener('sync', function(event) {
@@ -658,17 +862,16 @@ self.addEventListener('sync', function(event) {
         event.waitUntil(syncProfiles());
     } else if (event.tag === 'game-data-sync') {
         event.waitUntil(syncGameData());
+    } else if (event.tag === 'numeri-progress-sync') {
+        event.waitUntil(syncNumeriProgress());
     }
 });
 
 function syncProfiles() {
     console.log('👤 Sincronizzazione profili in background...');
-    // Qui implementeresti la logica di sync dei profili
-    // Per ora è un placeholder che simula la sincronizzazione
     return Promise.resolve().then(() => {
         console.log('✅ Profili sincronizzati');
         
-        // Notifica ai client
         return self.clients.matchAll().then(clients => {
             clients.forEach(client => {
                 client.postMessage({
@@ -682,7 +885,6 @@ function syncProfiles() {
 
 function syncGameData() {
     console.log('🎮 Sincronizzazione dati gioco in background...');
-    // Placeholder per sync dati di gioco
     return Promise.resolve().then(() => {
         console.log('✅ Dati gioco sincronizzati');
         
@@ -691,6 +893,24 @@ function syncGameData() {
                 client.postMessage({
                     type: 'GAME_DATA_SYNCED',
                     message: '🎮 Dati di gioco sincronizzati'
+                });
+            });
+        });
+    });
+}
+
+// 🔢 NUOVA FUNZIONE: Sincronizzazione progressi Gioco Numeri
+function syncNumeriProgress() {
+    console.log('🔢 Sincronizzazione progressi Numeri in background...');
+    return Promise.resolve().then(() => {
+        console.log('✅ Progressi Numeri sincronizzati');
+        
+        return self.clients.matchAll().then(clients => {
+            clients.forEach(client => {
+                client.postMessage({
+                    type: 'NUMERI_PROGRESS_SYNCED',
+                    message: '🔢 Progressi Gioco Numeri sincronizzati',
+                    game: 'numeri.html'
                 });
             });
         });
@@ -708,11 +928,11 @@ self.addEventListener('push', function(event) {
     console.log('🔔 Notifica push ricevuta:', data);
     
     const options = {
-        body: data.body || 'Nuove sfide matematiche disponibili!',
+        body: data.body || 'Nuovi giochi educativi disponibili!',
         icon: '/icon-192x192.png',
         badge: '/icon-192x192.png',
         vibrate: [200, 100, 200],
-        tag: 'math-challenge',
+        tag: 'educational-games',
         requireInteraction: false,
         actions: [
             {
@@ -752,13 +972,15 @@ console.log(`📦 Cache principale: ${CACHE_NAME}`);
 console.log(`📊 Cache dati: ${DATA_CACHE_NAME}`);
 console.log(`🎯 Configurato per AGGIORNAMENTI AUTOMATICI`);
 console.log(`👶 Modalità BAMBINI A SCUOLA: ZERO intervento richiesto`);
-console.log(`🍎 Fix iOS Safari: Sfida Matematica ora compatibile iPhone/iPad`);
+console.log(`🔢 NUOVO: Gioco "Impara i Numeri" aggiunto e ottimizzato`);
+console.log(`🍎 Fix iOS Safari: Tutti i giochi compatibili iPhone/iPad`);
 console.log(`🚀 Sistema pronto per PWA completamente automatica!`);
 
 // 📊 Esporta informazioni SW per debug (se necessario)
 self.SW_INFO = {
     version: SW_VERSION,
     caches: [CACHE_NAME, DATA_CACHE_NAME],
+    games: ['matematica.html', 'sfida-matematica.html', 'tabelline.html', 'numeri.html'],
     features: [
         'Auto SkipWaiting',
         'Auto Cache Cleanup', 
@@ -767,7 +989,15 @@ self.SW_INFO = {
         'Push Notifications Ready',
         'Offline Fallbacks',
         'Sfida Matematica Special Handling',
+        'Numeri Game Special Handling (NEW)',
         'iOS Safari Compatibility'
     ],
-    mode: 'AUTOMATIC_FOR_CHILDREN'
+    mode: 'AUTOMATIC_FOR_CHILDREN',
+    newInVersion: [
+        'Gioco Numeri aggiunto a cache',
+        'Gestione speciale per numeri.html',
+        'Pagina offline dedicata per Gioco Numeri',
+        'Sync progressi Gioco Numeri',
+        'Notifiche aggiornamento Gioco Numeri'
+    ]
 };

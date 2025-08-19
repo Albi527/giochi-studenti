@@ -19,7 +19,7 @@
         "standaloneMode": false,
         "localStorage": "SYNCHRONIZED",
         "navigation": "UNIFIED",
-        "serviceWorker": "v8.3.5",
+        "serviceWorker": "v8.4.0",
         "duplicationsRemoved": true,
         "installationControls": "CENTRALIZED",
         "updateSystem": "GREEN_BUTTON_ACTIVE",
@@ -42,7 +42,7 @@
         "localStorage sincronizzato con index.html",
         "Navigazione fluida tra componenti",
         "Controlli installazione centralizzati",
-        "Cache strategy ottimizzata con SW v8.3.5",
+        "Cache strategy ottimizzata con SW v8.4.0",
         "Interfaccia pulita e ottimizzata",
         "Sistema aggiornamenti automatici con bottone verde",
         "Fallback offline specifico per matematica"
@@ -70,7 +70,7 @@
           "localStorageSync": true,
           "unifiedNavigation": true,
           "centralizedInstallation": true,
-          "serviceWorkerVersion": "v8.3.5",
+          "serviceWorkerVersion": "v8.4.0",
           "noDuplications": true,
           "optimizedCaching": true,
           "homeButtonFixed": true,
@@ -109,7 +109,7 @@
       "pwaIntegration": {
         "status": "SYNCHRONIZED",
         "unifiedSystem": true,
-        "serviceWorker": "v8.3.5",
+        "serviceWorker": "v8.4.0",
         "cacheStrategy": "CACHE_FIRST_WITH_BACKGROUND_UPDATE",
         "updateSystem": "GREEN_BUTTON_ACTIVE"
       },
@@ -125,7 +125,7 @@
         "Navigazione fluida con index",
         "Sincronizzato nel sistema PWA unificato",
         "Aggiornamenti automatici con bottone verde",
-        "Cache strategy ottimizzata SW v8.3.5"
+        "Cache strategy ottimizzata SW v8.4.0"
       ],
       "educational": {
         "targetAge": "6-12 anni",
@@ -139,7 +139,7 @@
         "expirationDate": null,
         "systemIntegration": {
           "unifiedPWA": true,
-          "serviceWorkerVersion": "v8.3.5",
+          "serviceWorkerVersion": "v8.4.0",
           "homeButtonFixed": true,
           "antiRepetitionAdvanced": true,
           "updateSystemIntegrated": true,
@@ -166,7 +166,7 @@
         "standaloneMode": false,
         "localStorage": "PROFILES_MANAGED",
         "navigation": "UNIFIED",
-        "serviceWorker": "v8.3.5",
+        "serviceWorker": "v8.4.0",
         "profileSystem": true,
         "dailyChallenges": true,
         "updateSystem": "GREEN_BUTTON_ACTIVE",
@@ -220,7 +220,7 @@
           "localStorageProfiles": true,
           "unifiedNavigation": true,
           "centralizedInstallation": true,
-          "serviceWorkerVersion": "v8.3.5",
+          "serviceWorkerVersion": "v8.4.0",
           "optimizedCaching": true,
           "homeButtonIntegrated": true,
           "updateSystem": "green_button_active",
@@ -290,6 +290,196 @@
       }
     },
     {
+      "id": "numeri",
+      "title": "Impara i Numeri",
+      "description": "Gioco interattivo per imparare i numeri da 0 a 10.000! 4 modalità di gioco: Ascolta e Scegli, Leggi ad Alta Voce (con microfono), Componi il Numero (drag&drop) e Sfida Velocità. Include tabelle posizionali, sistema punteggi e supporto vocale completo! Modalità 'Parla' ottimizzata senza countdown per un'esperienza più fluida.",
+      "icon": "🔢",
+      "file": "numeri.html",
+      "category": "matematica",
+      "buttonText": "🎲 Impara i Numeri",
+      "buttonColor": "numeri",
+      "active": true,
+      "featured": true,
+      "version": "2.0.0",
+      "lastUpdated": "2025-08-19",
+      "pwaIntegration": {
+        "status": "FULLY_INTEGRATED_WITH_DEDICATED_HANDLING",
+        "unifiedSystem": true,
+        "standaloneMode": false,
+        "localStorage": "SYNCHRONIZED_WITH_PROGRESSI",
+        "navigation": "UNIFIED",
+        "serviceWorker": "v8.4.0",
+        "updateSystem": "GREEN_BUTTON_ACTIVE",
+        "cacheStrategy": "DEDICATED_NUMERI_STRATEGY",
+        "backgroundSync": "NUMERI_PROGRESS_SYNC",
+        "offlineFallback": "CUSTOM_NUMERI_PAGE",
+        "offlineCapable": "FULLY_SUPPORTED"
+      },
+      "features": [
+        "🎧 Modalità 'Ascolta e Scegli' - numeri pronunciati con scelta multipla",
+        "🗣️ Modalità 'Leggi ad Alta Voce' - riconoscimento vocale immediato senza countdown",
+        "🔢 Modalità 'Componi il Numero' - drag & drop interattivo",
+        "⚡ Modalità 'Sfida Velocità' - quanto sei veloce a leggere?",
+        "📊 4 livelli progressivi: 0-100, 101-999, 1.000-5.000, 5.001-10.000",
+        "🎯 Sistema punteggi con stelle e badge personalizzati",
+        "🏆 Strumenti di aiuto: tabelle posizionali con casa delle migliaia",
+        "🔊 Sintesi vocale italiana completa con pronuncia corretta",
+        "🎤 Supporto microfono con gestione permessi automatica e avvio immediato",
+        "💾 Salvataggio progressi automatico (funziona offline)",
+        "📱 Design responsive ottimizzato per tutti i dispositivi",
+        "🔧 Gestione cache dedicata handleNumeriGame()",
+        "🔄 Sincronizzazione progressi in background",
+        "🌐 Fallback offline personalizzato con guida completa",
+        "✨ Feedback visivo e sonoro coinvolgente",
+        "🏠 Bottone Home integrato nel sistema unificato",
+        "⚡ Modalità vocale ottimizzata - parla immediatamente senza attese"
+      ],
+      "educational": {
+        "targetAge": "5-12 anni",
+        "subject": "Matematica - Apprendimento Numeri",
+        "skills": [
+          "Riconoscimento numeri da 0 a 10.000",
+          "Lettura e pronuncia corretta dei numeri",
+          "Comprensione posizionale (unità, decine, centinaia, migliaia)",
+          "Composizione e scomposizione numerica",
+          "Coordinazione occhio-mano (drag & drop)",
+          "Ascolto attivo e comprensione uditiva",
+          "Velocità di lettura numerica",
+          "Confidenza con numeri grandi"
+        ]
+      },
+      "technical": {
+        "audioSupport": true,
+        "speechSynthesis": true,
+        "speechRecognition": true,
+        "microphoneRequired": "partial (solo per 2 modalità)",
+        "offlineCapable": true,
+        "mobileOptimized": true,
+        "pwaIntegrated": true,
+        "backgroundTheme": "gradiente blu-viola elegante",
+        "dragDropSupport": true,
+        "touchOptimized": true,
+        "voiceOptimizations": "immediate_start_no_countdown",
+        "systemIntegration": {
+          "unifiedPWA": true,
+          "localStorageProgressi": true,
+          "unifiedNavigation": true,
+          "centralizedInstallation": true,
+          "serviceWorkerVersion": "v8.4.0",
+          "optimizedCaching": true,
+          "homeButtonIntegrated": true,
+          "updateSystem": "green_button_active",
+          "progressPersistence": true,
+          "dedicatedCacheHandling": "handleNumeriGameRequest()",
+          "backgroundProgressSync": "syncNumeriProgress()",
+          "customOfflineFallback": "generateNumeriOfflinePage()",
+          "microphonePermissionManagement": true,
+          "audioContextSupport": true,
+          "webSpeechAPIIntegration": true,
+          "immediateVoiceActivation": true
+        }
+      },
+      "gameSystem": {
+        "levels": {
+          "level1": {
+            "name": "LIVELLO 1",
+            "range": "0-100",
+            "description": "Numeri 0-100 (ripasso)",
+            "difficulty": "base"
+          },
+          "level2": {
+            "name": "LIVELLO 2", 
+            "range": "101-999",
+            "description": "Numeri 101-999",
+            "difficulty": "intermedio"
+          },
+          "level3": {
+            "name": "LIVELLO 3",
+            "range": "1.000-5.000", 
+            "description": "Numeri 1.000-5.000",
+            "difficulty": "avanzato"
+          },
+          "level4": {
+            "name": "LIVELLO 4",
+            "range": "5.001-10.000",
+            "description": "Numeri 5.001-10.000", 
+            "difficulty": "esperto"
+          }
+        },
+        "gameModes": {
+          "listen": {
+            "name": "ASCOLTA E SCEGLI",
+            "icon": "🎧",
+            "microphoneRequired": false,
+            "description": "Ascolta il numero e scegli la risposta corretta",
+            "features": ["sintesi vocale", "scelta multipla", "feedback audio"]
+          },
+          "speak": {
+            "name": "LEGGI AD ALTA VOCE", 
+            "icon": "🗣️",
+            "microphoneRequired": true,
+            "description": "Leggi il numero mostrato ad alta voce - avvio immediato senza countdown",
+            "features": ["riconoscimento vocale immediato", "feedback pronuncia", "start istantaneo"]
+          },
+          "compose": {
+            "name": "COMPONI IL NUMERO",
+            "icon": "🔢", 
+            "microphoneRequired": false,
+            "description": "Trascina le cifre per comporre il numero ascoltato",
+            "features": ["drag & drop", "cifre mescolate", "feedback visivo"]
+          },
+          "speed": {
+            "name": "SFIDA VELOCITÀ",
+            "icon": "⚡",
+            "microphoneRequired": true, 
+            "description": "Leggi una sequenza di numeri il più velocemente possibile",
+            "features": ["cronometro", "sfida tempo", "punteggi bonus"]
+          }
+        },
+        "scoring": {
+          "pointsPerCorrect": {
+            "listen": 10,
+            "speak": 15,
+            "compose": 20,
+            "speed": "5-30 basato su tempo"
+          },
+          "starSystem": {
+            "1star": "50-69% risposte corrette",
+            "2stars": "70-89% risposte corrette", 
+            "3stars": "90-100% risposte corrette"
+          },
+          "badges": [
+            "ESPERTO DELLE MIGLIAIA",
+            "VELOCISTA DEI NUMERI",
+            "COLLEZIONISTA DI STELLE"
+          ]
+        },
+        "helperTools": {
+          "positionTables": true,
+          "unitHouse": ["unità(u)", "decine(da)", "centinaia(h)"],
+          "thousandHouse": ["unità migliaia(uk)", "decine migliaia(dak)"],
+          "visualSeparator": "punto rosso tra case",
+          "colorCoding": true
+        }
+      },
+      "compatibility": {
+        "microphoneSupport": {
+          "chrome": true,
+          "edge": true,
+          "firefox": "limited",
+          "safari": "ios_only",
+          "fallbackMode": "modalità senza microfono sempre disponibili"
+        },
+        "speechAPI": {
+          "webSpeechAPI": true,
+          "speechSynthesis": true,
+          "speechRecognition": "webkit prefixed",
+          "languageSupport": "it-IT",
+          "voiceActivation": "immediate_no_countdown"
+        }
+      }
+    },
+    {
       "id": "coming-soon-1",
       "title": "Altro in arrivo",
       "description": "Nuovi giochi educativi e attività didattiche sono in fase di sviluppo. Saranno automaticamente integrati nel sistema PWA unificato con aggiornamenti automatici. Resta sintonizzato per le prossime novità!",
@@ -307,7 +497,7 @@
         "unifiedSystem": true,
         "willBeIntegrated": true,
         "updateSystemReady": true,
-        "serviceWorkerSupport": "v8.3.5"
+        "serviceWorkerSupport": "v8.4.0"
       }
     }
   ],
@@ -374,9 +564,9 @@
   "settings": {
     "title": "Giochi Educativi",
     "subtitle": "by Maestro Alberto",
-    "version": "1.9.3",
-    "lastUpdated": "2025-07-31",
-    "systemType": "UNIFIED_PWA_WITH_SW_V8.3.5",
+    "version": "1.9.4",
+    "lastUpdated": "2025-08-19",
+    "systemType": "UNIFIED_PWA_WITH_SW_V8.4.0",
     "autoDetectGames": true,
     "showInstallButton": true,
     "showOfflineIndicator": true,
@@ -386,7 +576,7 @@
     "updateSystem": {
       "enabled": true,
       "type": "GREEN_BUTTON",
-      "serviceWorkerVersion": "v8.3.5",
+      "serviceWorkerVersion": "v8.4.0",
       "autoCheck": true,
       "userControlled": true,
       "bannerAnimation": true,
@@ -398,7 +588,8 @@
       "matematicaIntegrated": true,
       "tabellineIntegrated": true,
       "sfidaMatematicaIntegrated": true,
-      "serviceWorkerVersion": "v8.3.5",
+      "numeriIntegrated": true,
+      "serviceWorkerVersion": "v8.4.0",
       "localStorageSynchronized": true,
       "navigationUnified": true,
       "duplicationsRemoved": true,
@@ -410,13 +601,14 @@
       "dedicatedCacheStrategies": true
     },
     "serviceWorkerFeatures": {
-      "version": "v8.3.5",
+      "version": "v8.4.0",
       "cacheNames": {
-        "main": "giochi-educativi-v8.3.5",
-        "data": "giochi-data-v8.3.5"
+        "main": "giochi-educativi-v8.4.0",
+        "data": "giochi-data-v8.4.0"
       },
       "specialHandling": {
         "sfidaMatematica": "handleSfidaMatematica()",
+        "numeriGame": "handleNumeriGameRequest()",
         "dataRequests": "handleDataRequest()",
         "documentRequests": "handleDocumentRequest()",
         "otherRequests": "handleOtherRequests()"
@@ -424,6 +616,7 @@
       "backgroundSync": {
         "profileSync": "syncProfiles()",
         "gameDataSync": "syncGameData()",
+        "numeriProgressSync": "syncNumeriProgress()",
         "supported": true
       },
       "notifications": {
@@ -433,17 +626,39 @@
       },
       "offlineFallbacks": {
         "sfidaMatematica": "Custom offline page with family-friendly design",
-        "general": "Main offline page with game links",
+        "numeriGame": "Custom offline page with game features explanation", 
+        "general": "Main offline page with all game links",
         "index": "Full offline experience with cached games"
       },
       "cacheStrategies": {
         "sfidaMatematica": "Cache first with background update + custom fallback",
+        "numeriGame": "Cache first with background update + custom fallback + dedicated handling",
         "dataFiles": "Network first with cache fallback",
         "documents": "Cache first with background update", 
         "otherResources": "Cache first"
       }
     },
     "newFeatures": {
+      "v1.9.4": [
+        "🔢 NUOVO GIOCO: 'Impara i Numeri' v2.0.0 - Completamente Integrato",
+        "🎮 4 modalità di gioco: Ascolta, Parla, Componi, Sfida Velocità",
+        "📊 Numeri da 0 a 10.000 con 4 livelli progressivi",
+        "🎤 Supporto microfono con riconoscimento vocale italiano",
+        "🔊 Sintesi vocale completa per pronuncia corretta",
+        "🎯 Sistema drag & drop interattivo per composizione numeri",
+        "🏆 Tabelle posizionali con casa delle migliaia e unità",
+        "⚡ Service Worker v8.4.0 - Gestione dedicata Gioco Numeri",
+        "💾 handleNumeriGameRequest() - Cache strategy ottimizzata",
+        "🔄 syncNumeriProgress() - Sincronizzazione progressi automatica",
+        "🌐 generateNumeriOfflinePage() - Fallback offline personalizzato",
+        "📱 Supporto offline completo con salvataggio progressi",
+        "🎨 Design responsive ottimizzato per tutti i dispositivi",
+        "🔧 Gestione permessi microfono automatica e user-friendly",
+        "✨ Sistema punteggi con stelle, badge e feedback coinvolgente",
+        "🚀 OTTIMIZZAZIONE: Modalità 'Parla' senza countdown - avvio immediato",
+        "⚡ Registrazione vocale istantanea per esperienza più fluida",
+        "🎯 Rimosso popup e countdown per interazione diretta bambini"
+      ],
       "v1.9.3": [
         "🔧 Service Worker v8.3.5 - Sistema Completamente Automatico per Bambini",
         "⚡ SkipWaiting Immediato + Reload Forzato Automatico",
@@ -457,68 +672,37 @@
         "🔥 Fetch con Retry Logic per Richieste Critiche",
         "💾 Background Sync Ottimizzato per Profili e Dati",
         "🌐 Fallback Offline Personalizzati per Ogni Componente"
-      ],
-      "v1.9.2": [
-        "🔧 Service Worker v8.3.2 - Gestione Avanzata Completa",
-        "handleSfidaMatematica() - Strategia cache dedicata per Sfida Matematica",
-        "Sistema cache separato DATA_CACHE_NAME per dati dinamici (games.json)",
-        "syncProfiles() - Sincronizzazione background automatica profili",
-        "syncGameData() - Aggiornamento background dati di gioco",
-        "Supporto notifiche push con gestione click",
-        "Fallback offline personalizzati per ogni gioco",
-        "Cache strategy differenziata per tipo di richiesta",
-        "Gestione errori avanzata con retry automatici",
-        "Background sync tags: 'profile-sync', 'game-data-sync'",
-        "Sistema messaggi SW-Client migliorato",
-        "Controllo versione cache automatico con cleanup"
-      ],
-      "v1.9.1": [
-        "🎯 Sfida Matematica in Famiglia 3ª v1.0.0 - Integrazione Completata",
-        "Sistema profili personalizzati con 10 avatar",
-        "3 sfide giornaliere da 30 domande (90 totali al giorno)",
-        "4 tipologie domande: Calcolo, Logica, Problemi, Geometria",
-        "Reset automatico giornaliero a mezzanotte",
-        "Sistema seeded random per consistenza giornaliera",
-        "Generazione domande uniche senza ripetizioni nella sessione",
-        "Design family-friendly con Comic Sans e gradienti",
-        "Audio system con feedback appropriati per bambini",
-        "Ottimizzazioni specifiche per iOS e compatibilità multi-dispositivo",
-        "Cache strategy ottimizzata per gestione profili",
-        "Integrazione perfetta nel sistema PWA unificato"
-      ],
-      "v1.9.0": [
-        "🟢 Sistema bottone verde per aggiornamenti PWA migliorato",
-        "Service Worker v8.2.0: Gestione intelligente aggiornamenti",
-        "Banner animato con pulse verde per nuove versioni",
-        "Controllo utente su aggiornamenti (non più automatici)",
-        "Auto-dismiss intelligente con reset temporizzato"
       ]
     }
   },
   "stats": {
-    "totalGames": 4,
-    "availableGames": 3,
+    "totalGames": 5,
+    "availableGames": 4,
     "inDevelopment": 1,
-    "totalLevels": 36,
+    "totalLevels": 40,
     "mathematicaLevels": 33,
     "tabellineLevels": 3,
     "sfidaMatematicaChallenges": 3,
     "sfidaMatematicaDailyQuestions": 90,
+    "numeriLevels": 4,
+    "numeriGameModes": 4,
     "supportedDevices": 3,
     "pwaInstallable": true,
     "offlineCapable": true,
     "audioSupported": true,
+    "speechRecognitionSupported": true,
     "profileSystemSupported": true,
     "backgroundSyncSupported": true,
     "pushNotificationsSupported": true,
-    "lastMajorUpdate": "2025-07-31",
+    "lastMajorUpdate": "2025-08-19",
     "updateSystemActive": true,
-    "serviceWorkerVersion": "v8.3.5",
+    "serviceWorkerVersion": "v8.4.0",
     "systemUnification": {
       "matematicaIntegrationStatus": "COMPLETED",
       "tabellineIntegrationStatus": "COMPLETED", 
       "sfidaMatematicaIntegrationStatus": "COMPLETED_WITH_DEDICATED_HANDLING",
-      "serviceWorkerVersion": "v8.3.5",
+      "numeriIntegrationStatus": "COMPLETED_WITH_DEDICATED_HANDLING",
+      "serviceWorkerVersion": "v8.4.0",
       "localStorageConflicts": "RESOLVED",
       "navigationIssues": "RESOLVED",
       "pwaConflicts": "RESOLVED",
@@ -543,6 +727,8 @@
         "unifiedSystemSupport": true,
         "updateSystemSupport": true,
         "profileSystemSupport": true,
+        "speechRecognitionSupport": true,
+        "speechSynthesisSupport": true,
         "backgroundSyncSupport": true,
         "pushNotificationSupport": true
       },
@@ -554,6 +740,8 @@
         "unifiedSystemSupport": true,
         "updateSystemSupport": true,
         "profileSystemSupport": true,
+        "speechRecognitionSupport": true,
+        "speechSynthesisSupport": true,
         "backgroundSyncSupport": true,
         "pushNotificationSupport": true
       },
@@ -565,6 +753,8 @@
         "unifiedSystemSupport": "partial",
         "updateSystemSupport": "partial",
         "profileSystemSupport": "limited",
+        "speechRecognitionSupport": false,
+        "speechSynthesisSupport": true,
         "backgroundSyncSupport": false,
         "pushNotificationSupport": "limited"
       },
@@ -576,6 +766,8 @@
         "unifiedSystemSupport": "mobile_only",
         "updateSystemSupport": "limited",
         "profileSystemSupport": "limited",
+        "speechRecognitionSupport": false,
+        "speechSynthesisSupport": true,
         "backgroundSyncSupport": false,
         "pushNotificationSupport": false
       }
@@ -589,11 +781,11 @@
     }
   },
   "systemIntegration": {
-    "version": "1.9.3",
-    "type": "UNIFIED_PWA_SYSTEM_WITH_SW_V8.3.5",
+    "version": "1.9.4",
+    "type": "UNIFIED_PWA_SYSTEM_WITH_SW_V8.4.0",
     "updateManagement": {
       "type": "FULLY_AUTOMATIC_FOR_CHILDREN",
-      "serviceWorkerVersion": "v8.3.5",
+      "serviceWorkerVersion": "v8.4.0",
       "skipWaitingImmediate": true,
       "autoReload": true,
       "userFriendly": true,
@@ -603,7 +795,7 @@
     },
     "components": {
       "index": {
-        "version": "8.3.5",
+        "version": "8.4.0",
         "status": "ACTIVE",
         "role": "MAIN_LANDING_PAGE",
         "updateSystemIntegration": true,
@@ -663,14 +855,47 @@
           "customOfflineFallback": true
         }
       },
+      "numeri": {
+        "version": "2.0.0",
+        "status": "FULLY_INTEGRATED_WITH_DEDICATED_SW_HANDLING_OPTIMIZED",
+        "role": "NUMBER_LEARNING_GAME_COMPONENT",
+        "fileName": "numeri.html",
+        "cacheStrategy": "handleNumeriGameRequest",
+        "backgroundSync": ["syncNumeriProgress"],
+        "features": {
+          "multiModalGameplay": true,
+          "speechRecognitionIntegrated": true,
+          "speechSynthesisOptimized": true,
+          "dragDropSystemActive": true,
+          "progressTrackingComplete": true,
+          "levelSystemImplemented": true,
+          "scoringSystemActive": true,
+          "helperToolsIntegrated": true,
+          "responsiveDesignPerfect": true,
+          "offlineCapabilityFull": true,
+          "microphonePermissionManagement": true,
+          "homeButtonIntegrated": true,
+          "updateSystemAware": true,
+          "pwaFullyIntegrated": true,
+          "dedicatedSWHandling": true,
+          "backgroundSyncIntegrated": true,
+          "customOfflineFallback": true,
+          "audioContextSupport": true,
+          "touchOptimized": true,
+          "voiceModeOptimized": true,
+          "immediateVoiceActivation": true,
+          "noCountdownRequired": true,
+          "streamlinedUserExperience": true
+        }
+      },
       "serviceWorker": {
-        "version": "v8.3.5",
+        "version": "v8.4.0",
         "status": "FULLY_AUTOMATIC_FOR_CHILDREN",
-        "manages": ["index.html", "matematica.html", "tabelline.html", "sfida-matematica.html", "games.json", "manifest.json"],
+        "manages": ["index.html", "matematica.html", "tabelline.html", "sfida-matematica.html", "numeri.html", "games.json", "manifest.json"],
         "duplications": false,
         "caches": {
-          "main": "giochi-educativi-v8.3.5",
-          "data": "giochi-data-v8.3.5"
+          "main": "giochi-educativi-v8.4.0",
+          "data": "giochi-data-v8.4.0"
         },
         "features": {
           "updateSystem": "FULLY_AUTOMATIC",
@@ -681,6 +906,7 @@
           "waitingState": "BYPASSED",
           "profileSystemSupport": true,
           "dailyChallengeSupport": true,
+          "numeriProgressSupport": true,
           "backgroundSync": true,
           "pushNotifications": true,
           "cacheBusting": true,
@@ -689,18 +915,20 @@
           "schoolMode": true,
           "dedicatedHandlers": {
             "sfidaMatematica": "handleSfidaMatematica()",
+            "numeriGame": "handleNumeriGameRequest()",
             "dataRequests": "handleDataRequest()",
             "documents": "handleDocumentRequest()",
             "others": "handleOtherRequests()"
           },
           "offlineFallbacks": {
             "sfidaMatematica": "Custom family-friendly offline page",
-            "general": "PWA offline experience",
+            "numeriGame": "Custom numeri game offline page with features explanation",
+            "general": "PWA offline experience with all games",
             "index": "Full offline capability"
           },
-          "syncTags": ["profile-sync", "game-data-sync"],
+          "syncTags": ["profile-sync", "game-data-sync", "numeri-progress-sync"],
           "errorHandling": "Advanced with retry logic",
-          "cacheManagement": "Automatic cleanup old versions"
+          "cacheManagement": "Automatic cleanup old versions including v8.3.6"
         }
       }
     },
@@ -726,7 +954,16 @@
       "dedicatedCacheHandling": true,
       "customOfflineFallbacks": true,
       "advancedErrorHandling": true,
-      "iOSSafariCompatible": true
+      "iOSSafariCompatible": true,
+      "speechRecognitionSupported": true,
+      "speechSynthesisIntegrated": true,
+      "dragDropInteractionSupported": true,
+      "multiModalLearningEnabled": true,
+      "progressPersistenceActive": true,
+      "microphoneManagementAutomatic": true,
+      "immediateVoiceInteraction": true,
+      "streamlinedGameplay": true,
+      "optimizedForChildren": true
     },
     "conflicts": {
       "pwaConflicts": "RESOLVED",
@@ -739,38 +976,48 @@
       "homeButtonConflicts": "RESOLVED",
       "updateSystemConflicts": "RESOLVED",
       "profileSystemConflicts": "RESOLVED",
-      "backgroundSyncConflicts": "RESOLVED"
+      "backgroundSyncConflicts": "RESOLVED",
+      "audioSystemConflicts": "RESOLVED",
+      "speechAPIConflicts": "RESOLVED"
     }
   },
   "metadata": {
     "author": "Maestro Alberto Fogliata (Bs)",
-    "description": "Piattaforma di giochi educativi per studenti con sistema PWA completamente unificato v8.3.5. Include sistema completamente automatico per bambini a scuola con aggiornamenti trasparenti, fix iOS Safari per Sfida Matematica, profili personalizzati, sincronizzazione background e gestione offline dedicata. Ottimizzato per zero intervento utente.",
-    "keywords": ["educativo", "matematica", "tabelline", "sfide giornaliere", "profili famiglia", "PWA", "giochi", "studenti", "sistema automatico", "service worker v8.3.5", "cache avanzate", "background sync", "notifiche push", "offline dedicato", "iOS compatibile", "bambini scuola", "aggiornamenti trasparenti"],
+    "description": "Piattaforma di giochi educativi per studenti con sistema PWA completamente unificato v8.4.0. Include il nuovo gioco 'Impara i Numeri' con riconoscimento vocale ottimizzato, sistema completamente automatico per bambini a scuola con aggiornamenti trasparenti, profili personalizzati, sincronizzazione background e gestione offline dedicata. Ottimizzato per zero intervento utente con modalità vocale immediata.",
+    "keywords": ["educativo", "matematica", "numeri", "tabelline", "sfide giornaliere", "profili famiglia", "riconoscimento vocale immediato", "drag drop", "PWA", "giochi", "studenti", "sistema automatico", "service worker v8.4.0", "cache avanzate", "background sync", "notifiche push", "offline dedicato", "iOS compatibile", "bambini scuola", "aggiornamenti trasparenti", "modalità vocale ottimizzata"],
     "language": "it",
-    "target_audience": "6-12 anni + famiglie + scuole",
-    "educational_subjects": ["Matematica", "Calcolo mentale", "Operazioni aritmetiche", "Logica", "Problemi", "Geometria"],
+    "target_audience": "5-12 anni + famiglie + scuole",
+    "educational_subjects": ["Matematica", "Numeri", "Calcolo mentale", "Operazioni aritmetiche", "Logica", "Problemi", "Geometria", "Riconoscimento numerico", "Lettura numerica"],
     "technical_features": [
-      "🔧 Service Worker v8.3.5 - Sistema Completamente Automatico per Bambini",
+      "🔢 NUOVO GIOCO: 'Impara i Numeri' v2.0.0 con gestione dedicata SW",
+      "🎮 4 modalità interattive: Ascolta, Parla, Componi, Sfida Velocità",
+      "🎤 Riconoscimento vocale italiano completo con Web Speech API",
+      "🔊 Sintesi vocale ottimizzata per pronuncia corretta numeri",
+      "🎯 Sistema drag & drop per composizione numeri interattiva",
+      "📊 Apprendimento numeri 0-10.000 con livelli progressivi",
+      "🏆 Tabelle posizionali educative (casa migliaia + unità)",
+      "⚡ Service Worker v8.4.0 - Sistema Completamente Automatico",
+      "🔧 handleNumeriGameRequest() - Cache strategy dedicata",
+      "💾 syncNumeriProgress() - Sincronizzazione progressi automatica",
+      "🌐 generateNumeriOfflinePage() - Fallback offline personalizzato",
+      "📱 Supporto offline completo con persistenza dati",
+      "🎨 Design responsive touch-optimized per tutti i dispositivi",
+      "🔧 Gestione permessi microfono user-friendly e automatica",
+      "🚀 OTTIMIZZAZIONE v2.0.0: Modalità 'Parla' senza countdown",
+      "⚡ Registrazione vocale istantanea per esperienza fluida bambini",
+      "🎯 Rimosso popup e countdown - interazione diretta e immediata",
       "⚡ SkipWaiting Immediato + Reload Forzato Automatico",
-      "🍎 Fix iOS Safari: Sfida Matematica ora compatibile iPhone/iPad",
+      "🍎 Fix iOS Safari: Tutti i giochi compatibili iPhone/iPad",
       "🚨 Zero Intervento Utente Richiesto - Aggiornamenti Trasparenti",
-      "🧹 Pulizia Automatica Cache Vecchie con Array OLD_CACHE_VERSIONS",
-      "🔄 Auto-check Aggiornamenti ogni 30 secondi in background",
-      "📦 Cache Busting Aggressivo con Timestamp per Aggiornamenti Forzati",
       "🎯 Modalità BAMBINI A SCUOLA: sistema pensato per ambienti educativi",
-      "📢 Notifiche SW-Client Automatiche per Feedback Trasparente",
-      "🔥 Fetch con Retry Logic per Garantire Funzionamento delle Richieste Critiche",
-      "💾 Background Sync Ottimizzato per Profili e Dati di Gioco",
-      "🌐 Fallback Offline Personalizzati per Ogni Componente",
+      "🔄 Auto-check Aggiornamenti ogni 30 secondi in background",
+      "🧹 Pulizia Automatica Cache Vecchie incluse v8.3.6",
       "🎯 Sfida Matematica in Famiglia 3ª v1.0.0 - Completamente Integrata",
       "Sistema profili personalizzati con gestione famiglia automatica",
       "3 sfide giornaliere rinnovabili automaticamente a mezzanotte",
       "90 domande totali al giorno (30 per sfida) con generazione unica",
       "4 tipologie domande: Calcolo, Logica, Problemi, Geometria",
-      "Sistema seeded random per consistenza giornaliera garantita",
-      "Audio system ottimizzato per ambiente familiare e scolastico",
-      "Compatibilità perfetta iOS Safari (fix v8.3.5)",
-      "PWA Sistema Unificato v1.9.3 completamente automatico",
+      "PWA Sistema Unificato v1.9.4 completamente automatico",
       "Audio interattivo ottimizzato per tutti i dispositivi", 
       "Offline completo con supporto profili avanzato e cache intelligenti", 
       "Responsive perfetto per tutti i dispositivi inclusi tablet scolastici", 
@@ -784,12 +1031,15 @@
       "Cache strategy differenziata per componente con supporto profili automatico",
       "Nessuna duplicazione PWA o conflitti - sistema completamente pulito",
       "Gestione automatica di tutti gli stati SW senza intervento utente",
-      "User experience ottimizzata specificamente per bambini e famiglie"
+      "User experience ottimizzata specificamente per bambini e famiglie",
+      "Modalità vocale immediate-start per apprendimento naturale",
+      "Sistema intuitivo senza attese o popup per bambini piccoli"
     ],
     "integration_status": {
       "matematica_integration": "COMPLETED",
       "tabelline_integration": "IMPROVED",
       "sfida_matematica_integration": "COMPLETED_WITH_DEDICATED_SW_HANDLING",
+      "numeri_integration": "COMPLETED_WITH_DEDICATED_SW_HANDLING_AND_VOICE_OPTIMIZATION",
       "system_unification": "COMPLETED",
       "conflicts_resolution": "COMPLETED",
       "ui_optimization": "COMPLETED",
@@ -804,8 +1054,15 @@
       "push_notification_integration": "READY",
       "cache_strategy_optimization": "COMPLETED",
       "offline_fallback_customization": "COMPLETED",
-      "ios_safari_compatibility": "FIXED_v8.3.5",
-      "school_mode_optimization": "COMPLETED"
+      "ios_safari_compatibility": "FIXED_v8.4.0",
+      "school_mode_optimization": "COMPLETED",
+      "speech_recognition_integration": "COMPLETED",
+      "speech_synthesis_integration": "COMPLETED",
+      "drag_drop_integration": "COMPLETED",
+      "multi_modal_learning_integration": "COMPLETED",
+      "voice_mode_optimization": "COMPLETED_IMMEDIATE_START",
+      "countdown_removal_optimization": "COMPLETED",
+      "child_friendly_voice_interaction": "OPTIMIZED"
     }
   }
 }

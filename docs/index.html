@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giochi Educativi by Maestro Alberto - PWA v8.3.5</title>
-    <meta name="description" content="Piattaforma di giochi educativi per studenti con sistema PWA unificato. Include Matematica sul Divano 3ª, Sfida Tabelline e Sfida Matematica in Famiglia 3ª.">
-    <meta name="keywords" content="giochi educativi, matematica, tabelline, PWA, studenti, famiglia">
+    <title>Giochi Educativi by Maestro Alberto - PWA v8.4.0</title>
+    <meta name="description" content="Piattaforma di giochi educativi per studenti con sistema PWA unificato. Include Matematica sul Divano 3ª, Sfida Tabelline, Sfida Matematica in Famiglia 3ª e Impara i Numeri.">
+    <meta name="keywords" content="giochi educativi, matematica, tabelline, numeri, PWA, studenti, famiglia">
     <meta name="author" content="Maestro Alberto Fogliata">
     
     <!-- PWA Manifest -->
@@ -28,6 +28,7 @@
             --matematica-gradient: linear-gradient(135deg, #2196F3 0%, #4CAF50 100%);
             --tabelline-gradient: linear-gradient(135deg, #9C27B0 0%, #E91E63 100%);
             --sfida-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --numeri-gradient: linear-gradient(135deg, #F44336 0%, #D32F2F 100%);
         }
 
         * {
@@ -221,6 +222,42 @@
             z-index: 1;
         }
         
+        /* Nuovo gioco - Impara i Numeri */
+        .impara-numeri {
+            background: var(--numeri-gradient);
+            color: white;
+            position: relative;
+        }
+        
+        .impara-numeri .game-description {
+            color: rgba(255, 255, 255, 0.95);
+        }
+        
+        .impara-numeri .play-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+        }
+        
+        .impara-numeri::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 5s infinite;
+            z-index: 0;
+        }
+        
+        .impara-numeri > * {
+            position: relative;
+            z-index: 1;
+        }
+        
         @keyframes shimmer {
             0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
             100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
@@ -284,16 +321,6 @@
             font-weight: bold;
             margin-left: 8px;
             vertical-align: middle;
-        }
-        
-        .new-badge {
-            background: var(--accent-gradient);
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
         }
         
         .feature-list {
@@ -430,132 +457,43 @@
             font-family: inherit;
         }
         
-        /* 🟢 SISTEMA AGGIORNAMENTI PWA v8.3.5 */
-        .update-banner {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            padding: 15px 20px;
-            z-index: 10000;
-            box-shadow: 0 2px 20px rgba(40, 167, 69, 0.3);
-            transform: translateY(-100%);
-            transition: all 0.3s ease;
-            border-bottom: 3px solid rgba(255,255,255,0.2);
-        }
+        /* 🟢 SISTEMA AGGIORNAMENTI PWA v8.4.0 */
         
-        .update-banner.show {
-            transform: translateY(0);
-            animation: greenPulse 3s infinite;
-        }
         
-        @keyframes greenPulse {
-            0%, 100% { 
-                background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-                box-shadow: 0 2px 20px rgba(40, 167, 69, 0.3);
-            }
+        
+        
+        
             50% { 
                 background: linear-gradient(135deg, #34ce57 0%, #2dd4aa 100%);
                 box-shadow: 0 2px 25px rgba(40, 167, 69, 0.5);
             }
         }
         
-        .update-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 15px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
         
-        .update-text {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-            min-width: 250px;
-        }
         
-        .update-pulse {
-            width: 12px;
-            height: 12px;
-            background: white;
-            border-radius: 50%;
-            animation: pulse-dot 2s infinite;
-        }
         
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; transform: scale(1); }
+        
+        
+        
+        
             50% { opacity: 0.7; transform: scale(1.2); }
         }
         
-        .update-message {
-            font-weight: bold;
-            font-size: clamp(0.9rem, 2vw, 1.1rem);
-        }
         
-        .update-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
         
-        .update-button {
-            background: white;
-            color: #28a745;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(255,255,255,0.2);
-            font-size: clamp(0.9rem, 2vw, 1rem);
-        }
         
-        .update-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(255,255,255,0.3);
-        }
         
-        .update-button:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-        }
         
-        .dismiss-button {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.3s ease;
-            font-size: clamp(0.85rem, 1.8vw, 0.95rem);
-        }
         
-        .dismiss-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-        }
         
-        .updating-spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(40, 167, 69, 0.3);
-            border-top: 2px solid #28a745;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 8px;
-        }
+        
+        
+        
+        
+        
+        
+        
+        
         
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -563,13 +501,9 @@
         }
         
         /* Adattamento layout con banner */
-        body.update-banner-visible {
-            padding-top: 80px;
-        }
         
-        body.update-banner-visible .header {
-            margin-top: 0;
-        }
+        
+        
         
         /* Toast notifications */
         .toast {
@@ -619,24 +553,15 @@
                 gap: 1rem;
             }
             
-            .update-content {
-                flex-direction: column;
-                text-align: center;
-                gap: 10px;
-            }
             
-            .update-actions {
-                width: 100%;
-                justify-content: center;
-            }
+            
+            
             
             .container {
                 padding: 1rem;
             }
             
-            body.update-banner-visible {
-                padding-top: 120px;
-            }
+            
         }
         
         @media (max-width: 480px) {
@@ -648,13 +573,9 @@
                 padding: 1.5rem;
             }
             
-            .update-banner {
-                padding: 12px 15px;
-            }
             
-            body.update-banner-visible {
-                padding-top: 100px;
-            }
+            
+            
         }
         
         /* Accessibilità */
@@ -666,27 +587,6 @@
             }
         }
         
-        
-        /* --- Effetto riflesso animato su tutte le card --- */
-        .game-card::before {
-            content:"";
-            position:absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-            transform: rotate(45deg);
-            animation: shimmer 4s infinite;
-            z-index: 0;
-            pointer-events: none;
-        }
-        
-        .game-card > * {
-            position: relative;
-            z-index: 1;
-        }
-
         /* High contrast mode */
         @media (prefers-contrast: high) {
             .game-card {
@@ -700,12 +600,8 @@
     </style>
 </head>
 <body>
-    <!-- 🟢 Banner Aggiornamenti PWA v8.3.5 -->
-    <div class="update-banner" id="update-banner">
-        <div class="update-content">
-            <div class="update-text">
-                <div class="update-pulse"></div>
-                <span class="update-message" id="update-message">🚀 Nuovo aggiornamento disponibile!</span>
+    <!-- 🟢 Banner Aggiornamenti PWA v8.4.0 -->
+<span class="update-message" id="update-message">🚀 Nuovo aggiornamento disponibile!</span>
             </div>
             <div class="update-actions">
                 <button class="update-button" id="update-button" onclick="updateApp()">
@@ -720,7 +616,7 @@
 
     <div class="header">
         <h1>🎮 Giochi Educativi</h1>
-        <p>by Maestro Alberto Fogliata <span class="version-badge">v8.3.5</span></p>
+        <p>by Maestro Alberto Fogliata <span class="version-badge">v8.4.0</span></p>
     </div>
 
     <div class="container">
@@ -785,6 +681,32 @@
                 <a href="sfida-matematica.html" class="play-button" onclick="event.stopPropagation()">🎯 Inizia le Sfide</a>
             </div>
 
+            <!-- 🔢 Impara i Numeri -->
+            <div class="game-card impara-numeri" id="numeri-card" onclick="navigateToGame('numeri.html')">
+                <div class="game-icon">🔢</div>
+                <div class="game-title">
+                    Impara i Numeri
+                </div>
+                <div class="game-description">
+                    <strong>🎲 Gioco educativo interattivo per imparare i numeri!</strong>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <span class="feature-icon">🎧</span>
+                            <span>4 modalità: Ascolta, Parla, Componi, Velocità</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📊</span>
+                            <span>4 livelli progressivi: da 0 a 10.000</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🏆</span>
+                            <span>Sistema stelle, badge e tabella posizionale</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="numeri.html" class="play-button" onclick="event.stopPropagation()">🎲 Inizia a Imparare</a>
+            </div>
+
             <!-- Altro in arrivo -->
             <div class="game-card coming-soon">
                 <div class="game-icon">🎲</div>
@@ -801,7 +723,7 @@
     <div class="footer">
         <div class="stats">
             <div class="stat-item">
-                <div class="stat-number">3</div>
+                <div class="stat-number">4</div>
                 <div class="stat-label">Giochi Disponibili</div>
             </div>
             <div class="stat-item">
@@ -827,18 +749,19 @@
     </div>
 
     <script>
-        // ========== CONFIGURAZIONE PWA v8.3.5 ==========
+        // ========== CONFIGURAZIONE PWA v8.4.0 ==========
         const PWA_CONFIG = {
-            VERSION: '8.3.5',
+            VERSION: '8.4.0',
             SERVICE_WORKER_URL: './sw.js',
-            CACHE_NAME: 'giochi-educativi-v8.3.5',
-            DATA_CACHE_NAME: 'giochi-data-v8.3.5',
+            CACHE_NAME: 'giochi-educativi-v8.4.0',
+            DATA_CACHE_NAME: 'giochi-data-v8.4.0',
             UPDATE_CHECK_INTERVAL: 30000, // 30 secondi - allineato con sw.js
             AUTO_DISMISS_DELAY: 15000, // 15 secondi
             GAMES: {
                 matematica: { file: 'matematica.html', name: 'Matematica sul Divano 3ª' },
                 tabelline: { file: 'tabelline.html', name: 'Sfida Tabelline' },
-                sfidaMatematica: { file: 'sfida-matematica.html', name: 'Sfida Matematica in Famiglia 3ª' }
+                sfidaMatematica: { file: 'sfida-matematica.html', name: 'Sfida Matematica in Famiglia 3ª' },
+                numeri: { file: 'numeri.html', name: 'Impara i Numeri' }
             }
         };
 
@@ -853,7 +776,7 @@
 
         console.log(`🚀 PWA Giochi Educativi v${PWA_CONFIG.VERSION} - Inizializzazione...`);
 
-        // ========== 🟢 GESTIONE SERVICE WORKER v8.3.5 ==========
+        // ========== 🟢 GESTIONE SERVICE WORKER v8.4.0 ==========
         
         class ServiceWorkerManager {
             constructor() {
@@ -870,7 +793,7 @@
                 }
 
                 try {
-                    console.log('🔧 Registrazione Service Worker v8.3.5...');
+                    console.log('🔧 Registrazione Service Worker v8.4.0...');
                     
                     this.registration = await navigator.serviceWorker.register(PWA_CONFIG.SERVICE_WORKER_URL, {
                         scope: './',
@@ -914,7 +837,7 @@
                                     newWorker = installingWorker;
                                     this.pendingUpdate = true;
                                     if (!updateDismissed) {
-                                        this.showUpdateBanner('🍎 Fix iOS Safari: Sfida Matematica ora compatibile iPhone/iPad!');
+                                        this.showUpdateBanner('🔢 Nuovo Gioco: Impara i Numeri con sintesi vocale e 4 modalità!');
                                     }
                                 } else {
                                     console.log('✅ Primo SW installato');
@@ -930,7 +853,7 @@
                     console.log('🟢 SW già in waiting - mostro banner immediatamente');
                     newWorker = this.registration.waiting;
                     this.pendingUpdate = true;
-                    this.showUpdateBanner('🍎 Fix iOS Safari: Sfida Matematica ora compatibile iPhone/iPad!');
+                    this.showUpdateBanner('🔢 Nuovo Gioco: Impara i Numeri con sintesi vocale e 4 modalità!');
                 }
 
                 // Messaggi dal Service Worker
@@ -954,7 +877,7 @@
                 switch (type) {
                     case 'SW_INSTALLED':
                         if (!updateDismissed) {
-                            this.showUpdateBanner(message || '🍎 Fix iOS Safari: Sfida Matematica ora compatibile!');
+                            this.showUpdateBanner(message || '🔢 Nuovo gioco Impara i Numeri disponibile!');
                         }
                         break;
 
@@ -969,7 +892,7 @@
                         break;
 
                     case 'SW_ACTIVATED':
-                        this.notifyUpdateCompleted('✅ Aggiornamento iOS Safari completato!');
+                        this.notifyUpdateCompleted('✅ Aggiornamento completato! Nuovo gioco Impara i Numeri disponibile!');
                         if (gameAdded) {
                             this.highlightNewGame();
                         }
@@ -1004,7 +927,7 @@
                         }, 2000);
                         break;
 
-                    case 'SFIDA_UPDATED':
+                    case 'NUMERI_ADDED':
                         showToast(message, 'success');
                         this.highlightNewGame();
                         break;
@@ -1148,17 +1071,17 @@
             }
 
             highlightNewGame() {
-                const sfidaCard = document.getElementById('sfida-card');
-                if (sfidaCard) {
-                    console.log('🎯 Evidenziazione nuovo gioco');
+                const numeriCard = document.getElementById('numeri-card');
+                if (numeriCard) {
+                    console.log('🔢 Evidenziazione nuovo gioco Impara i Numeri');
                     
                     // Effetto speciale
-                    sfidaCard.style.animation = 'pulse 2s ease-in-out 3';
-                    sfidaCard.style.boxShadow = '0 0 30px rgba(255, 107, 107, 0.8)';
+                    numeriCard.style.animation = 'pulse 2s ease-in-out 3';
+                    numeriCard.style.boxShadow = '0 0 30px rgba(255, 152, 0, 0.8)';
                     
                     // Scroll verso il gioco
                     setTimeout(() => {
-                        sfidaCard.scrollIntoView({ 
+                        numeriCard.scrollIntoView({ 
                             behavior: 'smooth', 
                             block: 'center' 
                         });
@@ -1166,8 +1089,8 @@
                     
                     // Rimuovi effetto
                     setTimeout(() => {
-                        sfidaCard.style.animation = '';
-                        sfidaCard.style.boxShadow = '';
+                        numeriCard.style.animation = '';
+                        numeriCard.style.boxShadow = '';
                     }, 6000);
                 }
             }
@@ -1252,9 +1175,9 @@
             } else if (deviceInfo.isiOS) {
                 badge.textContent = '🍎 iOS';
                 if (deviceInfo.isSafari) {
-                    description.innerHTML = '🍎 <strong>iOS Safari perfetto!</strong><br>✨ <em>Ora Sfida Matematica funziona perfettamente su iPhone/iPad!</em><br>Clicca per aggiungere l\'app alla schermata home!';
+                    description.innerHTML = '🍎 <strong>iOS Safari perfetto!</strong><br>✨ <em>Include il nuovo gioco Impara i Numeri con sintesi vocale!</em><br>Clicca per aggiungere l\'app alla schermata home!';
                 } else {
-                    description.innerHTML = '🍎 <strong>iOS rilevato!</strong><br>⚠️ Apri con Safari per aggiungere l\'app e goderti il fix per Sfida Matematica!';
+                    description.innerHTML = '🍎 <strong>iOS rilevato!</strong><br>⚠️ Apri con Safari per aggiungere l\'app e goderti tutti i 4 giochi!';
                 }
             } else {
                 badge.textContent = '🔍 Altro';
@@ -1386,7 +1309,7 @@
                         <p><strong>Aggiungi alla schermata home!</strong></p>
                         <div style="background: #d4edda; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #28a745;">
                             <p style="margin: 0; font-weight: bold; color: #155724;">
-                                ✨ <strong>NOVITÀ v8.3.5:</strong> Sfida Matematica ora funziona perfettamente su iPhone e iPad!
+                                ✨ <strong>NOVITÀ v8.4.0:</strong> Nuovo gioco Impara i Numeri con sintesi vocale italiana!
                             </p>
                         </div>
                         <div style="text-align: left; background: #f5f5f5; padding: 15px; border-radius: 10px; margin: 20px 0;">
@@ -1417,7 +1340,7 @@
                             <ul>
                                 <li><strong>Desktop:</strong> Chrome o Edge</li>
                                 <li><strong>Android:</strong> Chrome</li>
-                                <li><strong>iOS:</strong> Safari (ora con fix per Sfida Matematica!)</li>
+                                <li><strong>iOS:</strong> Safari (con nuovo gioco Impara i Numeri!)</li>
                             </ul>
                             <p>Con questi browser potrai installare l'app come PWA nativa!</p>
                         </div>
@@ -1571,13 +1494,13 @@
                 // 4. Log stato finale
                 console.log('✅ Inizializzazione completata');
                 console.log(`🎮 Giochi disponibili: ${Object.keys(PWA_CONFIG.GAMES).length}`);
-                console.log(`🟢 Service Worker: ${swInitialized ? 'ATTIVO v8.3.5' : 'NON DISPONIBILE'}`);
+                console.log(`🟢 Service Worker: ${swInitialized ? 'ATTIVO v8.4.0' : 'NON DISPONIBILE'}`);
                 console.log(`📱 PWA Status: ${isAppInstalled() ? 'INSTALLATA' : 'NON INSTALLATA'}`);
                 
                 // 5. Toast di benvenuto
                 if (swInitialized) {
                     setTimeout(() => {
-                        showToast(`🎮 PWA v${PWA_CONFIG.VERSION} caricata - iOS Safari Fix attivo!`, 'success');
+                        showToast(`🎮 PWA v${PWA_CONFIG.VERSION} caricata - Nuovo gioco Impara i Numeri disponibile!`, 'success');
                     }, 1000);
                 }
                 
@@ -1602,7 +1525,7 @@
 
         function testUpdateBanner() {
             updateDismissed = false;
-            swManager.showUpdateBanner('🧪 Test: Fix iOS Safari - Sfida Matematica ora compatibile!');
+            swManager.showUpdateBanner('🧪 Test: Nuovo gioco Impara i Numeri con sintesi vocale!');
         }
 
         function testHighlightGame() {
@@ -1629,7 +1552,7 @@
             initializeApp();
         }
 
-        console.log(`✅ PWA v${PWA_CONFIG.VERSION} - Script caricato e pronto - iOS Safari Fix attivo`);
+        console.log(`✅ PWA v${PWA_CONFIG.VERSION} - Script caricato e pronto - Nuovo gioco Impara i Numeri attivo`);
         
     </script>
 </body>

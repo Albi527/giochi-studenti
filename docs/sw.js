@@ -1,12 +1,13 @@
-// Service Worker v8.4.0 - COMPLETAMENTE AUTOMATICO PER BAMBINI A SCUOLA
+// Service Worker v8.5.0 - COMPLETAMENTE AUTOMATICO PER BAMBINI A SCUOLA
 // 🚀 ZERO INTERVENTO UTENTE - AGGIORNAMENTI TRASPARENTI E SILENZIOSI
 // 🔢 NUOVO: Gioco "Impara i Numeri" aggiunto e ottimizzato
 // 🍎 Fix iOS Safari - Tutti i giochi compatibili iPhone/iPad
+// 🎨 NUOVO: Effetto shimmer CSS su tutte le carte giochi homepage
 // ⚡ SkipWaiting IMMEDIATO + Reload AUTOMATICO + NO BANNER + NO BOTTONI
 
-const SW_VERSION = 'v8.4.0';
-const CACHE_NAME = 'giochi-educativi-v8.4.0';
-const DATA_CACHE_NAME = 'giochi-data-v8.4.0';
+const SW_VERSION = 'v8.5.0';
+const CACHE_NAME = 'giochi-educativi-v8.5.0';
+const DATA_CACHE_NAME = 'giochi-data-v8.5.0';
 
 // 🎯 LISTA COMPLETA RISORSE DA CACHEARE (incluso nuovo gioco numeri)
 const STATIC_CACHE_URLS = [
@@ -38,6 +39,8 @@ const DATA_URLS = [
 
 // 🚨 CACHE VECCHIE DA ELIMINARE AUTOMATICAMENTE
 const OLD_CACHE_VERSIONS = [
+    'giochi-educativi-v8.4.0',
+    'giochi-data-v8.4.0',
     'giochi-educativi-v8.3.6',
     'giochi-data-v8.3.6',
     'giochi-educativi-v8.3.5',
@@ -896,6 +899,7 @@ console.log(`📊 Cache dati: ${DATA_CACHE_NAME}`);
 console.log(`🔄 Modalità: COMPLETAMENTE AUTOMATICA`);
 console.log(`👶 Target: BAMBINI A SCUOLA - ZERO INTERVENTO`);
 console.log(`🔢 Nuovo gioco: "Impara i Numeri" ottimizzato`);
+console.log(`🎨 Nuovo in v8.5.0: Effetti shimmer CSS su homepage`);
 console.log(`🍎 iOS Safari: Compatibilità completa`);
 console.log(`🚀 Aggiornamenti: TRASPARENTI E SILENZIOSI`);
 console.log(`🎯 Sistema: PWA AUTOMATICA per ambiente educativo!`);
@@ -925,7 +929,8 @@ self.SW_INFO = {
         'Fallback offline ottimizzato per Numeri',
         'Sync automatico progressi Numeri',
         'Notifiche silenziose aggiornamenti',
-        'Modalità scuola senza banner/bottoni'
+        'Modalità scuola senza banner/bottoni',
+        'Effetti CSS shimmer aggiunti a tutte le carte'
     ],
     updateStrategy: 'TRANSPARENT_SILENT_AUTOMATIC'
 };

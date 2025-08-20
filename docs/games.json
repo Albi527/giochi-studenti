@@ -19,7 +19,7 @@
         "standaloneMode": false,
         "localStorage": "SYNCHRONIZED",
         "navigation": "UNIFIED",
-        "serviceWorker": "v8.4.0",
+        "serviceWorker": "v8.5.0",
         "duplicationsRemoved": true,
         "installationControls": "CENTRALIZED",
         "updateSystem": "GREEN_BUTTON_ACTIVE",
@@ -42,7 +42,7 @@
         "localStorage sincronizzato con index.html",
         "Navigazione fluida tra componenti",
         "Controlli installazione centralizzati",
-        "Cache strategy ottimizzata con SW v8.4.0",
+        "Cache strategy ottimizzata con SW v8.5.0",
         "Interfaccia pulita e ottimizzata",
         "Sistema aggiornamenti automatici con bottone verde",
         "Fallback offline specifico per matematica"
@@ -70,7 +70,7 @@
           "localStorageSync": true,
           "unifiedNavigation": true,
           "centralizedInstallation": true,
-          "serviceWorkerVersion": "v8.4.0",
+          "serviceWorkerVersion": "v8.5.0",
           "noDuplications": true,
           "optimizedCaching": true,
           "homeButtonFixed": true,
@@ -109,7 +109,7 @@
       "pwaIntegration": {
         "status": "SYNCHRONIZED",
         "unifiedSystem": true,
-        "serviceWorker": "v8.4.0",
+        "serviceWorker": "v8.5.0",
         "cacheStrategy": "CACHE_FIRST_WITH_BACKGROUND_UPDATE",
         "updateSystem": "GREEN_BUTTON_ACTIVE"
       },
@@ -125,7 +125,7 @@
         "Navigazione fluida con index",
         "Sincronizzato nel sistema PWA unificato",
         "Aggiornamenti automatici con bottone verde",
-        "Cache strategy ottimizzata SW v8.4.0"
+        "Cache strategy ottimizzata SW v8.5.0"
       ],
       "educational": {
         "targetAge": "6-12 anni",
@@ -139,7 +139,7 @@
         "expirationDate": null,
         "systemIntegration": {
           "unifiedPWA": true,
-          "serviceWorkerVersion": "v8.4.0",
+          "serviceWorkerVersion": "v8.5.0",
           "homeButtonFixed": true,
           "antiRepetitionAdvanced": true,
           "updateSystemIntegrated": true,
@@ -166,7 +166,7 @@
         "standaloneMode": false,
         "localStorage": "PROFILES_MANAGED",
         "navigation": "UNIFIED",
-        "serviceWorker": "v8.4.0",
+        "serviceWorker": "v8.5.0",
         "profileSystem": true,
         "dailyChallenges": true,
         "updateSystem": "GREEN_BUTTON_ACTIVE",
@@ -220,7 +220,7 @@
           "localStorageProfiles": true,
           "unifiedNavigation": true,
           "centralizedInstallation": true,
-          "serviceWorkerVersion": "v8.4.0",
+          "serviceWorkerVersion": "v8.5.0",
           "optimizedCaching": true,
           "homeButtonIntegrated": true,
           "updateSystem": "green_button_active",
@@ -308,7 +308,7 @@
         "standaloneMode": false,
         "localStorage": "SYNCHRONIZED_WITH_PROGRESSI",
         "navigation": "UNIFIED",
-        "serviceWorker": "v8.4.0",
+        "serviceWorker": "v8.5.0",
         "updateSystem": "GREEN_BUTTON_ACTIVE",
         "cacheStrategy": "DEDICATED_NUMERI_STRATEGY",
         "backgroundSync": "NUMERI_PROGRESS_SYNC",
@@ -365,7 +365,7 @@
           "localStorageProgressi": true,
           "unifiedNavigation": true,
           "centralizedInstallation": true,
-          "serviceWorkerVersion": "v8.4.0",
+          "serviceWorkerVersion": "v8.5.0",
           "optimizedCaching": true,
           "homeButtonIntegrated": true,
           "updateSystem": "green_button_active",
@@ -497,7 +497,7 @@
         "unifiedSystem": true,
         "willBeIntegrated": true,
         "updateSystemReady": true,
-        "serviceWorkerSupport": "v8.4.0"
+        "serviceWorkerSupport": "v8.5.0"
       }
     }
   ],
@@ -564,9 +564,9 @@
   "settings": {
     "title": "Giochi Educativi",
     "subtitle": "by Maestro Alberto",
-    "version": "1.9.4",
-    "lastUpdated": "2025-08-19",
-    "systemType": "UNIFIED_PWA_WITH_SW_V8.4.0",
+    "version": "1.9.5",
+    "lastUpdated": "2025-08-20",
+    "systemType": "UNIFIED_PWA_WITH_SW_V8.5.0",
     "autoDetectGames": true,
     "showInstallButton": true,
     "showOfflineIndicator": true,
@@ -576,7 +576,7 @@
     "updateSystem": {
       "enabled": true,
       "type": "GREEN_BUTTON",
-      "serviceWorkerVersion": "v8.4.0",
+      "serviceWorkerVersion": "v8.5.0",
       "autoCheck": true,
       "userControlled": true,
       "bannerAnimation": true,
@@ -589,7 +589,7 @@
       "tabellineIntegrated": true,
       "sfidaMatematicaIntegrated": true,
       "numeriIntegrated": true,
-      "serviceWorkerVersion": "v8.4.0",
+      "serviceWorkerVersion": "v8.5.0",
       "localStorageSynchronized": true,
       "navigationUnified": true,
       "duplicationsRemoved": true,
@@ -601,10 +601,10 @@
       "dedicatedCacheStrategies": true
     },
     "serviceWorkerFeatures": {
-      "version": "v8.4.0",
+      "version": "v8.5.0",
       "cacheNames": {
-        "main": "giochi-educativi-v8.4.0",
-        "data": "giochi-data-v8.4.0"
+        "main": "giochi-educativi-v8.5.0",
+        "data": "giochi-data-v8.5.0"
       },
       "specialHandling": {
         "sfidaMatematica": "handleSfidaMatematica()",
@@ -639,6 +639,15 @@
       }
     },
     "newFeatures": {
+      "v1.9.5": [
+        "🎨 NUOVO: Effetti shimmer CSS su tutte le carte giochi homepage",
+        "✨ Animazioni dinamiche accattivanti per migliore esperienza visiva",
+        "⚡ Service Worker aggiornato a v8.5.0 con gestione cache ottimizzata",
+        "🔄 Sistema di aggiornamento automatico migliorato per stabilità",
+        "📱 Design cards responsive con effetti shimmer per tutti i dispositivi",
+        "🎯 Homepage più coinvolgente e moderna per bambini",
+        "🔧 Ottimizzazioni performance generale del sistema PWA"
+      ],
       "v1.9.4": [
         "🔢 NUOVO GIOCO: 'Impara i Numeri' v2.0.0 - Completamente Integrato",
         "🎮 4 modalità di gioco: Ascolta, Parla, Componi, Sfida Velocità",
@@ -694,15 +703,15 @@
     "profileSystemSupported": true,
     "backgroundSyncSupported": true,
     "pushNotificationsSupported": true,
-    "lastMajorUpdate": "2025-08-19",
+    "lastMajorUpdate": "2025-08-20",
     "updateSystemActive": true,
-    "serviceWorkerVersion": "v8.4.0",
+    "serviceWorkerVersion": "v8.5.0",
     "systemUnification": {
       "matematicaIntegrationStatus": "COMPLETED",
       "tabellineIntegrationStatus": "COMPLETED", 
       "sfidaMatematicaIntegrationStatus": "COMPLETED_WITH_DEDICATED_HANDLING",
       "numeriIntegrationStatus": "COMPLETED_WITH_DEDICATED_HANDLING",
-      "serviceWorkerVersion": "v8.4.0",
+      "serviceWorkerVersion": "v8.5.0",
       "localStorageConflicts": "RESOLVED",
       "navigationIssues": "RESOLVED",
       "pwaConflicts": "RESOLVED",
@@ -781,11 +790,11 @@
     }
   },
   "systemIntegration": {
-    "version": "1.9.4",
-    "type": "UNIFIED_PWA_SYSTEM_WITH_SW_V8.4.0",
+    "version": "1.9.5",
+    "type": "UNIFIED_PWA_SYSTEM_WITH_SW_V8.5.0",
     "updateManagement": {
       "type": "FULLY_AUTOMATIC_FOR_CHILDREN",
-      "serviceWorkerVersion": "v8.4.0",
+      "serviceWorkerVersion": "v8.5.0",
       "skipWaitingImmediate": true,
       "autoReload": true,
       "userFriendly": true,
@@ -795,7 +804,7 @@
     },
     "components": {
       "index": {
-        "version": "8.4.0",
+        "version": "8.5.0",
         "status": "ACTIVE",
         "role": "MAIN_LANDING_PAGE",
         "updateSystemIntegration": true,
@@ -889,13 +898,13 @@
         }
       },
       "serviceWorker": {
-        "version": "v8.4.0",
+        "version": "v8.5.0",
         "status": "FULLY_AUTOMATIC_FOR_CHILDREN",
         "manages": ["index.html", "matematica.html", "tabelline.html", "sfida-matematica.html", "numeri.html", "games.json", "manifest.json"],
         "duplications": false,
         "caches": {
-          "main": "giochi-educativi-v8.4.0",
-          "data": "giochi-data-v8.4.0"
+          "main": "giochi-educativi-v8.5.0",
+          "data": "giochi-data-v8.5.0"
         },
         "features": {
           "updateSystem": "FULLY_AUTOMATIC",
@@ -928,7 +937,7 @@
           },
           "syncTags": ["profile-sync", "game-data-sync", "numeri-progress-sync"],
           "errorHandling": "Advanced with retry logic",
-          "cacheManagement": "Automatic cleanup old versions including v8.3.6"
+          "cacheManagement": "Automatic cleanup old versions including v8.4.0"
         }
       }
     },
@@ -963,7 +972,9 @@
       "microphoneManagementAutomatic": true,
       "immediateVoiceInteraction": true,
       "streamlinedGameplay": true,
-      "optimizedForChildren": true
+      "optimizedForChildren": true,
+      "shimmerEffectsEnabled": true,
+      "modernHomepageDesign": true
     },
     "conflicts": {
       "pwaConflicts": "RESOLVED",
@@ -983,12 +994,14 @@
   },
   "metadata": {
     "author": "Maestro Alberto Fogliata (Bs)",
-    "description": "Piattaforma di giochi educativi per studenti con sistema PWA completamente unificato v8.4.0. Include il nuovo gioco 'Impara i Numeri' con riconoscimento vocale ottimizzato, sistema completamente automatico per bambini a scuola con aggiornamenti trasparenti, profili personalizzati, sincronizzazione background e gestione offline dedicata. Ottimizzato per zero intervento utente con modalità vocale immediata.",
-    "keywords": ["educativo", "matematica", "numeri", "tabelline", "sfide giornaliere", "profili famiglia", "riconoscimento vocale immediato", "drag drop", "PWA", "giochi", "studenti", "sistema automatico", "service worker v8.4.0", "cache avanzate", "background sync", "notifiche push", "offline dedicato", "iOS compatibile", "bambini scuola", "aggiornamenti trasparenti", "modalità vocale ottimizzata"],
+    "description": "Piattaforma di giochi educativi per studenti con sistema PWA completamente unificato v8.5.0. Include il nuovo gioco 'Impara i Numeri' con riconoscimento vocale ottimizzato, sistema completamente automatico per bambini a scuola con aggiornamenti trasparenti, profili personalizzati, sincronizzazione background e gestione offline dedicata. Ottimizzato per zero intervento utente con modalità vocale immediata e nuovi effetti shimmer CSS.",
+    "keywords": ["educativo", "matematica", "numeri", "tabelline", "sfide giornaliere", "profili famiglia", "riconoscimento vocale immediato", "drag drop", "PWA", "giochi", "studenti", "sistema automatico", "service worker v8.5.0", "cache avanzate", "background sync", "notifiche push", "offline dedicato", "iOS compatibile", "bambini scuola", "aggiornamenti trasparenti", "modalità vocale ottimizzata", "effetti shimmer CSS", "homepage moderna"],
     "language": "it",
     "target_audience": "5-12 anni + famiglie + scuole",
     "educational_subjects": ["Matematica", "Numeri", "Calcolo mentale", "Operazioni aritmetiche", "Logica", "Problemi", "Geometria", "Riconoscimento numerico", "Lettura numerica"],
     "technical_features": [
+      "🎨 NUOVO v1.9.5: Effetti shimmer CSS su tutte le carte giochi homepage",
+      "✨ Animazioni dinamiche accattivanti per migliore esperienza visiva",
       "🔢 NUOVO GIOCO: 'Impara i Numeri' v2.0.0 con gestione dedicata SW",
       "🎮 4 modalità interattive: Ascolta, Parla, Componi, Sfida Velocità",
       "🎤 Riconoscimento vocale italiano completo con Web Speech API",
@@ -996,7 +1009,7 @@
       "🎯 Sistema drag & drop per composizione numeri interattiva",
       "📊 Apprendimento numeri 0-10.000 con livelli progressivi",
       "🏆 Tabelle posizionali educative (casa migliaia + unità)",
-      "⚡ Service Worker v8.4.0 - Sistema Completamente Automatico",
+      "⚡ Service Worker v8.5.0 - Sistema Completamente Automatico",
       "🔧 handleNumeriGameRequest() - Cache strategy dedicata",
       "💾 syncNumeriProgress() - Sincronizzazione progressi automatica",
       "🌐 generateNumeriOfflinePage() - Fallback offline personalizzato",
@@ -1011,13 +1024,13 @@
       "🚨 Zero Intervento Utente Richiesto - Aggiornamenti Trasparenti",
       "🎯 Modalità BAMBINI A SCUOLA: sistema pensato per ambienti educativi",
       "🔄 Auto-check Aggiornamenti ogni 30 secondi in background",
-      "🧹 Pulizia Automatica Cache Vecchie incluse v8.3.6",
+      "🧹 Pulizia Automatica Cache Vecchie incluse v8.4.0",
       "🎯 Sfida Matematica in Famiglia 3ª v1.0.0 - Completamente Integrata",
       "Sistema profili personalizzati con gestione famiglia automatica",
       "3 sfide giornaliere rinnovabili automaticamente a mezzanotte",
       "90 domande totali al giorno (30 per sfida) con generazione unica",
       "4 tipologie domande: Calcolo, Logica, Problemi, Geometria",
-      "PWA Sistema Unificato v1.9.4 completamente automatico",
+      "PWA Sistema Unificato v1.9.5 completamente automatico con shimmer effects",
       "Audio interattivo ottimizzato per tutti i dispositivi", 
       "Offline completo con supporto profili avanzato e cache intelligenti", 
       "Responsive perfetto per tutti i dispositivi inclusi tablet scolastici", 
@@ -1033,7 +1046,9 @@
       "Gestione automatica di tutti gli stati SW senza intervento utente",
       "User experience ottimizzata specificamente per bambini e famiglie",
       "Modalità vocale immediate-start per apprendimento naturale",
-      "Sistema intuitivo senza attese o popup per bambini piccoli"
+      "Sistema intuitivo senza attese o popup per bambini piccoli",
+      "Homepage moderna con effetti shimmer CSS coinvolgenti",
+      "Design cards dinamico e responsivo per tutti i dispositivi"
     ],
     "integration_status": {
       "matematica_integration": "COMPLETED",
@@ -1054,7 +1069,7 @@
       "push_notification_integration": "READY",
       "cache_strategy_optimization": "COMPLETED",
       "offline_fallback_customization": "COMPLETED",
-      "ios_safari_compatibility": "FIXED_v8.4.0",
+      "ios_safari_compatibility": "FIXED_v8.5.0",
       "school_mode_optimization": "COMPLETED",
       "speech_recognition_integration": "COMPLETED",
       "speech_synthesis_integration": "COMPLETED",
@@ -1062,7 +1077,9 @@
       "multi_modal_learning_integration": "COMPLETED",
       "voice_mode_optimization": "COMPLETED_IMMEDIATE_START",
       "countdown_removal_optimization": "COMPLETED",
-      "child_friendly_voice_interaction": "OPTIMIZED"
+      "child_friendly_voice_interaction": "OPTIMIZED",
+      "shimmer_effects_integration": "COMPLETED_V8.5.0",
+      "modern_homepage_design": "COMPLETED"
     }
   }
 }

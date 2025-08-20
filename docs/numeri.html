@@ -583,7 +583,12 @@
             microphoneAllowed: false,
             mediaStream: null,
             speechSynthesis: window.speechSynthesis,
-            recognition: null
+            recognition: null,
+            // Nuove proprietà per Android
+            isAndroid: false,
+            androidPermissionRequested: false,
+            speechRecognitionRetries: 0,
+            debugMode: false
         };
 
         // Configurazione livelli
@@ -602,8 +607,299 @@
             speed: "VELOCITA"
         };
 
+        // === NUOVE FUNZIONI ANDROID SUPPORT ===
+        
+        // Rilevamento Android e configurazione
+        function detectAndroidDevice() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            gameState.isAndroid = userAgent.includes('android');
+            
+            if (gameState.isAndroid) {
+                console.log('🤖 Dispositivo Android rilevato:', navigator.userAgent);
+                gameState.debugMode = true; // Abilita debug automatico su Android
+                
+                // Log delle capacità del dispositivo
+                console.log('📱 Capacità dispositivo:', {
+                    getUserMedia: !!navigator.mediaDevices?.getUserMedia,
+                    webkitSpeechRecognition: !!window.webkitSpeechRecognition,
+                    speechSynthesis: !!window.speechSynthesis,
+                    audioContext: !!(window.AudioContext || window.webkitAudioContext)
+                });
+            }
+            
+            return gameState.isAndroid;
+        }
+
+        // Gestione permessi specifica Android
+        async function requestAndroidMicrophonePermission() {
+            console.log('🎤 Richiesta permessi Android...');
+            
+            try {
+                // Per Android: richiesta esplicita con parametri specifici
+                const constraints = {
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        sampleRate: 44100,
+                        sampleSize: 16
+                    }
+                };
+                
+                console.log('📋 Constraints audio:', constraints);
+                
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                
+                if (stream) {
+                    console.log('✅ Stream ottenuto su Android:', stream.getTracks());
+                    
+                    // Testa che il microfono funzioni davvero
+                    const audioTracks = stream.getAudioTracks();
+                    if (audioTracks.length > 0) {
+                        console.log('🎙️ Track audio attivo:', audioTracks[0].getSettings());
+                        
+                        // Mantieni il stream attivo su Android
+                        if (gameState.mediaStream) {
+                            gameState.mediaStream.getTracks().forEach(track => track.stop());
+                        }
+                        gameState.mediaStream = stream;
+                        gameState.microphoneAllowed = true;
+                        gameState.androidPermissionRequested = true;
+                        
+                        return true;
+                    }
+                }
+                
+                throw new Error('Nessun track audio disponibile');
+                
+            } catch (error) {
+                console.error('❌ Errore permessi Android:', error);
+                gameState.microphoneAllowed = false;
+                gameState.androidPermissionRequested = true;
+                
+                // Mostra dialog specifico per Android
+                showAndroidPermissionTroubleshooting();
+                return false;
+            }
+        }
+
+        // Dialog troubleshooting Android
+        function showAndroidPermissionTroubleshooting() {
+            const dialog = document.createElement('div');
+            dialog.style.cssText = `
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background: #f0f4f8; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 3000; text-align: left; max-width: 450px; width: 95%; max-height: 80vh; overflow-y: auto;
+            `;
+            
+            dialog.innerHTML = `
+                <h3 style="color: #ff6b6b; margin-bottom: 15px; text-align: center;">🤖 RISOLUZIONE PROBLEMI ANDROID</h3>
+                
+                <div style="background: #e3f2fd; padding: 12px; border-radius: 8px; margin: 10px 0;">
+                    <h4 style="margin-top: 0; color: #1976d2;">🔧 PASSAGGI PER ABILITARE IL MICROFONO:</h4>
+                    <ol style="margin: 5px 0; padding-left: 20px; color: #424242; font-size: 0.9em;">
+                        <li><strong>Apri il menu Chrome</strong> (3 puntini in alto a destra)</li>
+                        <li>Vai su <strong>"Impostazioni"</strong></li>
+                        <li>Tocca <strong>"Impostazioni sito"</strong></li>
+                        <li>Tocca <strong>"Microfono"</strong></li>
+                        <li>Assicurati che sia <strong>"Consentito"</strong></li>
+                        <li>Torna indietro e <strong>ricarica questa pagina</strong></li>
+                    </ol>
+                </div>
+                
+                <div style="background: #fff3e0; padding: 12px; border-radius: 8px; margin: 10px 0;">
+                    <h4 style="margin-top: 0; color: #f57c00;">⚠️ SE IL PROBLEMA PERSISTE:</h4>
+                    <ul style="margin: 5px 0; padding-left: 20px; color: #424242; font-size: 0.9em;">
+                        <li>Chiudi <strong>tutte le altre app</strong> che potrebbero usare il microfono</li>
+                        <li>Riavvia Chrome completamente</li>
+                        <li>Verifica che il microfono funzioni in altre app</li>
+                        <li>Prova a <strong>riavviare il dispositivo</strong></li>
+                    </ul>
+                </div>
+                
+                <div style="background: #e8f5e8; padding: 12px; border-radius: 8px; margin: 10px 0;">
+                    <p style="margin: 0; color: #2e7d32; font-size: 0.9em;">
+                        💡 <strong>ALTERNATIVA:</strong> Puoi sempre giocare con le modalità "ASCOLTA E SCEGLI" e "COMPONI IL NUMERO" che funzionano perfettamente senza microfono!
+                    </p>
+                </div>
+                
+                <div style="text-align: center; margin-top: 15px;">
+                    <button onclick="this.parentElement.parentElement.remove(); window.location.reload();" 
+                            style="background: #4CAF50; color: white; border: none; padding: 10px 15px; border-radius: 8px; margin: 3px; cursor: pointer; font-size: 0.9em;">
+                        🔄 RICARICA PAGINA
+                    </button>
+                    <button onclick="this.parentElement.parentElement.remove(); requestAndroidMicrophonePermission();" 
+                            style="background: #2196F3; color: white; border: none; padding: 10px 15px; border-radius: 8px; margin: 3px; cursor: pointer; font-size: 0.9em;">
+                        🔄 RIPROVA
+                    </button>
+                    <button onclick="this.parentElement.parentElement.remove(); showLevelSelection();" 
+                            style="background: #ff9800; color: white; border: none; padding: 10px 15px; border-radius: 8px; margin: 3px; cursor: pointer; font-size: 0.9em;">
+                        🎮 GIOCHI NO-MIC
+                    </button>
+                    <button onclick="this.parentElement.parentElement.remove();" 
+                            style="background: #6c757d; color: white; border: none; padding: 10px 15px; border-radius: 8px; margin: 3px; cursor: pointer; font-size: 0.9em;">
+                        CHIUDI
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(dialog);
+        }
+
+        // Configurazione Speech Recognition per Android
+        function initAndroidSpeechRecognition() {
+            if (!window.webkitSpeechRecognition) {
+                console.log('❌ webkitSpeechRecognition non disponibile');
+                return false;
+            }
+            
+            try {
+                gameState.recognition = new webkitSpeechRecognition();
+                
+                // Configurazioni specifiche per Android
+                gameState.recognition.lang = 'it-IT';
+                gameState.recognition.continuous = false;
+                gameState.recognition.interimResults = false;
+                gameState.recognition.maxAlternatives = 1;
+                
+                gameState.recognition.onstart = function() {
+                    console.log('🎤 Speech recognition avviato (Android)');
+                    gameState.isRecording = true;
+                };
+                
+                gameState.recognition.onresult = function(event) {
+                    console.log('📝 Risultato ricevuto (Android):', event.results);
+                    if (event.results && event.results.length > 0) {
+                        const spokenText = event.results[0][0].transcript.toLowerCase();
+                        const confidence = event.results[0][0].confidence;
+                        console.log('🗣️ Testo:', spokenText, 'Confidenza:', confidence);
+                        handleSpeechResult(spokenText);
+                    }
+                };
+                
+                gameState.recognition.onerror = function(event) {
+                    console.error('❌ Errore Speech Recognition Android:', event.error, event);
+                    
+                    // Gestione errori specifica per Android
+                    if (event.error === 'not-allowed') {
+                        console.log('🚫 Permessi negati - mostra troubleshooting');
+                        showAndroidPermissionTroubleshooting();
+                        return;
+                    }
+                    
+                    if (event.error === 'no-speech' && gameState.speechRecognitionRetries < 2) {
+                        console.log('🔄 Retry recognition - tentativo', gameState.speechRecognitionRetries + 1);
+                        gameState.speechRecognitionRetries++;
+                        setTimeout(() => {
+                            if (gameState.mediaStream && gameState.microphoneAllowed) {
+                                startAndroidRecording();
+                            }
+                        }, 1000);
+                        return;
+                    }
+                    
+                    let errorMessage = 'ERRORE MICROFONO. RIPROVA!';
+                    switch(event.error) {
+                        case 'no-speech':
+                            errorMessage = 'NON HO SENTITO NULLA. PARLA PIU FORTE E PIU VICINO AL MICROFONO!';
+                            break;
+                        case 'audio-capture':
+                            errorMessage = 'MICROFONO NON ACCESSIBILE. CONTROLLA LE IMPOSTAZIONI ANDROID.';
+                            break;
+                        case 'network':
+                            errorMessage = 'PROBLEMA DI RETE. CONTROLLA LA CONNESSIONE INTERNET.';
+                            break;
+                    }
+                    
+                    showFeedback(errorMessage, 'error');
+                    stopRecording();
+                };
+                
+                gameState.recognition.onend = function() {
+                    console.log('🏁 Speech recognition terminato (Android)');
+                    stopRecording();
+                };
+                
+                console.log('✅ Speech Recognition Android configurato');
+                return true;
+                
+            } catch (error) {
+                console.error('❌ Errore inizializzazione Speech Recognition Android:', error);
+                return false;
+            }
+        }
+
+        // Funzione di registrazione specifica per Android
+        function startAndroidRecording() {
+            console.log('🎤 Avvio registrazione Android...');
+            
+            // Reset retry counter
+            gameState.speechRecognitionRetries = 0;
+            
+            if (!gameState.recognition) {
+                console.log('🔧 Inizializzazione Speech Recognition...');
+                if (!initAndroidSpeechRecognition()) {
+                    showFeedback('RICONOSCIMENTO VOCALE NON DISPONIBILE SU QUESTO DISPOSITIVO ANDROID', 'error');
+                    return false;
+                }
+            }
+            
+            if (!gameState.mediaStream || !gameState.microphoneAllowed) {
+                console.log('📱 Richiesta permessi Android...');
+                requestAndroidMicrophonePermission().then(success => {
+                    if (success) {
+                        setTimeout(() => startAndroidRecording(), 500);
+                    }
+                });
+                return false;
+            }
+            
+            // Verifica che il MediaStream sia ancora attivo
+            const audioTracks = gameState.mediaStream.getAudioTracks();
+            if (audioTracks.length === 0 || audioTracks[0].readyState !== 'live') {
+                console.log('🔄 MediaStream non attivo, richiedendo nuovi permessi...');
+                requestAndroidMicrophonePermission().then(success => {
+                    if (success) {
+                        setTimeout(() => startAndroidRecording(), 500);
+                    }
+                });
+                return false;
+            }
+            
+            try {
+                // Mostra feedback visivo
+                const micIcon = document.getElementById('micIcon');
+                micIcon.classList.add('recording');
+                
+                // Avvia il riconoscimento
+                gameState.recognition.start();
+                playSound('record_start');
+                
+                // Timeout più breve per Android
+                setTimeout(() => {
+                    if (gameState.isRecording && gameState.recognition) {
+                        console.log('⏰ Timeout Android - stopping recognition');
+                        gameState.recognition.stop();
+                    }
+                }, 3000); // 3 secondi invece di 5
+                
+                console.log('✅ Registrazione Android avviata con successo');
+                return true;
+                
+            } catch (error) {
+                console.error('❌ Errore avvio registrazione Android:', error);
+                showFeedback('IMPOSSIBILE AVVIARE LA REGISTRAZIONE. RIPROVA!', 'error');
+                stopRecording();
+                return false;
+            }
+        }
+        
+        // === FINE NUOVE FUNZIONI ANDROID ===
+
         // Inizializzazione
         document.addEventListener('DOMContentLoaded', function() {
+            // Rileva dispositivo Android
+            detectAndroidDevice();
+            
             loadGameState();
             initSpeechRecognition();
             // NON richiedere permessi all'avvio - solo quando necessario
@@ -679,6 +975,11 @@
                             💡 <strong>SUGGERIMENTO:</strong> Le modalità con 🎤 richiedono l'accesso al microfono. 
                             Se hai problemi, prova prima le modalità senza microfono!
                         </p>
+                        ${gameState.isAndroid ? `
+                            <p style="margin: 5px 0 0 0; font-size: 0.7em; color: #6c757d;">
+                                🤖 <strong>DISPOSITIVO ANDROID RILEVATO</strong> - Ottimizzazioni attive per microfono
+                            </p>
+                        ` : ''}
                     </div>
                 </div>
             `;
@@ -742,26 +1043,43 @@
 
         async function activateMicrophoneAndStart(mode) {
             try {
-                // Richiedi permessi con user gesture
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                gameState.mediaStream = stream;
-                gameState.microphoneAllowed = true;
-                updateMicrophoneIcon();
+                let success = false;
                 
-                showFeedback('🎤 MICROFONO ATTIVATO! INIZIAMO IL GIOCO...', 'success');
+                // Usa gestione specifica per Android
+                if (gameState.isAndroid) {
+                    console.log('📱 Attivazione microfono Android...');
+                    success = await requestAndroidMicrophonePermission();
+                } else {
+                    // Gestione standard per altri dispositivi
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    gameState.mediaStream = stream;
+                    gameState.microphoneAllowed = true;
+                    success = true;
+                }
                 
-                // Inizia il gioco dopo un breve delay
-                setTimeout(() => {
-                    startGame(mode);
-                }, 1500);
+                if (success) {
+                    updateMicrophoneIcon();
+                    showFeedback('🎤 MICROFONO ATTIVATO! INIZIAMO IL GIOCO...', 'success');
+                    
+                    // Inizia il gioco dopo un breve delay
+                    setTimeout(() => {
+                        startGame(mode);
+                    }, 1500);
+                } else {
+                    throw new Error('Impossibile ottenere accesso al microfono');
+                }
                 
             } catch (error) {
                 console.warn('Permessi microfono negati:', error);
                 gameState.microphoneAllowed = false;
                 updateMicrophoneIcon();
                 
-                // Mostra dialog alternativo
-                showMicrophoneErrorDialog(mode);
+                // Mostra dialog specifico per il tipo di dispositivo
+                if (gameState.isAndroid) {
+                    showAndroidPermissionTroubleshooting();
+                } else {
+                    showMicrophoneErrorDialog(mode);
+                }
             }
         }
 
@@ -1111,6 +1429,12 @@
 
         // Gestione permessi microfono
         async function requestMicrophonePermission() {
+            // Usa gestione specifica per Android
+            if (gameState.isAndroid) {
+                return await requestAndroidMicrophonePermission();
+            }
+            
+            // Gestione standard per altri dispositivi
             try {
                 // Mantieni lo stream attivo per conservare i permessi
                 if (!gameState.mediaStream) {
@@ -1169,16 +1493,37 @@
             const micIcon = document.getElementById('micIcon');
             if (gameState.microphoneAllowed) {
                 micIcon.innerHTML = '🎤';
-                micIcon.title = 'Microfono attivo';
+                micIcon.title = gameState.isAndroid ? 
+                    'Microfono attivo (Android)' : 
+                    'Microfono attivo';
             } else {
                 micIcon.innerHTML = '🔇';
-                micIcon.title = 'Microfono non disponibile - Clicca per riattivare';
+                micIcon.title = gameState.isAndroid ? 
+                    'Microfono non disponibile (Android) - Clicca per configurare' :
+                    'Microfono non disponibile - Clicca per riattivare';
+            }
+            
+            // Debug info per Android
+            if (gameState.isAndroid && gameState.debugMode) {
+                console.log('🎤 Stato microfono:', {
+                    allowed: gameState.microphoneAllowed,
+                    hasStream: !!gameState.mediaStream,
+                    hasRecognition: !!gameState.recognition,
+                    androidPermissionRequested: gameState.androidPermissionRequested
+                });
             }
         }
 
         // Riconoscimento vocale
         function initSpeechRecognition() {
             if ('webkitSpeechRecognition' in window) {
+                // Su Android usa la configurazione speciale
+                if (gameState.isAndroid) {
+                    console.log('🤖 Inizializzazione Speech Recognition per Android...');
+                    return initAndroidSpeechRecognition();
+                }
+                
+                // Configurazione standard per altri dispositivi
                 // Crea UNA SOLA istanza globale riutilizzabile
                 gameState.recognition = new webkitSpeechRecognition();
                 gameState.recognition.lang = 'it-IT';
@@ -1231,6 +1576,13 @@
         }
 
         function startRecording() {
+            // Su Android usa la funzione specializzata
+            if (gameState.isAndroid) {
+                console.log('📱 Avvio registrazione Android...');
+                return startAndroidRecording();
+            }
+            
+            // Logica originale per altri dispositivi
             // Verifica permessi prima di procedere
             if (!gameState.microphoneAllowed || !gameState.mediaStream) {
                 console.log('Richiedendo permessi microfono...');
@@ -1648,7 +2000,12 @@
         // Gestione eventi microfono
         document.getElementById('micIcon').addEventListener('click', function() {
             if (!gameState.microphoneAllowed) {
-                requestMicrophonePermission();
+                // Usa gestione specifica per Android
+                if (gameState.isAndroid) {
+                    requestAndroidMicrophonePermission();
+                } else {
+                    requestMicrophonePermission();
+                }
             } else if (gameState.isRecording) {
                 gameState.recognition.stop();
             } else if (gameState.currentMode === 'speak') {
